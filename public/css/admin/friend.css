@@ -1,0 +1,78 @@
+/* end hear admin*/
+.datepicker {
+    width:380px;
+}
+.padding-40{
+    padding-left: 40px;
+    padding-right: 40px;
+}
+.padding-30{
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.padding-20{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.select-icon {
+    font-family: 'FontAwesome', 'Second Font name';
+}
+label{
+    color: #000;
+}
+.btn-option,.btn-post{
+    width: 15%;
+    padding: 3px 0px;
+    font-size: 10px;
+    float: left;
+}
+.btn-post{
+    width: 9%;
+}
+.btn-user{
+    width: 22%;
+    padding: 3px 6px;
+    float: left;
+    font-size: 10px;
+}
+.btn-state{
+    width: 50%;
+    padding: 3px 0px;
+    font-size: 12px;
+    float: left;
+}
+#sortable1, #sortable2 {
+    border: 1px solid #eee;
+    width: 100%; /*225px*/
+    min-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: right;
+    margin-right: 10px;
+}
+#sortable1 li, #sortable2 li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    font-size: 1.2em;
+    width: 98%;/*210px;*/
+}
+.colorpicker-visible{
+    right: 598px;
+} 
+
+.mapCanvas{
+    position: relative;
+    overflow: hidden;
+    height: 225px;
+}  
+.position-h1{
+        position: absolute;
+    top: -10px;
+}
+.img-radius{
+    border-radius: 50%;
+}
+.fontbtn{
+    font-size:14px;
+}
