@@ -1,4 +1,8 @@
 /* end hear admin*/
+.breadcrumb #active a, .breadcrumb a, .breadcrumb a:hover {
+    color: #337ab7;
+    text-decoration: none;
+}
 .datepicker {
     width:380px;
 }
@@ -75,4 +79,10 @@ label{
 }
 .fontbtn{
     font-size:14px;
+}
+.thumbnail {
+    border: none;
+}
+.dataTables_filter .input-sm {
+    font-size: 14px;
 }

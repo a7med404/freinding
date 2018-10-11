@@ -81,8 +81,6 @@ function Compress_Modify_Image($source_url) {
         list($width_min, $height_min) = getimagesize($source_url);
         $array_width_height = array(
             '350' => 100,
-            '500' => 150,
-            '1000' => 200,
         );
         foreach ($array_width_height as $new_width_min => $new_height_min) {
             $new_width_min_name = $new_width_min;
@@ -144,6 +142,26 @@ function Compress_Image($source_url) {
         imagejpeg($source_min, $destination_url, $quality); //copy image to folder
     }
     return $destination_url;
+}
+function validImage($file) {
+   $size = getimagesize($file);
+   return (strtolower(substr($size['mime'], 0, 5)) == 'image' ? true : false);  
+}
+function PathuploadImage($image) {
+    $name = generateRandomToken() . ".png";
+    if ($image != '' && $name != '') {
+        $path = 'uploads/' . $name;
+        if (file_put_contents($path, base64_decode($image))) {
+            $default_server = 'http://' . $_SERVER['SERVER_NAME'];
+//            $path = $default_server . '/uploads/' . $name;
+            $path = '/' . $path;
+            Compress_Modify_Image($default_server, $name);
+            return $path;
+        } else {
+            return FALSE;
+        }
+    }
+    return FALSE;
 }
 
 function generateRandomValue() {

@@ -2,24 +2,7 @@
 @section('title') All roles
 @stop
 @section('head_content')
-<section class="content-header">
-    <div class="pull-left position-h1">
-        <h1>Roles</h1>
-    </div>
-    <div class="pull-right">
-        <ol class="breadcrumb">
-            <li>
-                <a href="{{ route('admin.index') }}">
-                    <i class="livicon" data-name="home" data-size="14" data-color="#000"></i> Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.roles.index') }}">Roles</a>
-            </li>
-            <li class="active">Roles List</li>
-        </ol>
-    </div>
-</section>
+@include('admin.roles.head')
 @stop
 @section('content')
 <div class="row">

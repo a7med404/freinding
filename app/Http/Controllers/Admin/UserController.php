@@ -128,6 +128,10 @@ class UserController extends AdminController {
             $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
         }
         $input['site_register'] = 'adminPanel';
+        $array_image = explode(';base64,', $input['image']);
+        if (count($array_image) >= 2) {
+            $input['image'] = PathuploadImage($array_image[1]);
+        }
         $user = User::create($input);
         if ($this->user->can(['access-all', 'user-all'])) {
             if (!empty($request->input('roles'))) {
@@ -285,6 +289,10 @@ class UserController extends AdminController {
             if ($id == 1) {
                 $input['is_active'] = 1;
             }
+            $array_image = explode(';base64,', $input['image']);
+            if (count($array_image) >= 2) {
+                $input['image'] = PathuploadImage($array_image[1]);
+            }
             $user->update($input);
 
             if ($this->user->can(['access-all', 'user-all'])) {
@@ -305,7 +313,7 @@ class UserController extends AdminController {
             return $this->pageError();
         }
     }
-    
+
     public function updatePassword(Request $request, $id) {
         $user = User::find($id);
         if (!empty($user)) {

@@ -1,33 +1,24 @@
 <div class="col-md-4">
     <div class="text-center">
         <div class="fileinput fileinput-new" data-provides="fileinput">
-            <input id="image" name="image" type="hidden" value="{{ $image }}">
-            @if($image == Null)
-            <img src="{{ asset('css/admin/img/authors/avatar.jpg') }}" width="200" class="img-responsive img-radius" height="150" alt="user">
-            @else
-            <img  src="{{ $image }}"  width="200" width="200" class="img-responsive img-radius" height="150" alt="riot"/>
-            @endif
-            <div class="clearfix"></div>
-            @if(Auth::user()->can('access-all', 'user-all'))
-            <a href="{{URL::asset('filemanager/dialog.php?type=1&akey=admin_panel&field_id=image')}}" class="btn iframe-btn btn-success fa fa-download" type="button"></a>
-            @else
-            <a href="{{URL::asset('filemanager/dialog.php?type=0&akey=user&field_id=image')}}" class="btn iframe-btn btn-success fa fa-download" type="button"></a>
-            @endif
-            <a class="btn btn-danger fa fa-remove  remove_image_link" type="button"></a>
-            <!--            <div class="fileinput-new thumbnail img-file">
-                            <img src="{{ asset('css/admin/img/authors/avatar.jpg') }}" width="200" class="img-responsive" height="150" alt="riot">
-                        </div>
-                        <div class="fileinput-preview fileinput-exists thumbnail img-max">
-                        </div>
-                        <div>
-                            <span class="btn btn-default btn-file ">
-                                <span class="fileinput-new">Select image</span>
-                                <span class="fileinput-exists">Change</span>
-                                <input type="file" name="...">
-                            </span>
-                            <a class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
-                        </div>
-            -->
+            <div class="fileinput-new thumbnail img-file">
+                @if($image == Null)
+                <img src="{{ asset('css/admin/img/authors/avatar.jpg') }}" width="200" class="img-responsive img-radius" height="150" alt="user">
+                @else
+                <img  src="{{ $image }}"  width="200" width="200" class="img-responsive img-radius" height="150" alt="riot"/>
+                @endif                       
+            </div>
+            <div class="fileinput-preview fileinput-exists thumbnail img-max">
+            </div>
+            <div>
+                <span class="btn btn-default btn-file ">
+                    <span class="fileinput-new">Select image</span>
+                    <span class="fileinput-exists">Change</span>
+                    <input type="hidden" id="valImgsData" class="valImgsData" name="image" value="{{ $image }}">
+                    <input type="file" name="...">
+                </span>
+                <a class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+            </div>
         </div>
     </div>
 </div>
@@ -237,9 +228,10 @@
                     @endif
             </table>
             <div class="box-footer text-center">
-                <a href="{{$link_return}}" class="btn btn-info">Return</a>
+                <!--<a href="{{$link_return}}" class="btn btn-default">Return</a>-->
                 <a id='btnCheck_basic_inform' class="btn btn-success btnCheck_basic_inform">Save</a>
                 <button type="submit" id="submit_basic_inform" class="btn btn-success hidden submit_basic_inform" >Save</button>
+                <button type="reset" value="Reset" class="btn btn-default">Reset</button>
             </div>
         </div>
     </div>

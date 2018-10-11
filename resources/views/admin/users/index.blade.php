@@ -2,24 +2,7 @@
 @section('title') All users
 @stop
 @section('head_content')
-<section class="content-header">
-    <div class="pull-left position-h1">
-        <h1>Users</h1>
-    </div>
-    <div class="pull-right">
-        <ol class="breadcrumb">
-            <li>
-                <a href="{{ route('admin.index') }}">
-                    <i class="livicon" data-name="home" data-size="14" data-color="#000"></i> Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.users.index') }}">Users</a>
-            </li>
-            <li class="active">Users List</li>
-        </ol>
-    </div>
-</section>
+@include('admin.users.head')
 @stop
 @section('content')
 <div class="row">

@@ -33,7 +33,8 @@
     </div>
 </div>
 <div class="box-footer form-actions text-center">
-    <a href="{{$link_return}}" class="btn btn-info">Return</a>
+    <!--<a href="{{$link_return}}" class="btn btn-info">Return</a>-->
+    <button type="reset" value="Reset" class="btn btn-default">Reset</button>
     <button type="submit" class="btn btn-success" >Change</button>
 </div>
 @else

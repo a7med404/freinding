@@ -36,8 +36,9 @@
                 @endif
 
                 <div class="box-footer text-center">
-                    <a href="{{$link_return}}" class="btn btn-info">Return</a>
+                    <!--<a href="{{$link_return}}" class="btn btn-info">Return</a>-->
                     <button type="submit" class="btn btn-success" >Save</button>
+                    <button type="reset" value="Reset" class="btn btn-default">Reset</button>
                 </div>
             </div>
         </div>
