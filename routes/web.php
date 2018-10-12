@@ -15,6 +15,7 @@
 //    return view('welcome');
 //});
 
+
 $admin_panel = DB::table('options')->where('option_key', 'admin_url')->value('option_value');
 if ($admin_panel == '' || $admin_panel == NULL) {
     $admin_panel = 'admin';
