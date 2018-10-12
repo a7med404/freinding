@@ -26,7 +26,6 @@ class CreateReactionsTable extends Migration
             $table->collation = 'utf8_general_ci';
         });
     }
-
     /**
      * Reverse the migrations.
      *

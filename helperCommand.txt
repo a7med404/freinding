@@ -1,6 +1,9 @@
 php artisan module:make-model model_name module_name -m
 php artisan module:seed Blog
 php artisan module:make-migration create_relations Posts
+php artisan module:seed ModuleName
+php artisan module:make-seed modelName ModuleName
+
 
       module:disable
       module:dump
