@@ -65,9 +65,9 @@ class AppServiceProvider extends ServiceProvider {
         
         view()->composer('admin.layouts.app', function($view) {
             $user_account = Auth::user();
-            $post_count = Post::countPostTypeUnRead('posts');
+            $post_count = 0;//Post::countPostTypeUnRead('posts');
             $message_count =0;
-            $comment_count = Comment::countUnRead();
+            $comment_count = 0;//Comment::countUnRead();
             $contact_count = 0;
 
             $access_all = $user_all =  $post_all = $tag_all = $search_all = $message_all = $category_all = $comment_all = $contact_all = 0;

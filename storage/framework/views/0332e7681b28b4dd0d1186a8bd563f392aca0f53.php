@@ -6,7 +6,7 @@
 <?php $__env->startSection('content'); ?>      
 <!-- Main content -->
 <section class="content-header">
-    <h1>Welcome to Dashboard</h1>
+    <h1>Welcome to Freinding</h1>
     <ol class="breadcrumb">
         <li class="active">
             <a href="#">

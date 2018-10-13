@@ -70,11 +70,11 @@ class StatisticsReportController extends AdminController {
 
         $contact_count = Contact::count();
 
-        $post_count_read = Post::countPostTypeUnRead();
-        $comment_count_read = Comment::countUnRead();
+        $post_count_read = 0;//Post::countPostTypeUnRead();
+        $comment_count_read =0;// Comment::countUnRead();
         $message_count_read = 0;
-        $contact_count_read = Contact::countUnRead();
-        $contact_count_reply = Contact::countUnReply();
+        $contact_count_read = 0;//Contact::countUnRead();
+        $contact_count_reply = 0;//Contact::countUnReply();
 
         $post_count_month = Post::lastMonth($month, $date);
         $comment_count_month = Comment::lastMonth($month, $date);
