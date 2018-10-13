@@ -15,7 +15,14 @@ class PostsDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
+//        $this->call(TopicsTableSeeder::class);
+//        $this->call(UsersTableSeeder::class);
+//        $this->call(PostsTableSeeder::class);
+//        $this->call(CommentsTableSeeder::class);
+//        $this->call(RepliesTableSeeder::class);
+//        $this->call(PostTopicTableSeeder::class);
+//        $this->call(SupportFriendTableSeeder::class);
+//        $this->call(TaggedFriendTableSeeder::class);
 
-        // $this->call("OthersTableSeeder");
     }
 }

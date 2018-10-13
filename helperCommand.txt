@@ -1,3 +1,48 @@
 php artisan module:make-model model_name module_name -m
 php artisan module:seed Blog
+php artisan module:make-migration create_relations Posts
+php artisan module:seed ModuleName
+php artisan module:make-seed modelName ModuleName
+
+
+      module:disable
+      module:dump
+      module:enable
+      module:install
+      module:list
+      module:make
+      module:make-command
+      module:make-controller
+      module:make-event
+      module:make-factory
+      module:make-job
+      module:make-listener
+      module:make-mail
+      module:make-middleware
+      module:make-migration
+      module:make-model
+      module:make-notification
+      module:make-policy
+      module:make-provider
+      module:make-request
+      module:make-resource
+      module:make-rule
+      module:make-seed
+      module:make-test
+      module:migrate
+      module:migrate-refresh
+      module:migrate-reset
+      module:migrate-rollback
+      module:migrate-status
+      module:publish
+      module:publish-config
+      module:publish-migration
+      module:publish-translation
+      module:route-provider
+      module:seed
+      module:setup
+      module:unuse
+      module:update
+      module:use
+
 
