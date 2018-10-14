@@ -10,6 +10,8 @@ class Reaction extends Model
     use SoftDeletes;
     protected $fillable = ['name_en','name_ar','icon','is_active'];
 
+    public static $icons_path = "/storage/images/reactions/";
+
     public function posts(){
         return $this->belongsToMany(Post::class);
     }

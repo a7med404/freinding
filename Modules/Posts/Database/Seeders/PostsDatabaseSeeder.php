@@ -15,6 +15,7 @@ class PostsDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
+        //TODO uncomment for just one time seed them and comment them again
 //        $this->call(TopicsTableSeeder::class);
 //        $this->call(UsersTableSeeder::class);
 //        $this->call(PostsTableSeeder::class);
@@ -23,6 +24,10 @@ class PostsDatabaseSeeder extends Seeder
 //        $this->call(PostTopicTableSeeder::class);
 //        $this->call(SupportFriendTableSeeder::class);
 //        $this->call(TaggedFriendTableSeeder::class);
+//        $this->call(ReactionTableSeeder::class);
+//        $this->call(ReactionReplyTableSeeder::class);
+//        $this->call(PostReactionTableSeeder::class);
+//        $this->call(CommentReactionTableSeeder::class);
 
     }
 }
