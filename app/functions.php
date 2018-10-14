@@ -658,6 +658,19 @@ function genderType() {
     return $gender_array;
 }
 
+function fun_session_num() {
+
+    $gender_array = array(
+        'null' => 'null',
+        '0' => '0',
+        '10' => '10',
+        '20' => '20',
+        '50' => '50',
+        '100' => '100',
+    );
+    return $gender_array;
+}
+
 function fieldType() {
     $field_array = array(
         'text' => 'نصى', 'textarea' => 'وصف',
@@ -710,18 +723,24 @@ function socialstatusData($status = null) {
 
     $output = '';
     $status_array = array(
-        'married' => 'Married',
-        'engaged' => 'Engaged',
+        'none' => 'None',
         'single' => 'Single',
+        'engaged' => 'Engaged',
+        'married' => 'Married',
+        'relationship' => 'In a relationship'
     );
     foreach ($status_array as $key => $status_name) {
         if ($status == $key) {
             if ($key == 'married') {
                 $class = "btn-success";
             } else if ($key == 'engaged') {
-                $class = "btn-info";
-            } else if ($key == 'single') {
                 $class = "btn-primary";
+            } else if ($key == 'single') {
+                $class = "btn-info";
+            } else if ($key == 'relationship') {
+                $class = "btn-warning";
+            } else if ($key == 'none') {
+                $class = "btn-default";
             }
             $output = "<span class= 'label $class' >$status_name</span>";
         }
@@ -740,9 +759,11 @@ function statusType() {
 
 function socialstatusType() {
     $status_array = array(
-        'married' => 'Married',
-        'engaged' => 'Engaged',
+            'none' => 'None',
         'single' => 'Single',
+        'engaged' => 'Engaged',
+        'married' => 'Married',
+        'relationship' => 'In a relationship'
     );
     return $status_array;
 }

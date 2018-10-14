@@ -122,7 +122,7 @@
                         <a data-pk="1" class="editable data_form" data-id="roles" data-title="Edit Roles">
                             @if(!empty($user->roles))
                             @foreach($user->roles as $v)
-                            <small class="label bg-green" style="color: #000;">{{ $v->display_name }}</small>
+                            <small class="label btn-success">{{ $v->display_name }}</small>
                             @endforeach
                             @endif
                         </a>
@@ -153,9 +153,9 @@
                     <td>
                         @if(isset($user->address))
                         <a data-pk="1" class="editable  data_form" data-id="address" data-title="Edit Address">{{$user->address}}</a>
-                        {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => ' hidden form-control','required'=>'','data-parsley-type'=>"email")) !!}
+                        {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => ' hidden form-control')) !!}
                         @else
-                        {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => '  form-control','required'=>'','data-parsley-type'=>"email")) !!}
+                        {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => '  form-control')) !!}
                         @endif
                     </td>
                 </tr>
@@ -176,21 +176,32 @@
                     <td>Nationality</td>
                     <td>
                         @if(isset($user->nationality))
-                        <a data-pk="1" class="editable  data_form" data-id="nationality" data-title="Edit Nationality">{{$user->nationality}}</a>
-                        {!! Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => ' hidden form-control','required'=>'','data-parsley-type'=>"email")) !!}
+                        <a data-pk="1" class="editable  data_form" data-id="nationality" data-title="Edit Nationality">{!!$user->nationality!!}</a>
+                        {!! Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => ' hidden form-control')) !!}
                         @else
-                        {!! Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => '  form-control','required'=>'','data-parsley-type'=>"email")) !!}
+                        {!! Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => '  form-control')) !!}
                         @endif
                     </td>
                 </tr>
                 <tr>
-                    <td>Address Jop</td>
+                    <td>Occupation </td>
+                    <td>
+                        @if(isset($user->occupation))
+                        <a data-pk="1" class="editable  data_form" data-id="occupation" data-title="Edit Occupation">{!!$user->occupation!!}</a>
+                        {!! Form::text('occupation', null, array('placeholder' => 'Occupation','id'=>'occupation','class' => ' hidden form-control')) !!}
+                        @else
+                        {!! Form::text('occupation', null, array('placeholder' => 'Occupation','id'=>'occupation','class' => '  form-control')) !!}
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td>Working at</td>
                     <td>
                         @if(isset($user->address_jop))
-                        <a data-pk="1" class="editable  data_form" data-id="address_jop" data-title="Edit Address Jop">{{$user->address_jop}}</a>
-                        {!! Form::text('address_jop', null, array('placeholder' => 'Address Jop','id'=>'address_jop','class' => ' hidden form-control','required'=>'','data-parsley-type'=>"email")) !!}
+                        <a data-pk="1" class="editable  data_form" data-id="address_jop" data-title="Edit Working at">{!!$user->address_jop!!}</a>
+                        {!! Form::text('address_jop', null, array('placeholder' => 'Working at','id'=>'address_jop','class' => ' hidden form-control')) !!}
                         @else
-                        {!! Form::text('address_jop', null, array('placeholder' => 'Address Jop','id'=>'address_jop','class' => '  form-control','required'=>'','data-parsley-type'=>"email")) !!}
+                        {!! Form::text('address_jop', null, array('placeholder' => 'Working at','id'=>'address_jop','class' => '  form-control')) !!}
                         @endif
                     </td>
                 </tr>
@@ -204,6 +215,17 @@
                         </div>
                         @else
                         {!! Form::select('social_status',socialstatusType() ,null, array('id'=>'social_status','class' => ' select2 form-control')) !!}
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td> About me</td>
+                    <td>
+                        @if(isset($user->about_me))
+                        <a data-pk="1" class="editable  data_form" data-id="about_me" data-title="Edit About me">{!!$user->about_me!!}</a>
+                        {!! Form::textarea('about_me', null, array('placeholder' => 'About me','id'=>'about_me','rows'=>'3','class' => ' hidden form-control')) !!}
+                        @else
+                        {!! Form::textarea('about_me', null, array('placeholder' => 'About me','id'=>'about_me','rows'=>'3','class' => '  form-control')) !!}
                         @endif
                     </td>
                 </tr>

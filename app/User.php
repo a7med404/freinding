@@ -22,7 +22,7 @@ class User extends Authenticatable {
     protected $fillable = [
         'name', 'email', 'password', 'display_name', 'image','address',  'phone',
         'is_active','site_register','country','gender','social_status','address_jop',
-        'nationality','birthdate'
+        'nationality','birthdate','occupation','about_me'
     ];
 
     /**
@@ -54,6 +54,8 @@ class User extends Authenticatable {
         $user = static::where('id', $id)->first();
         if(isset($user)){
         return $user->$column;
+        }else{
+         return '';
         }
     }
     

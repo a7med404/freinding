@@ -34,6 +34,8 @@ class CreateUserMetaTable extends Migration
             $table->string('social_status',50)->nullable()->after('gender');
             $table->string('birthdate',100)->nullable()->after('social_status');
             $table->string('address_jop',100)->nullable()->after('birthdate');
+            $table->string('occupation',200)->nullable()->after('address_jop');
+            $table->text('about_me')->nullable()->after('occupation');
             $table->string('fcm_token')->nullable()->after('password');
             $table->tinyInteger('state_fcm_token')->default(1)->after('password');
             $table->tinyInteger('is_active')->default(0);

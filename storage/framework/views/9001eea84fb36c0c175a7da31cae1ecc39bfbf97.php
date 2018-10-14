@@ -133,7 +133,7 @@
                         <a data-pk="1" class="editable data_form" data-id="roles" data-title="Edit Roles">
                             <?php if(!empty($user->roles)): ?>
                             <?php $__currentLoopData = $user->roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <small class="label bg-green" style="color: #000;"><?php echo e($v->display_name); ?></small>
+                            <small class="label btn-success"><?php echo e($v->display_name); ?></small>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             <?php endif; ?>
                         </a>
@@ -168,10 +168,10 @@
                     <td>
                         <?php if(isset($user->address)): ?>
                         <a data-pk="1" class="editable  data_form" data-id="address" data-title="Edit Address"><?php echo e($user->address); ?></a>
-                        <?php echo Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => ' hidden form-control','required'=>'','data-parsley-type'=>"email")); ?>
+                        <?php echo Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => ' hidden form-control')); ?>
 
                         <?php else: ?>
-                        <?php echo Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => '  form-control','required'=>'','data-parsley-type'=>"email")); ?>
+                        <?php echo Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => '  form-control')); ?>
 
                         <?php endif; ?>
                     </td>
@@ -195,24 +195,37 @@
                     <td>Nationality</td>
                     <td>
                         <?php if(isset($user->nationality)): ?>
-                        <a data-pk="1" class="editable  data_form" data-id="nationality" data-title="Edit Nationality"><?php echo e($user->nationality); ?></a>
-                        <?php echo Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => ' hidden form-control','required'=>'','data-parsley-type'=>"email")); ?>
+                        <a data-pk="1" class="editable  data_form" data-id="nationality" data-title="Edit Nationality"><?php echo $user->nationality; ?></a>
+                        <?php echo Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => ' hidden form-control')); ?>
 
                         <?php else: ?>
-                        <?php echo Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => '  form-control','required'=>'','data-parsley-type'=>"email")); ?>
+                        <?php echo Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => '  form-control')); ?>
 
                         <?php endif; ?>
                     </td>
                 </tr>
                 <tr>
-                    <td>Address Jop</td>
+                    <td>Occupation </td>
                     <td>
-                        <?php if(isset($user->address_jop)): ?>
-                        <a data-pk="1" class="editable  data_form" data-id="address_jop" data-title="Edit Address Jop"><?php echo e($user->address_jop); ?></a>
-                        <?php echo Form::text('address_jop', null, array('placeholder' => 'Address Jop','id'=>'address_jop','class' => ' hidden form-control','required'=>'','data-parsley-type'=>"email")); ?>
+                        <?php if(isset($user->occupation)): ?>
+                        <a data-pk="1" class="editable  data_form" data-id="occupation" data-title="Edit Occupation"><?php echo $user->occupation; ?></a>
+                        <?php echo Form::text('occupation', null, array('placeholder' => 'Occupation','id'=>'occupation','class' => ' hidden form-control')); ?>
 
                         <?php else: ?>
-                        <?php echo Form::text('address_jop', null, array('placeholder' => 'Address Jop','id'=>'address_jop','class' => '  form-control','required'=>'','data-parsley-type'=>"email")); ?>
+                        <?php echo Form::text('occupation', null, array('placeholder' => 'Occupation','id'=>'occupation','class' => '  form-control')); ?>
+
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Working at</td>
+                    <td>
+                        <?php if(isset($user->address_jop)): ?>
+                        <a data-pk="1" class="editable  data_form" data-id="address_jop" data-title="Edit Working at"><?php echo $user->address_jop; ?></a>
+                        <?php echo Form::text('address_jop', null, array('placeholder' => 'Working at','id'=>'address_jop','class' => ' hidden form-control')); ?>
+
+                        <?php else: ?>
+                        <?php echo Form::text('address_jop', null, array('placeholder' => 'Working at','id'=>'address_jop','class' => '  form-control')); ?>
 
                         <?php endif; ?>
                     </td>
@@ -228,6 +241,19 @@
                         </div>
                         <?php else: ?>
                         <?php echo Form::select('social_status',socialstatusType() ,null, array('id'=>'social_status','class' => ' select2 form-control')); ?>
+
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td> About me</td>
+                    <td>
+                        <?php if(isset($user->about_me)): ?>
+                        <a data-pk="1" class="editable  data_form" data-id="about_me" data-title="Edit About me"><?php echo $user->about_me; ?></a>
+                        <?php echo Form::textarea('about_me', null, array('placeholder' => 'About me','id'=>'about_me','rows'=>'3','class' => ' hidden form-control')); ?>
+
+                        <?php else: ?>
+                        <?php echo Form::textarea('about_me', null, array('placeholder' => 'About me','id'=>'about_me','rows'=>'3','class' => '  form-control')); ?>
 
                         <?php endif; ?>
                     </td>

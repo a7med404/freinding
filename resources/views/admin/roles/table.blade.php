@@ -35,7 +35,7 @@
 
         @foreach($role->permissions as $v)
 
-        <small class="label bg-green" style="color: #000;">{{ $v->display_name }}</small>
+        <small class="label btn-success">{{ $v->display_name }}</small>
 
         @endforeach
 

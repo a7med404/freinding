@@ -35,7 +35,7 @@
 
         <?php $__currentLoopData = $role->permissions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-        <small class="label bg-green" style="color: #000;"><?php echo e($v->display_name); ?></small>
+        <small class="label btn-success"><?php echo e($v->display_name); ?></small>
 
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 

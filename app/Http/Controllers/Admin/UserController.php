@@ -7,6 +7,7 @@ use App\User;
 use App\Model\UserMeta;
 use App\Model\Post;
 use App\Model\Role;
+use App\Model\Options;
 use DB;
 use Hash;
 use Auth;
@@ -120,13 +121,10 @@ class UserController extends AdminController {
         $input['password'] = Hash::make($input['password']);
 
         if (!isset($input['is_active'])) {
-            $user_active = DB::table('options')->where('option_key', 'user_active')->value('option_value');
+            $user_active = Options::where('option_key', 'user_active')->value('option_value');
             $input['is_active'] = is_numeric($user_active) ? $user_active : 0;
         }
 
-        foreach ($input as $key => $value) {
-            $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
-        }
         $input['site_register'] = 'adminPanel';
         $array_image = explode(';base64,', $input['image']);
         if (count($array_image) >= 2) {
@@ -141,6 +139,19 @@ class UserController extends AdminController {
             }
         }
         return redirect()->route('admin.users.index')->with('success', 'User created successfully');
+    }
+
+    public function storePassAdditional(Request $request) {
+
+        if (!$this->user->can(['access-all', 'user-all', 'user-create', 'user-edit'])) {
+            if ($this->user->can('user-list')) {
+                return redirect()->route('admin.users.index')->with('error', 'Have No Access');
+            } else {
+                return $this->pageUnauthorized();
+            }
+        }
+
+        return redirect()->route('admin.users.create')->with('error', 'Please,Add Basic Information firstly');
     }
 
     /**
@@ -213,8 +224,14 @@ class UserController extends AdminController {
             $image = $user->image;
             $confirm_password = $user->password;
             $new = 0;
+            $image_card =$id_verificat=$joined_date=$lifetime_value=$inter_hobbies=$session_num=$session_time=$wifi_netLog=$gps_log=$most_session_time= NULL;
+            $social_net=$social_netCounts=[];
+            $userMeta = UserMeta::getUserMeta($id);
+            foreach ($userMeta as $keymeta => $valmeta) {
+                $$keymeta = $valmeta;
+            }
             $link_return = route('admin.users.index');
-            return view('admin.users.edit', compact('confirm_password', 'new', 'link_return', 'user', 'roles', 'userRole', 'image'));
+            return view('admin.users.edit', compact('inter_hobbies','wifi_netLog','gps_log','most_session_time','session_time','session_num','lifetime_value','joined_date','social_net','social_netCounts','id_verificat','image_card', 'confirm_password', 'new', 'link_return', 'user', 'roles', 'userRole', 'image'));
         } else {
             return $this->pageError();
         }
@@ -315,6 +332,118 @@ class UserController extends AdminController {
     }
 
     public function updatePassword(Request $request, $id) {
+        $user = User::find($id);
+        if (!empty($user)) {
+            if ($id == 1 && $this->user->id != 1) {
+                if ($this->user->can(['user-list', 'user-create', 'user-edit'])) {
+                    return redirect()->route('admin.users.index')->with('error', 'Have No Access');
+                } else {
+                    return $this->pageUnauthorized();
+                }
+            }
+
+            if ($this->user->id != $id) {
+                if (!$this->user->can(['access-all', 'user-all', 'user-edit'])) {
+                    if ($this->user->can('user-list')) {
+                        return redirect()->route('admin.users.index')->with('error', 'Have No Access');
+                    } else {
+                        return $this->pageUnauthorized();
+                    }
+                }
+            }
+
+            if ($user->id == Auth::user()->id && !empty($input['confirm-password'])) {
+                $this->validate($request, [
+                    'password' => 'same:confirm-password',
+                ]);
+            }
+            $input = $request->all();
+            foreach ($input as $key => $value) {
+                if ($key != "roles") {
+                    $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
+                }
+            }
+            if ($user->id == Auth::user()->id && !empty($input['confirm-password'])) {
+                if (!empty($input['password'])) {
+
+                    $input['password'] = Hash::make($input['password']);
+                } else {
+
+                    $input = array_except($input, array('password'));
+                }
+            } else {
+                $input = array_except($input, array('password'));
+            }
+
+            if ($id == 1) {
+                $input['is_active'] = 1;
+            }
+            $user->update($input);
+
+            return redirect()->route('admin.users.index')
+                            ->with('success', 'User updated successfully');
+        } else {
+            return $this->pageError();
+        }
+    }
+
+    public function updateAdditional(Request $request, $id) {
+        $user = User::find($id);
+        if (!empty($user)) {
+            if ($id == 1 && $this->user->id != 1) {
+                if ($this->user->can(['user-list', 'user-create', 'user-edit'])) {
+                    return redirect()->route('admin.users.index')->with('error', 'Have No Access');
+                } else {
+                    return $this->pageUnauthorized();
+                }
+            }
+
+            if ($this->user->id != $id) {
+                if (!$this->user->can(['access-all', 'user-all', 'user-edit'])) {
+                    if ($this->user->can('user-list')) {
+                        return redirect()->route('admin.users.index')->with('error', 'Have No Access');
+                    } else {
+                        return $this->pageUnauthorized();
+                    }
+                }
+            }
+
+            if ($user->id == Auth::user()->id && !empty($input['confirm-password'])) {
+                $this->validate($request, [
+                    'password' => 'same:confirm-password',
+                ]);
+            }
+            $input = $request->all();
+            foreach ($input as $key => $value) {
+                if ($key != "roles") {
+                    $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
+                }
+            }
+            if ($user->id == Auth::user()->id && !empty($input['confirm-password'])) {
+                if (!empty($input['password'])) {
+
+                    $input['password'] = Hash::make($input['password']);
+                } else {
+
+                    $input = array_except($input, array('password'));
+                }
+            } else {
+                $input = array_except($input, array('password'));
+            }
+
+            if ($id == 1) {
+                $input['is_active'] = 1;
+            }
+            $user->update($input);
+
+            return redirect()->route('admin.users.index')
+                            ->with('success', 'User updated successfully');
+        } else {
+            return $this->pageError();
+        }
+    }
+    
+    public function updateHidden(Request $request, $id) {
         $user = User::find($id);
         if (!empty($user)) {
             if ($id == 1 && $this->user->id != 1) {

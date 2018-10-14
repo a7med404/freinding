@@ -42,12 +42,17 @@
 <?php else: ?>
 <div class="form-body">
     <div class="form-group">
-        <label for="inputpassword" class=" control-label" style="text-align: center;">
-            Not owner this account ,so Can't change this password !
+        <label for="inputpassword" class=" control-label btn-warning" style="text-align: center;padding: 20px 80px;">
+            <?php if($new==1): ?>
+            Please,Add Basic Information firstly !!
+            <?php else: ?>
+            Not owner this account ,so Can't change this password !!
+            <?php endif; ?>
         </label>
     </div>
 </div>
-<div class="box-footer text-center">
+<div class="box-footer">
+     <!--text-center-->
     <a href="<?php echo e($link_return); ?>" class="btn btn-info">Return</a>
 </div>
 <?php endif; ?>

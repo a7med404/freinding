@@ -1,15 +1,15 @@
 <?php
 
 /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+  |--------------------------------------------------------------------------
+  | Web Routes
+  |--------------------------------------------------------------------------
+  |
+  | Here is where you can register web routes for your application. These
+  | routes are loaded by the RouteServiceProvider within a group which
+  | contains the "web" middleware group. Now create something great!
+  |
+ */
 
 //Route::get('/', function () {
 //    return view('welcome');
@@ -25,7 +25,7 @@ Route::group([
     'namespace' => 'Site',
         ], function () {
 // Pages
-Route::get('', ['as' => 'home', 'uses' => 'HomeController@home']);
+    Route::get('', ['as' => 'home', 'uses' => 'HomeController@home']);
 });
 
 // Auth
@@ -44,7 +44,7 @@ Route::group([
     'middleware' => ['admin']
         ], function () {
 
-   
+
     //Statistics
     Route::get('', ['as' => 'index', 'uses' => 'StatisticsReportController@homeAdmin']);
     Route::get('statisticsorders', ['as' => 'statisticsorders', 'uses' => 'StatisticsReportController@statisticsOrders']);
@@ -55,8 +55,12 @@ Route::group([
     Route::get('users/{id}/type/{name}', ['as' => 'users.posttype', 'uses' => 'UserController@postType']);
     Route::get('users/{id}/comments', ['as' => 'users.comments', 'uses' => 'UserController@comments']);
     Route::get('users/search', ['as' => 'users.search', 'uses' => 'UserController@search']);
-    Route::post('storePassword', ['as' => 'users.storePassword', 'uses' => 'UserController@storePassword']);
+    Route::post('storePassword', ['as' => 'users.storePassword', 'uses' => 'UserController@storePassAdditional']);
     Route::patch('updatePassword/{id}', ['as' => 'users.updatePassword', 'uses' => 'UserController@updatePassword']);
+    Route::post('storeAdditional', ['as' => 'users.storeAdditional', 'uses' => 'UserController@storePassAdditional']);
+    Route::patch('updateAdditional/{id}', ['as' => 'users.updateAdditional', 'uses' => 'UserController@updateAdditional']);
+    Route::post('storeHidden', ['as' => 'users.storeHidden', 'uses' => 'UserController@storePassAdditional']);
+    Route::patch('updateHidden/{id}', ['as' => 'users.updateHidden', 'uses' => 'UserController@updateHidden']);
     Route::post('userstatus', ['as' => 'userstatus', 'uses' => 'AjaxController@userStatus']);
 
     //Role && Message

@@ -15,8 +15,23 @@ class UserMeta extends Model {
     public function user() {
         return $this->belongsTo(\App\User::class);
     }
+
     public function deleteMeta($user_id, $meta_type) {
         return static::where('user_id', $user_id)->where('meta_type', $meta_type)->delete();
+    }
+
+    public static function getUserMeta($user_id, $colum = '') {
+        $user = static::where('user_id', $user_id)->first();
+        if (!empty($user)) {
+            $user_data = json_decode($user, TRUE);
+            if (!empty($colum)) {
+                return $user_data[$colum];
+            } else {
+                return $user_data;
+            }
+        } else {
+            return [];
+        }
     }
 
 }
