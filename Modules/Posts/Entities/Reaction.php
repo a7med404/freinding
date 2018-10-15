@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Reaction extends Model
 {
     use SoftDeletes;
+
     protected $fillable = ['name_en','name_ar','icon','is_active'];
 
     public static $icons_path = "/storage/images/reactions/";

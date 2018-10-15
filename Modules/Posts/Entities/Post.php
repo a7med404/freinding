@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Post extends Model
 {
     use SoftDeletes;
+
     protected $fillable = ['user_id', 'text', 'type', 'dir', 'view_count', 'is_pined', 'privacy', 'time', 'is_boost', 'check_in'];
 
     protected $with=['user','comments','reactions','files','taggedFriends','supportFriends','topics'];
