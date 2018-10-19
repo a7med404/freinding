@@ -20,8 +20,6 @@ class RoleController extends AdminController {
      */
     public function index(Request $request) {
 
-
-
         if (!$this->user->can('access-all')) {
             return $this->pageUnauthorized();
         }

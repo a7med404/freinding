@@ -9,7 +9,7 @@
 
         <!--<th>Description</th>-->
 
-        <th>Roles</th>
+        <!--<th>Roles</th>-->
         
         <th>Settings</th>
 
@@ -28,7 +28,7 @@
     
     <!--<td>{{ $role->description }}</td>-->
 
-    @if($role_edit == 1)
+<!--    @if($role_edit == 1)
     <td>
 
         @if(!empty($role->permissions))
@@ -42,7 +42,7 @@
         @endif
 
     </td>
-    @endif
+    @endif-->
     
     <td>
         @if($role_edit == 1)

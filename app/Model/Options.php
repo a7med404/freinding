@@ -52,6 +52,11 @@ class Options extends Model
         return Options::where('option_group', $option_group)->delete();
         
     }
+    public static function get_Option($option_group, $array_option_key) {
+//         whereIn('option_group', $option_group)->
+        $options = Options::whereIn('option_key', $array_option_key)->get();
+        return $options;
+    }
 }
 
 

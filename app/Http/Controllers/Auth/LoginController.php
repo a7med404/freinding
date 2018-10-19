@@ -78,4 +78,9 @@ class LoginController extends SiteController
         return $this->sendFailedLoginResponse($request);
     }
     
+    public function authenticated($request, $user) {
+//        print_r('expression');die;
+//        return redirect(session()->pull('url.intended', $this->redirectTo));
+        
+    }
 }
