@@ -29,5 +29,7 @@ class PostsDatabaseSeeder extends Seeder
 //        $this->call(PostReactionTableSeeder::class);
 //        $this->call(CommentReactionTableSeeder::class);
 
+        //new add in 19-10-2018
+//        $this->call(OptionsTableSeeder::class);
     }
 }

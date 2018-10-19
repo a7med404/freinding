@@ -5,6 +5,8 @@ namespace Modules\Posts\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Posts\Entities\Post;
+use Modules\Posts\Entities\Reaction;
 
 class PostsController extends Controller
 {
@@ -14,8 +16,9 @@ class PostsController extends Controller
      */
     public function index()
     {
-//        return view('posts::index');
-        return view('posts::newsfeed');
+        $posts = Post::OrderBy('created_at','desc')->get();
+        $reactions = Reaction::where('is_active',1)->get();
+        return view('posts::newsfeed',compact('posts','reactions'));
     }
 
     /**

@@ -25,6 +25,7 @@ class User extends Authenticatable {
         'nationality','birthdate','occupation','about_me'
     ];
 
+    public static $users_image_path = "/storage/images/users/";
     /**
      * The attributes that should be hidden for arrays.
      *

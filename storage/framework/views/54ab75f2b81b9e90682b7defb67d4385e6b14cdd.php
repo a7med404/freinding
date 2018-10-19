@@ -2361,20 +2361,21 @@
 
             <div id="newsfeed-items-grid">
 
-                @foreach($posts as $post)
+                <?php $__currentLoopData = $posts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $post): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="ui-block">
 
                         <article class="hentry post video">
 
                             <div class="post__author author vcard inline-items">
-                                <img src="{{env('APP_URL').App\User::$users_image_path.$post->user->image}}"
+                                <img src="<?php echo e(env('APP_URL').App\User::$users_image_path.$post->user->image); ?>"
                                      alt="author">
 
                                 <div class="author-date">
-                                    <a class="h6 post__author-name fn" href="#">{{$post->user->display_name}}</a>
+                                    <a class="h6 post__author-name fn" href="#"><?php echo e($post->user->display_name); ?></a>
                                     <div class="post__date">
                                         <time class="published" datetime="2004-07-24T18:18">
-                                            {{$post->created_at}}
+                                            <?php echo e($post->created_at); ?>
+
                                         </time>
                                     </div>
                                 </div>
@@ -2401,7 +2402,7 @@
 
                             </div>
 
-                            <p>{{$post->text}}</p>
+                            <p><?php echo e($post->text); ?></p>
 
                             <div class="post-additional-info inline-items">
 
@@ -2409,7 +2410,7 @@
                                     <svg class="olymp-heart-icon">
                                         <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>
                                     </svg>
-                                    <span>{{$post->reactions->count()}}</span>
+                                    <span><?php echo e($post->reactions->count()); ?></span>
                                 </a>
 
                                 <ul class="friends-harmonic">
@@ -2467,11 +2468,11 @@
                             </div>
 
                             <div class="control-block-button post-control-button">
-                                {{--@foreach($reactions as $reaction)--}}
-                                    {{--<a href="#">--}}
-                                        {{--<img src="{{env('APP_URL').Modules\Posts\Entities\Reaction::$icons_path.$reaction->icon}}">--}}
-                                    {{--</a>--}}
-                                {{--@endforeach--}}
+                                
+                                    
+                                        
+                                    
+                                
                                 <a href="#" class="btn btn-control">
                                     <svg class="olymp-like-post-icon">
                                         <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
@@ -2494,7 +2495,7 @@
 
                         </article>
                     </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 <div class="ui-block">
 
                     <article class="hentry post video">

@@ -13,7 +13,7 @@ class CreatePostTopicTable extends Migration
      */
     public function up()
     {
-        Schema::create('post_topics', function (Blueprint $table) {
+        Schema::create('post_topic', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('post_id',false,true);
             $table->integer('topic_id',false,true);
@@ -35,6 +35,6 @@ class CreatePostTopicTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('post_topics');
+        Schema::dropIfExists('post_topic');
     }
 }

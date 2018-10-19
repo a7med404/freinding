@@ -10,7 +10,7 @@ class Comment extends Model
 {
     use SoftDeletes;
     protected $fillable = ['user_id','post_id','text'];
-    protected $with = ['user','post','replies','reactions','files'];
+    protected $with = ['user','replies','reactions','files'];
 
     public function user(){
         return $this->belongsTo(User::class);
@@ -29,7 +29,7 @@ class Comment extends Model
     }
 
     public function files(){
-        return $this->hasMany(File::class)->where('type','=','comment');
+        return $this->hasMany(File::class,'dependent_id','id')->where('type','=','comment');
     }
 
 
