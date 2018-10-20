@@ -16,7 +16,7 @@
                 <div class="ui-block-content">
                     <!-- Personal Information Form  -->
                     @if($form_type=='personal')
-                    @include('usersite::form_personal')
+                    @include('usersite::form.form_personal')
                     @endif
                     <!-- ... end Personal Information Form  -->
                 </div>
