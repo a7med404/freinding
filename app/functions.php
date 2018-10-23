@@ -155,15 +155,15 @@ function validImage($file) {
     return (strtolower(substr($size['mime'], 0, 5)) == 'image' ? true : false);
 }
 
-function PathuploadImage($image) {
+function PathuploadImage($image,$file='users') {
     $name = generateRandomToken() . ".png";
     if ($image != '' && $name != '') {
-        $path = 'uploads/' . $name;
+//        $path = 'uploads/' . $name;
+        $path = 'storage/images/'.$file.'/' . $name;
         if (file_put_contents($path, base64_decode($image))) {
-            $default_server = 'http://' . $_SERVER['SERVER_NAME'];
-//            $path = $default_server . '/uploads/' . $name;
             $new_path = Compress_ImageSquare($path);
-            $new_path = '/' . $new_path;
+//            $new_path = '/' . $new_path;
+            $new_path =$name;
             return $new_path;
         } else {
             return FALSE;
