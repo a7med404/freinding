@@ -24,7 +24,7 @@ class CreateUserMetaTable extends Migration
         
         Schema::table('users', function (Blueprint $table) {
             $table->string('display_name')->after('name');
-            $table->string('phone',50)->unique()->after('email');
+            $table->string('phone',50)->nullable()->after('email'); //unique
             $table->string('site_register',100)->default('site')->after('phone');
             $table->mediumText('image')->nullable()->after('password');
             $table->string('address',200)->nullable()->after('password');

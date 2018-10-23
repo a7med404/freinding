@@ -66,10 +66,10 @@ function GetSize_Image($source_url, $width, $height) {
     }
 }
 
-function Compress_Modify_Image($source_url) {
+function Compress_ImageSquare($source_url) {
     if (@getimagesize($source_url)) {
         $img_new = explode('.', $source_url);
-        $destination_url = $img_new[0] . '_compress.' . $img_new[1];
+//        $destination_url = $img_new[0] . '_compress.' . $img_new[1];
         $info = getimagesize($source_url);
         if ($info['mime'] == 'image/jpeg') {
             $image = imagecreatefromjpeg($source_url);
@@ -79,30 +79,30 @@ function Compress_Modify_Image($source_url) {
             $image = imagecreatefrompng($source_url);
         }
         list($width_min, $height_min) = getimagesize($source_url);
-        $array_width_height = array(
-            '350' => 100,
-        );
-        foreach ($array_width_height as $new_width_min => $new_height_min) {
-            $new_width_min_name = $new_width_min;
-            $new_height_min_name = $new_height_min;
-            $quality = 80;
-            if ($width_min < $new_width_min) {
-                $new_width_min = $width_min;
-                $quality = 80;
-            }
-            if ($height_min < $new_height_min) {
-                $new_width_min = $width_min;
-                $quality = 80;
-            }
-            if ($new_width_min >= 1000 || $new_width_min >= '1000') {
-                $quality = 50;
-            }
-            $source_min = imagecreatetruecolor($new_width_min, $new_height_min);  //create frame compress image
-            $destination_url = $img_new[0] . '_W_' . $new_width_min_name . '_H_' . $new_height_min_name . '.' . $img_new[1];
-            //compress image
-            imagecopyresampled($source_min, $image, 0, 0, 0, 0, $new_width_min, $new_height_min, $width_min, $height_min);
-            imagejpeg($source_min, $destination_url, $quality); //copy image to folder
+        $quality = 100;
+        $new_width_min = $width_min;
+        $new_height_min = $height_min;
+        if ($new_width_min < $new_height_min) {
+            $new_height_min = $new_width_min;
         }
+        if ($new_height_min < $new_width_min) {
+            $new_width_min = $new_height_min;
+        }
+        if ($new_height_min >= 1000 || $new_height_min >= '1000') {
+            $new_width_min = $new_height_min = 500;
+        }
+        $source_min = imagecreatetruecolor($width_min, $height_min);  //create frame compress image
+        $destination_url = $source_url; // $img_new[0] . '_W_' . $new_width_min . '_H_' . $new_height_min . '.' . $img_new[1];
+        //compress image
+        imagecopyresampled($source_min, $image, 0, 0, 0, 0, $new_width_min, $new_height_min, $width_min, $height_min);
+        imagejpeg($source_min, $destination_url, $quality); //copy image to folder
+
+        $im2 = imagecrop($source_min, ['x' => 0, 'y' => 0, 'width' => $new_width_min, 'height' => $new_height_min]);
+        if ($im2 !== FALSE) {
+            imagepng($im2, $destination_url);
+            imagedestroy($im2);
+        }
+        imagedestroy($source_min);
     } else {
         $destination_url = '';
     }
@@ -122,9 +122,9 @@ function Compress_Image($source_url) {
     }
     list($width_min, $height_min) = getimagesize($source_url);
     $array_width_height = array(
-        '350' => 80,
-        '500' => 80,
-        '1000' => 50,
+        '100' => 100,
+        '80' => 80,
+        '200' => 200,
     );
     foreach ($array_width_height as $new_width_min => $quality) {
         $new_width_min_name = $new_width_min;
@@ -140,13 +140,21 @@ function Compress_Image($source_url) {
         //compress image
         imagecopyresampled($source_min, $image, 0, 0, 0, 0, $new_width_min, $new_height_min, $width_min, $height_min);
         imagejpeg($source_min, $destination_url, $quality); //copy image to folder
+        $im2 = imagecrop($source_min, ['x' => 0, 'y' => 0, 'width' => $new_width_min, 'height' => $new_height_min]);
+        if ($im2 !== FALSE) {
+            imagepng($im2, $destination_url);
+            imagedestroy($im2);
+        }
+        imagedestroy($source_min);
     }
     return $destination_url;
 }
+
 function validImage($file) {
-   $size = getimagesize($file);
-   return (strtolower(substr($size['mime'], 0, 5)) == 'image' ? true : false);  
+    $size = getimagesize($file);
+    return (strtolower(substr($size['mime'], 0, 5)) == 'image' ? true : false);
 }
+
 function PathuploadImage($image) {
     $name = generateRandomToken() . ".png";
     if ($image != '' && $name != '') {
@@ -154,9 +162,9 @@ function PathuploadImage($image) {
         if (file_put_contents($path, base64_decode($image))) {
             $default_server = 'http://' . $_SERVER['SERVER_NAME'];
 //            $path = $default_server . '/uploads/' . $name;
-            $path = '/' . $path;
-            Compress_Modify_Image($default_server, $name);
-            return $path;
+            $new_path = Compress_ImageSquare($path);
+            $new_path = '/' . $new_path;
+            return $new_path;
         } else {
             return FALSE;
         }
@@ -189,6 +197,17 @@ function generateRandomToken() {
     return md5(time() . $randomString . $randomNumber);
 }
 
+function SesstionFlash() {
+        $array_data['correct_form'] = session()->get('correct_form');
+        $array_data['wrong_form'] = session()->get('wrong_form');
+        $array_data['correct'] = session()->get('correct');
+        $array_data['wrong'] = session()->get('wrong');
+        session()->forget('correct_form');
+        session()->forget('wrong_form');
+        session()->forget('correct');
+        session()->forget('wrong');
+        return $array_data;
+    }
 // function to sum
 function sum($f, $s) {
     $sum = doubleval($f) + doubleval($s);
@@ -759,7 +778,7 @@ function statusType() {
 
 function socialstatusType() {
     $status_array = array(
-            'none' => 'None',
+        'none' => 'None',
         'single' => 'Single',
         'engaged' => 'Engaged',
         'married' => 'Married',
@@ -769,13 +788,13 @@ function socialstatusType() {
 }
 
 function statusGender() {
-
     $status_array = array(
         'male' => 'Male ',
         'female' => 'Female '
     );
     return $status_array;
 }
+
 function readStatus($status = null) {
 
     $output = '';

@@ -57,8 +57,7 @@
             </table>
             <div class="box-footer text-center">
                 <!--<a href="{{$link_return}}" class="btn btn-default">Return</a>-->
-                <a id='btnCheck_basic_inform' class="btn btn-success btnCheck_basic_inform">Save</a>
-                <button type="submit" id="submit_basic_inform" class="btn btn-success hidden submit_basic_inform" >Save</button>
+                <button type="submit" id="" class="btn btn-success" >Save</button>
                 <button type="reset" value="Reset" class="btn btn-default">Reset</button>
             </div>
         </div>

@@ -1,4 +1,4 @@
-@if(isset($user) && $user->id == Auth::user()->id)
+@if($new!=1)
 <div class="form-body">
     <div class="form-group">
         <label for="inputpassword" class="col-md-3 control-label">
@@ -41,11 +41,7 @@
 <div class="form-body">
     <div class="form-group">
         <label for="inputpassword" class=" control-label btn-warning" style="text-align: center;padding: 20px 80px;">
-            @if($new==1)
-            Please,Add Basic Information firstly !!
-            @else
-            Not owner this account ,so Can't change this password !!
-            @endif
+            Please,Add Personal Information firstly !!
         </label>
     </div>
 </div>

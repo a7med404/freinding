@@ -5,20 +5,20 @@
             <ul class="nav  nav-tabs ">
                 <li class="active">
                     <a href="#tab1" data-toggle="tab">
-                        <i class="livicon" data-name="user" data-size="16" data-c="#000" data-hc="#000" data-loop="true"></i> Basic Information</a>
+                        <i class="livicon" data-name="user" data-size="16" data-c="#000" data-hc="#000" data-loop="true"></i> Personal Information</a>
                 </li>
                 <li>
                     <a href="#tab2" data-toggle="tab">
                         <i class="livicon" data-name="key" data-size="16" data-loop="true" data-c="#000" data-hc="#000"></i> Change Password</a>
                 </li>
-                <li>
+<!--                <li>
                     <a href="#tab3" data-toggle="tab">
                         <i class="livicon" data-name="pencil" data-size="16" data-loop="true" data-c="#000" data-hc="#000"></i> Additional Information</a>
                 </li>
                 <li>
                     <a href="#tab4" data-toggle="tab">
                         <i class="livicon" data-name="history" data-size="16" data-loop="true" data-c="#000" data-hc="#000"></i>Hidden Information</a>
-                </li>
+                </li>-->
                 <!--                <li>
                                     <a href="">
                                         <i class="livicon" data-name="gift" data-size="16" data-loop="true" data-c="#000" data-hc="#000"></i> Advanced User Profile</a>

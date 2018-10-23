@@ -8,9 +8,9 @@
 <meta name="description" content="{{ $description }} " />
 <meta name="keywords" content="{{ $keywords }}" />
 <meta name="reply-to" content="{{ $email }}">
-<meta name="author" content="Project">
-<meta name="designer" content="Project">
-<meta name="owner" content="{{ config('app.name', 'Project') }}">
+<meta name="author" content="Friending">
+<meta name="designer" content="Friending">
+<meta name="owner" content="{{ config('app.name', 'Friending') }}">
 <meta name="revisit-after" content="7 days">
 
 <!-- image -->
@@ -22,14 +22,14 @@
 <meta property="og:image" content="{{ $share_image  }}">
 <meta property="og:url" content="{{ Request::url() }}">
 <meta property="og:title" content="{{ $title  }}">
-<meta property="og:site_name" content="{{ config('app.name', 'Project') }}">
+<meta property="og:site_name" content="{{ config('app.name', 'Friending') }}">
 <meta property="fb:app_id" content="485726318457824">
 <meta property="og:image:width" content="476"/>
 <meta property="og:image:height" content="249"/>
 
 <!-- for Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="{{ config('app.name', 'Project') }}">
+<meta name="twitter:site" content="{{ config('app.name', 'Friending') }}">
 <meta name="twitter:title" content="{{ $title  }}">
 <meta name="twitter:description" content="{{ $description }}">
 <meta name="twitter:image" content="{{ $share_image }}">  

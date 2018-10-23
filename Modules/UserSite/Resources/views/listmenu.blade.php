@@ -17,7 +17,7 @@
             <div id="collapseOne-1" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
                 <ul class="your-profile-menu">
                     <li>
-                        <a href="{{ route('profile.index') }}">Personal Information</a>
+                        <a href="{{ route('profile.setting') }}">Personal Information</a>
                     </li>
                     <li>
                         <a href="29-YourAccount-AccountSettings.html">Account Settings</a>

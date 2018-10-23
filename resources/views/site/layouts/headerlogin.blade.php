@@ -361,7 +361,7 @@
 
                             <ul class="account-settings">
                                 <li>
-                                    <a href="{{ route('profile.index') }}">
+                                    <a href="{{ route('profile.setting') }}">
 
                                         <svg class="olymp-menu-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-menu-icon"></use></svg>
 

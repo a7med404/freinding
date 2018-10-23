@@ -114,6 +114,7 @@ class AppServiceProvider extends ServiceProvider {
         });
 
         view()->composer('site.layouts.app', function($view) {
+            $title='Friending';
             $option = DB::table('options')->where('autoload', 1)->pluck('option_value', 'option_key')->toArray();
             foreach ($option as $key => $value) {
                 $$key = $value;
@@ -132,7 +133,7 @@ class AppServiceProvider extends ServiceProvider {
             }
             $view->with(array(
                 'user_key' => $user_key, 'user_account' => $user_account, 'user_id' => $user_id, 'user_name' => $user_name, 'message_count' => $message_count,
-                'email' => $email, 'phone' => $phone, 'address' => $address, 'admin_panel' => $admin_panel,
+                'email' => $email, 'phone' => $phone, 'address' => $address, 'admin_panel' => $admin_panel,'title'=>$title,
                 'description' => $description, 'keywords' => $keywords, 'facebook_pixel' => $facebook_pixel, 'google_analytic' => $google_analytic,
                 'facebook' => $facebook, 'twitter' => $twitter, 'youtube' => $youtube, 'googleplus' => $googleplus, 'whatsapp' => $whatsapp, 'linkedin' => $linkedin,
                 'about_page' => $about_page, 'contact_page' => $contact_page, 'privacy_page' => $privacy_page, 'payment_page' => $payment_page, 'terms_page' => $terms_page, 'faq_page' => $faq_page,
