@@ -17,7 +17,8 @@ Route::group([
 //    'middleware' => ['auth']
         ], function () {
     Route::get('', ['as' => 'index', 'uses' => 'UserSiteController@index']);
-    Route::post('', ['as' => 'store', 'uses' => 'UserSiteController@store']);
+    Route::get('setting', ['as' => 'setting', 'uses' => 'UserSiteController@profileSetting']);
+    Route::post('setting', ['as' => 'setting.store', 'uses' => 'UserSiteController@storeSetting']);
     Route::get('favourite', ['as' => 'favourite', 'uses' => 'UserSiteController@favourite']);
     
 });

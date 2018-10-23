@@ -291,7 +291,7 @@ class UserController extends AdminController {
                     $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
                 }
             }
-            if ($user->id == Auth::user()->id && !empty($input['confirm-password'])) {
+            if (!empty($input['confirm-password'])) { //$user->id == Auth::user()->id && 
                 if (!empty($input['password'])) {
 
                     $input['password'] = Hash::make($input['password']);
@@ -363,7 +363,7 @@ class UserController extends AdminController {
                     $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
                 }
             }
-            if ($user->id == Auth::user()->id && !empty($input['confirm-password'])) {
+            if (!empty($input['confirm-password'])) { //$user->id == Auth::user()->id &&
                 if (!empty($input['password'])) {
 
                     $input['password'] = Hash::make($input['password']);

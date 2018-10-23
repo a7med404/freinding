@@ -149,13 +149,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Address</td>
+                    <td>Nationality</td>
                     <td>
-                        @if(isset($user->address))
-                        <a data-pk="1" class="editable  data_form" data-id="address" data-title="Edit Address">{{$user->address}}</a>
-                        {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => ' hidden form-control')) !!}
+                        @if(isset($user->nationality))
+                        <a data-pk="1" class="editable  data_form" data-id="nationality" data-title="Edit Nationality">{!!$user->nationality!!}</a>
+                        {!! Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => ' hidden form-control')) !!}
                         @else
-                        {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => '  form-control')) !!}
+                        {!! Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => '  form-control')) !!}
                         @endif
                     </td>
                 </tr>
@@ -173,13 +173,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Nationality</td>
+                    <td>Address</td>
                     <td>
-                        @if(isset($user->nationality))
-                        <a data-pk="1" class="editable  data_form" data-id="nationality" data-title="Edit Nationality">{!!$user->nationality!!}</a>
-                        {!! Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => ' hidden form-control')) !!}
+                        @if(isset($user->address))
+                        <a data-pk="1" class="editable  data_form" data-id="address" data-title="Edit Address">{{$user->address}}</a>
+                        {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => ' hidden form-control')) !!}
                         @else
-                        {!! Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => '  form-control')) !!}
+                        {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => '  form-control')) !!}
                         @endif
                     </td>
                 </tr>
