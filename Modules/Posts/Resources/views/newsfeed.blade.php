@@ -2362,19 +2362,65 @@
             <div id="newsfeed-items-grid">
 
                 @foreach($posts as $post)
+                    <div class="modal fade" id="reactions{{$post->id}}" tabindex="-1" role="dialog"
+                         aria-labelledby="reactions{{$post->id}}" aria-hidden="true">
+                        <div class="modal-dialog window-popup create-friend-group reactions{{$post->id}}"
+                             role="document">
+                            <div class="modal-content">
+                                <a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">
+                                    <svg class="olymp-close-icon">
+                                        <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-close-icon"></use>
+                                    </svg>
+                                </a>
+
+                                <div class="modal-header">
+                                    <h6 class="title">Users Who Reactioned With This Post</h6>
+                                </div>
+
+                                <div class="modal-body">
+                                    <ul class="widget w-friend-pages-added notification-list friend-requests">
+                                        @foreach($post->reactions as $reaction)
+                                            <li class="inline-items">
+                                                <div class="author-thumb">
+                                                    <img width="36px" height="36px" src="{{$reaction->user->image}}"
+                                                         alt="author">
+                                                </div>
+                                                <div class="notification-event">
+                                                    <a href="#"
+                                                       class="h6 notification-friend">{{$reaction->user->display_name}}</a>
+                                                    <span class="chat-message-item">8 Frinds In Common</span>
+                                                </div>
+                                                <span class="notification-icon post-control-button "
+                                                      data-toggle="tooltip" data-placement="top"
+                                                      data-original-title="ADD TO YOUR FREINDS">
+                                                    <a class="btn btn-control" href="#">
+                                                        <svg class="olymp-star-icon"><use
+                                                                    xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-plus-icon"></use></svg>
+                                                    </a>
+						                    </span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+
+                                    <a href="#" class="btn btn-blue btn-lg full-width" data-dismiss="modal">Close</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="ui-block">
 
                         <article class="hentry post video">
 
                             <div class="post__author author vcard inline-items">
-                                <img src="{{env('APP_URL').App\User::$users_image_path.$post->user->image}}"
+                                <img src="{{$post->user->image}}"
                                      alt="author">
 
                                 <div class="author-date">
                                     <a class="h6 post__author-name fn" href="#">{{$post->user->display_name}}</a>
                                     <div class="post__date">
                                         <time class="published" datetime="2004-07-24T18:18">
-                                            {{$post->created_at}}
+                                            {{$post->created_at->diffForHumans()}}
                                         </time>
                                     </div>
                                 </div>
@@ -2402,47 +2448,59 @@
                             </div>
 
                             <p>{{$post->text}}</p>
-
+                            <div style="display: inline-block;">
+                                <ul>
+                                    @foreach($post->topics as $topic)
+                                        <li style="margin:5px; float: left">
+                                            <a style="border-radius: 25px;
+                                                background-color: #9a9fbf;
+                                                display: block;
+                                                text-align: center;
+                                                color: aliceblue;
+                                                padding: 3px;
+                                                padding-left: 8px;
+                                                padding-right: 8px;">
+                                                {{$topic->name}}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                             <div class="post-additional-info inline-items">
 
-                                <a class="post-add-icon inline-items">
+                                <a id="post{{$post->id}}" class="post-add-icon inline-items" data-toggle="modal"
+                                   data-target="#reactions{{$post->id}}">
                                     <svg class="olymp-heart-icon">
                                         <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>
                                     </svg>
                                     <span>{{$post->reactions->count()}}</span>
                                 </a>
 
+
                                 <ul class="friends-harmonic">
-                                    <li>
-                                        <a href="#">
-                                            <img src="olympus/img/friend-harmonic9.jpg" alt="friend">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img src="olympus/img/friend-harmonic10.jpg" alt="friend">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img src="olympus/img/friend-harmonic7.jpg" alt="friend">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img src="olympus/img/friend-harmonic8.jpg" alt="friend">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img src="olympus/img/friend-harmonic11.jpg" alt="friend">
-                                        </a>
-                                    </li>
+                                    @foreach($post->reactions as $reaction)
+                                        @if($loop->index<5)
+                                            <li>
+                                                <a href="#">
+                                                    <img src="{{$reaction->user->image}}" alt="friend">
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endforeach
                                 </ul>
 
+
                                 <div class="names-people-likes">
-                                    <a href="#">Jenny</a>, <a href="#">Robert</a> and
-                                    <br>18 more liked this
+                                    @if($post->reactions->count()>2)
+                                        <a href="#">{{$post->reactions[0]->user->display_name}}</a>, <a
+                                                href="#">{{$post->reactions[1]->user->display_name}}</a> and
+                                        <br>{{$post->reactions->count()-2}} more react this
+                                    @elseif($post->reactions->count()==2)
+                                        <a href="#">{{$post->reactions[0]->user->display_name}}</a>, <a
+                                                href="#">{{$post->reactions[1]->user->display_name}}</a>
+                                    @elseif($post->reactions->count()==1)
+                                        <a href="#">{{$post->reactions[0]->user->display_name}}</a>
+                                    @endif
                                 </div>
 
                                 <div class="comments-shared">
@@ -2451,27 +2509,28 @@
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-speech-balloon-icon"></use>
                                         </svg>
 
-                                        <span>0</span>
+                                        <span>{{$post->comments->count()}}</span>
                                     </a>
 
                                     <a href="#" class="post-add-icon inline-items">
                                         <svg class="olymp-share-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>
                                         </svg>
-
-                                        <span>16</span>
+                                        <?php
+                                        $engagement = $post->reactions->count();
+                                        $engagement += $post->supportFriends->count();
+                                        $engagement += $post->comments->count();
+                                        foreach ($post->comments as $comment) {
+                                            $engagement += $comment->replies->count();
+                                        }
+                                        ?>
+                                        <span>{{$engagement}}</span>
                                     </a>
                                 </div>
-
 
                             </div>
 
                             <div class="control-block-button post-control-button">
-                                {{--@foreach($reactions as $reaction)--}}
-                                    {{--<a href="#">--}}
-                                        {{--<img src="{{env('APP_URL').Modules\Posts\Entities\Reaction::$icons_path.$reaction->icon}}">--}}
-                                    {{--</a>--}}
-                                {{--@endforeach--}}
                                 <a href="#" class="btn btn-control">
                                     <svg class="olymp-like-post-icon">
                                         <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
@@ -2493,7 +2552,114 @@
                             </div>
 
                         </article>
+
+                        <!-- Comments -->
+
+                        <ul class="comments-list">
+                            @foreach($post->comments as $comment)
+                                <li class="comment-item">
+                                    <div class="post__author author vcard inline-items">
+                                        <img src="{{$comment->user->image}}" alt="author">
+
+                                        <div class="author-date">
+                                            <a class="h6 post__author-name fn" href="#">{{$comment->user->display_name}}</a>
+                                            <div class="post__date">
+                                                <time class="published" datetime="2004-07-24T18:18">
+                                                 {{$comment->created_at->diffForHumans()}}
+                                                </time>
+                                            </div>
+                                        </div>
+
+                                        <a href="#" class="more">
+                                            <svg class="olymp-three-dots-icon">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                            </svg>
+                                        </a>
+
+                                    </div>
+
+                                    <p>{{$comment->text}}
+                                    </p>
+
+                                    <a href="#" class="post-add-icon inline-items">
+                                        <svg class="olymp-heart-icon">
+                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>
+                                        </svg>
+                                        <span>{{$comment->reactions->count()}}</span>
+                                    </a>
+                                    <a href="#" class="reply">Reply</a>
+                                </li>
+                            @endforeach
+                            <li class="comment-item">
+                                <div class="post__author author vcard inline-items">
+                                    <img src="olympus/img/author-page.jpg" alt="author">
+
+                                    <div class="author-date">
+                                        <a class="h6 post__author-name fn" href="02-ProfilePage.html">James Spiegel</a>
+                                        <div class="post__date">
+                                            <time class="published" datetime="2004-07-24T18:18">
+                                                38 mins ago
+                                            </time>
+                                        </div>
+                                    </div>
+
+                                    <a href="#" class="more">
+                                        <svg class="olymp-three-dots-icon">
+                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                        </svg>
+                                    </a>
+
+                                </div>
+
+                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der
+                                    doloremque
+                                    laudantium.</p>
+
+                                <a href="#" class="post-add-icon inline-items">
+                                    <svg class="olymp-heart-icon">
+                                        <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>
+                                    </svg>
+                                    <span>3</span>
+                                </a>
+                                <a href="#" class="reply">Reply</a>
+                            </li>
+                        </ul>
+
+                        <!-- ... end Comments -->
+
+                        <a href="#" class="more-comments">View more comments <span>+</span></a>
+
+
+                        <!-- Comment Form  -->
+
+                        <form class="comment-form inline-items">
+
+                            <div class="post__author author vcard inline-items">
+                                <img src="olympus/img/author-page.jpg" alt="author">
+
+                                <div class="form-group with-icon-right ">
+                                    <textarea class="form-control" placeholder=""></textarea>
+                                    <div class="add-options-message">
+                                        <a href="#" class="options-message" data-toggle="modal"
+                                           data-target="#update-header-photo">
+                                            <svg class="olymp-camera-icon">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-camera-icon"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-md-2 btn-primary">Post Comment</button>
+
+                            <button class="btn btn-md-2 btn-border-think c-grey btn-transparent custom-color">Cancel
+                            </button>
+
+                        </form>
+
+                        <!-- ... end Comment Form  -->
                     </div>
+
                 @endforeach
                 <div class="ui-block">
 
@@ -4755,6 +4921,15 @@
 <script defer src="olympus/fonts/fontawesome-all.js"></script>
 
 <script src="olympus/Bootstrap/dist/js/bootstrap.bundle.js"></script>
+<script>
+    $(document).ready(function () {
 
+        // $('[id^=post]').click(function () {
+        //     id = $(this).attr('id');
+        //     console.log(id);
+        //     document.getElementById("reactions" + id).showModal();
+        // })
+    });
+</script>
 </body>
 </html>

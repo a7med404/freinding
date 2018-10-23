@@ -25,7 +25,7 @@ class Post extends Model
     }
 
     public function reactions(){
-        return $this->belongsToMany(Reaction::class);
+        return $this->hasMany(PostReaction::class)->orderBy('created_at','desc');
     }
 
     public function files(){

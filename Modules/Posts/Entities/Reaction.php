@@ -11,7 +11,7 @@ class Reaction extends Model
 
     protected $fillable = ['name_en','name_ar','icon','is_active'];
 
-    public static $icons_path = "/storage/images/reactions/";
+    const ICONS_PATH = "/storage/images/reactions/";
 
     public function posts(){
         return $this->belongsToMany(Post::class);
@@ -25,5 +25,12 @@ class Reaction extends Model
         return $this->belongsToMany(Reply::class);
     }
 
+    public function getIconAttribute($value){
+        return asset(self::ICONS_PATH.$value);
+    }
+//    public function getImageAttribute($value)
+//    {
+//        return ($value ? asset(self::IMAGE_URL_PATH . $value) : asset('storage/images/users/avatar.jpg'));
+//    }
 
 }

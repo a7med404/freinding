@@ -18,6 +18,7 @@ class PostsController extends Controller
     {
         $posts = Post::OrderBy('created_at','desc')->get();
         $reactions = Reaction::where('is_active',1)->get();
+//        return $posts;
         return view('posts::newsfeed',compact('posts','reactions'));
     }
 

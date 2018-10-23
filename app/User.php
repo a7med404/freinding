@@ -25,7 +25,7 @@ class User extends Authenticatable {
         'nationality','birthdate','occupation','about_me'
     ];
 
-    public static $users_image_path = "/storage/images/users/";
+    const USERS_IMAGE_PATH = "/storage/images/users/";
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -93,5 +93,9 @@ class User extends Authenticatable {
         $count = static::select(DB::raw('COUNT(*)  count'))->whereBetween(DB::raw('created_at'), [$day, $date])->get();
         return $count[0]->count;
     }
-    
+
+    public function getImageAttribute($value)
+    {
+        return ($value ? asset(self::USERS_IMAGE_PATH . $value) : asset('storage/images/users/avatar.jpg'));
+    }
 }
