@@ -72,3 +72,7 @@ Route::group([
     Route::resource('roles', 'RoleController');
 });
 
+Route::get('/storage-link', function () {
+    $exitCode = \Artisan::call('storage:link');
+    return $exitCode;
+});
