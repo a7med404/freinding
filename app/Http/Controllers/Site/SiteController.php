@@ -23,11 +23,7 @@ class SiteController extends Controller {
     protected $site_title;
     protected $site_url;
     protected $site_open;
-    protected $current_id;
-    protected $user_key;
-    protected $user_email;
     protected $lang;
-    protected $admin_panel;
 
     public function __construct() {
         $array_option_key = ['pagi_limit', 'site_title', 'site_url', 'site_open'];
@@ -48,21 +44,6 @@ class SiteController extends Controller {
         $this->site_title = $site_title;
         $this->site_url = $site_url;
         $this->site_open = $site_open;
-        $current_id = $admin_panel = 0;
-        $user_key = $user_email = "";
-        $user_account =Auth::user();
-        if (!empty($user_account)) {
-            $current_id = Auth::user()->id;
-            $user_key = $user_account->name;
-            $user_email = $user_account->email;
-            if ($user_account->can(['access-all', 'post-type-all', 'post-all'])) {
-                $admin_panel = 1;
-            }
-        }
-        $this->current_id = $current_id;
-        $this->admin_panel = $admin_panel;
-        $this->user_key = $user_key;
-        $this->user_email = $user_email;
         $this->lang = 'en';
         
         $this->middleware('site.open', ['except' => ['close']]);

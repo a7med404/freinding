@@ -3,7 +3,9 @@
     @if(empty($user_key))
         @include('site.home.pagelogout')
     @else
-        @include('site.home.pagelogin')
+        @include('posts::content_news')
     @endif
 @endsection
-
+@section('after_foot')
+    @include('posts::script_news')
+@stop

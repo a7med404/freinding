@@ -7,15 +7,11 @@
 @include('usersite::profileheader')
 <div class="container">
     <div class="row">
-
         <!-- Main Content -->
-
         <div class="col col-xl-6 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
             <div id="newsfeed-items-grid">
-
                 <div class="ui-block">
                     <!-- Post -->
-
                     <article class="hentry post">
 
                         <div class="post__author author vcard inline-items">

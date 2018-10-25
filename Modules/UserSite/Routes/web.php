@@ -18,7 +18,11 @@ Route::group([
         ], function () {
     Route::get('', ['as' => 'index', 'uses' => 'UserSiteController@index']);
     Route::get('setting', ['as' => 'setting', 'uses' => 'UserSiteController@profileSetting']);
+    Route::get('changepassword', ['as' => 'changepassword', 'uses' => 'UserSiteController@changepasswordSetting']);
     Route::post('setting', ['as' => 'setting.store', 'uses' => 'UserSiteController@storeSetting']);
+    
+    Route::get('account', ['as' => 'countsetting', 'uses' => 'UserSiteController@countSetting']);
+    Route::post('account', ['as' => 'countsetting.store', 'uses' => 'UserSiteController@storeCount']);
     Route::get('favourite', ['as' => 'favourite', 'uses' => 'UserSiteController@favourite']);
     
 });

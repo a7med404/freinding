@@ -20,10 +20,10 @@
                         <a href="{{ route('profile.setting') }}">Personal Information</a>
                     </li>
                     <li>
-                        <a href="29-YourAccount-AccountSettings.html">Account Settings</a>
+                        <a href="{{ route('profile.countsetting') }}">Account Settings</a>
                     </li>
                     <li>
-                        <a href="30-YourAccount-ChangePassword.html">Change Password</a>
+                        <a href="{{ route('profile.changepassword') }}">Change Password</a>
                     </li>
                     <li>
                         <a href="31-YourAccount-HobbiesAndInterests.html">Hobbies and Interests</a>

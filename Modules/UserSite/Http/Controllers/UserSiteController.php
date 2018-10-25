@@ -8,7 +8,10 @@ use \Illuminate\Support\Facades\View;
 use Illuminate\Routing\Controller;
 use App\Http\Controllers\Site\SiteController; //as SiteController
 use Auth;
+use Hash;
+use App\User;
 
+//use App\Model\Options;
 class UserSiteController extends SiteController {
 
     /**
@@ -20,7 +23,7 @@ class UserSiteController extends SiteController {
             $lang = 'en';
             $user = Auth::user();
             $user_key = $user->name;
-            $admin_panel = $this->admin_panel;
+            $admin_panel = 0;
             if ($user->can(['access-all', 'post-type-all', 'post-all'])) {
                 $admin_panel = 1;
             }
@@ -39,7 +42,7 @@ class UserSiteController extends SiteController {
             $lang = 'en';
             $user = Auth::user();
             $user_key = $user->name;
-            $admin_panel = $this->admin_panel;
+            $admin_panel = 0;
             if ($user->can(['access-all', 'post-type-all', 'post-all'])) {
                 $admin_panel = 1;
             }
@@ -55,7 +58,29 @@ class UserSiteController extends SiteController {
         }
     }
 
-    //profile store
+    public function changepasswordSetting() {
+        if ($this->site_open == 1 || $this->site_open == "1") {
+            $wrong_form = $correct_form = null;
+            $lang = 'en';
+            $user = Auth::user();
+            $user_key = $user->name;
+            $admin_panel = 0;
+            if ($user->can(['access-all', 'post-type-all', 'post-all'])) {
+                $admin_panel = 1;
+            }
+            $title = 'Home' . " &#8211; " . $this->site_title;
+            View::share('title', $title);
+            $form_type = 'changepassword';
+            $dataForm = SesstionFlash();
+            $correct_form = $dataForm['correct_form'];
+            $wrong_form = $dataForm['wrong_form'];
+            return view('usersite::setting', compact('form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form'));
+        } else {
+            return redirect()->route('close');
+        }
+    }
+
+    //profile 7 password store
     public function storeSetting(Request $request) {
         $user = Auth::user();
         if (isset($input['submit'])) {
@@ -81,6 +106,7 @@ class UserSiteController extends SiteController {
             $input['birthdate'] = $input['datetimepicker'];
             $user->update($input);
             session()->put('correct_form', 'Successfully Saved');
+            return redirect()->route('profile.setting'); //->with('success', 'Successfully Saved');
         }
         if (isset($input['email_pass'])) {
             if ($input['password'] == $input['password_confirmation']) {
@@ -88,19 +114,42 @@ class UserSiteController extends SiteController {
                 if (Hash::check($input['user_pass'], $password_hash) && Hash::check($input['user_pass'], $user->password)) {
                     $new_password = Hash::make($input['password']);  //bcrypt($input['password']);
                     User::where('id', $user->id)->update(['password' => $new_password]);
-                    session()->put('correct', 'Data change success');
+                    session()->put('correct_form', 'Successfully Saved');
                 } else {
-                    session()->put('wrong', 'please verify email password');
+                    session()->put('wrong_form', 'please enter current password correct');
                 }
             } else {
-                session()->put('wrong', 'enter password match');
+                session()->put('wrong_form', 'enter password match');
             }
-            session()->put('correct', 'Successfully Saved');
+            return redirect()->route('profile.changepassword'); //->with('success', 'Successfully Saved');
         }
-        return redirect()->route('profile.setting'); //->with('success', 'Successfully Saved');
     }
 
-    public function Passwordstore(Request $request) {
+    //*********************************************************
+
+    public function countSetting() {
+        if ($this->site_open == 1 || $this->site_open == "1") {
+            $wrong_form = $correct_form = null;
+            $lang = 'en';
+            $user = Auth::user();
+            $user_key = $user->name;
+            $admin_panel = 0;
+            if ($user->can(['access-all', 'post-type-all', 'post-all'])) {
+                $admin_panel = 1;
+            }
+            $title = 'Home' . " &#8211; " . $this->site_title;
+            View::share('title', $title);
+            $form_type = 'countsetting';
+            $dataForm = SesstionFlash();
+            $correct_form = $dataForm['correct_form'];
+            $wrong_form = $dataForm['wrong_form'];
+            return view('usersite::setting', compact('form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form'));
+        } else {
+            return redirect()->route('close');
+        }
+    }
+
+    public function storeCount(Request $request) {
         $user = $this->user;
         if (isset($input['submit'])) {
             $this->validate($request, [

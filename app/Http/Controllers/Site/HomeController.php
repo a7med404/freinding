@@ -22,14 +22,11 @@ class HomeController extends SiteController {
     public function home() {
         if ($this->site_open == 1 || $this->site_open == "1") {
             $lang = 'en';
-            $user_key = $this->user_key;
-            $admin_panel = $this->admin_panel;
+            $user_key = NULL;
+            $admin_panel =0;
             $user = Auth::user();
             if ($user) {
-                $user_key = $user->name;
-                if ($user->can(['access-all', 'post-type-all', 'post-all'])) {
-                    $admin_panel = 1;
-                }
+                return redirect('/posts');
             }
             $title = 'Home' . " &#8211; " . $this->site_title;
             View::share('title', $title);
