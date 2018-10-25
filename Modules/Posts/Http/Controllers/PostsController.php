@@ -5,6 +5,7 @@ namespace Modules\Posts\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Auth;
 use Modules\Posts\Entities\Post;
 use Modules\Posts\Entities\Reaction;
 
@@ -18,6 +19,7 @@ class PostsController extends Controller
     {
         $posts = Post::OrderBy('created_at','desc')->get();
         $reactions = Reaction::where('is_active',1)->get();
+//        dd(Auth::user());
 //        return $posts;
         return view('posts::newsfeed',compact('posts','reactions'));
     }

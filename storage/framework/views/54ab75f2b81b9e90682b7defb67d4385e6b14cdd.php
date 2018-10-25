@@ -2361,10 +2361,10 @@
 
             <div id="newsfeed-items-grid">
 
-                @foreach($posts as $post)
-                    <div class="modal fade" id="reactions{{$post->id}}" tabindex="-1" role="dialog"
-                         aria-labelledby="reactions{{$post->id}}" aria-hidden="true">
-                        <div class="modal-dialog window-popup create-friend-group reactions{{$post->id}}"
+                <?php $__currentLoopData = $posts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $post): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="modal fade" id="reactions<?php echo e($post->id); ?>" tabindex="-1" role="dialog"
+                         aria-labelledby="reactions<?php echo e($post->id); ?>" aria-hidden="true">
+                        <div class="modal-dialog window-popup create-friend-group reactions<?php echo e($post->id); ?>"
                              role="document">
                             <div class="modal-content">
                                 <a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">
@@ -2379,15 +2379,15 @@
 
                                 <div class="modal-body">
                                     <ul class="widget w-friend-pages-added notification-list friend-requests">
-                                        @foreach($post->reactions as $reaction)
+                                        <?php $__currentLoopData = $post->reactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $reaction): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <li class="inline-items">
                                                 <div class="author-thumb">
-                                                    <img width="36px" height="36px" src="{{$reaction->user->image}}"
+                                                    <img width="36px" height="36px" src="<?php echo e($reaction->user->image); ?>"
                                                          alt="author">
                                                 </div>
                                                 <div class="notification-event">
                                                     <a href="#"
-                                                       class="h6 notification-friend">{{$reaction->user->display_name}}</a>
+                                                       class="h6 notification-friend"><?php echo e($reaction->user->display_name); ?></a>
                                                     <span class="chat-message-item">8 Frinds In Common</span>
                                                 </div>
                                                 <span class="notification-icon post-control-button "
@@ -2399,7 +2399,7 @@
                                                     </a>
 						                    </span>
                                             </li>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </ul>
 
                                     <a href="#" class="btn btn-blue btn-lg full-width" data-dismiss="modal">Close</a>
@@ -2413,14 +2413,15 @@
                         <article class="hentry post video">
 
                             <div class="post__author author vcard inline-items">
-                                <img src="{{$post->user->image}}"
+                                <img src="<?php echo e($post->user->image); ?>"
                                      alt="author">
 
                                 <div class="author-date">
-                                    <a class="h6 post__author-name fn" href="#">{{$post->user->display_name}}</a>
+                                    <a class="h6 post__author-name fn" href="#"><?php echo e($post->user->display_name); ?></a>
                                     <div class="post__date">
                                         <time class="published" datetime="2004-07-24T18:18">
-                                            {{$post->created_at->diffForHumans()}}
+                                            <?php echo e($post->created_at->diffForHumans()); ?>
+
                                         </time>
                                     </div>
                                 </div>
@@ -2447,10 +2448,10 @@
 
                             </div>
 
-                            <p>{{$post->text}}</p>
+                            <p><?php echo e($post->text); ?></p>
                             <div style="display: inline-block;">
                                 <ul>
-                                    @foreach($post->topics as $topic)
+                                    <?php $__currentLoopData = $post->topics; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $topic): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <li style="margin:5px; float: left">
                                             <a style="border-radius: 25px;
                                                 background-color: #9a9fbf;
@@ -2460,47 +2461,48 @@
                                                 padding: 3px;
                                                 padding-left: 8px;
                                                 padding-right: 8px;">
-                                                {{$topic->name}}
+                                                <?php echo e($topic->name); ?>
+
                                             </a>
                                         </li>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </ul>
                             </div>
                             <div class="post-additional-info inline-items">
 
-                                <a id="post{{$post->id}}" class="post-add-icon inline-items" data-toggle="modal"
-                                   data-target="#reactions{{$post->id}}">
+                                <a id="post<?php echo e($post->id); ?>" class="post-add-icon inline-items" data-toggle="modal"
+                                   data-target="#reactions<?php echo e($post->id); ?>">
                                     <svg class="olymp-heart-icon">
                                         <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>
                                     </svg>
-                                    <span>{{$post->reactions->count()}}</span>
+                                    <span><?php echo e($post->reactions->count()); ?></span>
                                 </a>
 
 
                                 <ul class="friends-harmonic">
-                                    @foreach($post->reactions as $reaction)
-                                        @if($loop->index<5)
+                                    <?php $__currentLoopData = $post->reactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $reaction): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php if($loop->index<5): ?>
                                             <li>
                                                 <a href="#">
-                                                    <img src="{{$reaction->user->image}}" alt="friend">
+                                                    <img src="<?php echo e($reaction->user->image); ?>" alt="friend">
                                                 </a>
                                             </li>
-                                        @endif
-                                    @endforeach
+                                        <?php endif; ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </ul>
 
 
                                 <div class="names-people-likes">
-                                    @if($post->reactions->count()>2)
-                                        <a href="#">{{$post->reactions[0]->user->display_name}}</a>, <a
-                                                href="#">{{$post->reactions[1]->user->display_name}}</a> and
-                                        <br>{{$post->reactions->count()-2}} more react this
-                                    @elseif($post->reactions->count()==2)
-                                        <a href="#">{{$post->reactions[0]->user->display_name}}</a>, <a
-                                                href="#">{{$post->reactions[1]->user->display_name}}</a>
-                                    @elseif($post->reactions->count()==1)
-                                        <a href="#">{{$post->reactions[0]->user->display_name}}</a>
-                                    @endif
+                                    <?php if($post->reactions->count()>2): ?>
+                                        <a href="#"><?php echo e($post->reactions[0]->user->display_name); ?></a>, <a
+                                                href="#"><?php echo e($post->reactions[1]->user->display_name); ?></a> and
+                                        <br><?php echo e($post->reactions->count()-2); ?> more react this
+                                    <?php elseif($post->reactions->count()==2): ?>
+                                        <a href="#"><?php echo e($post->reactions[0]->user->display_name); ?></a>, <a
+                                                href="#"><?php echo e($post->reactions[1]->user->display_name); ?></a>
+                                    <?php elseif($post->reactions->count()==1): ?>
+                                        <a href="#"><?php echo e($post->reactions[0]->user->display_name); ?></a>
+                                    <?php endif; ?>
                                 </div>
 
                                 <div class="comments-shared">
@@ -2509,7 +2511,7 @@
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-speech-balloon-icon"></use>
                                         </svg>
 
-                                        <span>{{$post->comments_count}}</span>
+                                        <span><?php echo e($post->comments_count); ?></span>
                                     </a>
 
                                     <a href="#" class="post-add-icon inline-items">
@@ -2524,30 +2526,30 @@
                                             $engagement += $comment->replies->count();
                                         }
                                         ?>
-                                        <span>{{$engagement}}</span>
+                                        <span><?php echo e($engagement); ?></span>
                                     </a>
                                 </div>
 
                             </div>
                             <div style="position: absolute; top: 18px;right:20px;">
-                                <ul hidden  id="post_{{$post->id}}" style=" display: flex;margin-right: -5px;">
-                                    @foreach($reactions as $reaction)
-                                        <li id="reaction{{$reaction->id}}" style="margin: 3px;margin-right: {{$loop->last?8:3}}px;">
+                                <ul hidden  id="post_<?php echo e($post->id); ?>" style=" display: flex;margin-right: -5px;">
+                                    <?php $__currentLoopData = $reactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $reaction): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <li id="reaction<?php echo e($reaction->id); ?>" style="margin: 3px;margin-right: <?php echo e($loop->last?8:3); ?>px;">
                                             <a>
-                                                <img src="{{$reaction->icon}}">
+                                                <img src="<?php echo e($reaction->icon); ?>">
                                             </a>
                                         </li>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </ul>
                             </div>
                             <div class="control-block-button post-control-button">
-                                <a id="react{{$post->id}}"  class="btn btn-control">
+                                <a id="react<?php echo e($post->id); ?>"  class="btn btn-control">
                                     <svg class="olymp-like-post-icon">
                                         <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
                                     </svg>
                                 </a>
 
-                                <a id="comment_post{{$post->id}}" class="btn btn-control">
+                                <a id="comment_post<?php echo e($post->id); ?>" class="btn btn-control">
                                     <svg class="olymp-comments-post-icon">
                                         <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>
                                     </svg>
@@ -2568,13 +2570,14 @@
                         <ul class="comments-list">
                             <li class="comment-item">
                                 <div class="post__author author vcard inline-items">
-                                    <img src="{{$post->newest_comment->user->image}}" alt="author">
+                                    <img src="<?php echo e($post->newest_comment->user->image); ?>" alt="author">
 
                                     <div class="author-date">
-                                        <a class="h6 post__author-name fn" href="#">{{$comment->user->display_name}}</a>
+                                        <a class="h6 post__author-name fn" href="#"><?php echo e($comment->user->display_name); ?></a>
                                         <div class="post__date">
                                             <time class="published" datetime="2004-07-24T18:18">
-                                                {{$post->newest_comment->created_at->diffForHumans()}}
+                                                <?php echo e($post->newest_comment->created_at->diffForHumans()); ?>
+
                                             </time>
                                         </div>
                                     </div>
@@ -2587,14 +2590,15 @@
 
                                 </div>
 
-                                <p>{{$post->newest_comment->text}}
+                                <p><?php echo e($post->newest_comment->text); ?>
+
                                 </p>
 
                                 <a href="#" class="post-add-icon inline-items">
                                     <svg class="olymp-heart-icon">
                                         <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>
                                     </svg>
-                                    <span>{{$post->newest_comment->reactions->count()}}</span>
+                                    <span><?php echo e($post->newest_comment->reactions->count()); ?></span>
                                 </a>
                                 <a href="#" class="reply">Reply</a>
                             </li>
@@ -2613,7 +2617,7 @@
                                 <img src="olympus/img/author-page.jpg" alt="author">
 
                                 <div class="form-group with-icon-right ">
-                                    <textarea id="comment_post_form{{$post->id}}" class="form-control"
+                                    <textarea id="comment_post_form<?php echo e($post->id); ?>" class="form-control"
                                               placeholder=""></textarea>
                                     <div class="add-options-message">
                                         <a href="#" class="options-message" data-toggle="modal"
@@ -2636,7 +2640,7 @@
                         <!-- ... end Comment Form  -->
                     </div>
 
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 <div class="ui-block">
 
                     <article class="hentry post video">
@@ -4947,8 +4951,8 @@
             console.log(reaction_id,4);
         });
 
-              {{--id="post_{{$post->id}}"--}}
-            {{--id="reaction{{$reaction->id}}"--}}
+              
+            
 
     });
 </script>

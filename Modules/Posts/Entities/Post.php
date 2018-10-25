@@ -11,8 +11,13 @@ class Post extends Model
     use SoftDeletes;
 
     protected $fillable = ['user_id', 'text', 'type', 'dir', 'view_count', 'is_pined', 'privacy', 'time', 'is_boost', 'check_in'];
+    protected $appends=['newest_comment'];
+    protected $with=['user'/*,'comments'*/,'reactions','files','taggedFriends','supportFriends','topics'];
+    protected $withCount=['comments'];
 
-    protected $with=['user','comments','reactions','files','taggedFriends','supportFriends','topics'];
+    public function getNewestCommentAttribute(){
+      return Comment::where('post_id',$this->id)->orderBy('created_at','desc')->first();
+    }
 
     public function user()
     {
@@ -21,7 +26,7 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)->orderBy('created_at','desc');
     }
 
     public function reactions(){
