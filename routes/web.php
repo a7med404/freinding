@@ -63,9 +63,8 @@ Route::group([
     Route::patch('updateHidden/{id}', ['as' => 'users.updateHidden', 'uses' => 'UserController@updateHidden']);
     Route::post('userstatus', ['as' => 'userstatus', 'uses' => 'AjaxController@userStatus']);
 
-    //Role && Message
+    //Role
     Route::get('roles/search', ['as' => 'roles.search', 'uses' => 'RoleController@search']);
-    Route::get('messages/search', ['as' => 'messages.search', 'uses' => 'MessageController@search']);
 
     //Resource
     Route::resource('users', 'UserController');
