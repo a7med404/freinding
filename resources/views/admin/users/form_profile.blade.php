@@ -152,14 +152,16 @@
                     <td>Nationality</td>
                     <td>
                         @if(isset($user->nationality))
-                        <a data-pk="1" class="editable  data_form" data-id="nationality" data-title="Edit Nationality">{!!$user->nationality!!}</a>
-                        {!! Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => ' hidden form-control')) !!}
+                        <a data-pk="1" class="editable  data_form" data-id="nationality" data-title="Edit Nationality">{!!nationalityData($user->nationality)!!}</a>
+                        <div class="hidden nationality_div">   
+                            {!! Form::select('nationality',allNationals() ,null, array('id'=>'nationality','class' => ' hidden select2 form-control')) !!}
+                        </div>
                         @else
-                        {!! Form::text('nationality', null, array('placeholder' => 'Nationality','id'=>'nationality','class' => '  form-control')) !!}
+                        {!! Form::select('nationality',allNationals() ,null, array('id'=>'nationality','class' => 'select2 form-control')) !!}
                         @endif
                     </td>
                 </tr>
-                <tr>
+<!--                <tr>
                     <td>Country</td>
                     <td>
                         @if(isset($user->country))
@@ -182,7 +184,7 @@
                         {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => '  form-control')) !!}
                         @endif
                     </td>
-                </tr>
+                </tr>-->
                 <tr>
                     <td>Occupation </td>
                     <td>

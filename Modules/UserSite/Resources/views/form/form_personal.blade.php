@@ -42,13 +42,13 @@
             </div>
         </div>
 
-        <div class="col col-lg-4 col-md-4 col-sm-12 col-12">
+        <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="form-group label-floating is-select">
                 <label class="control-label">Your Nationality</label>
-                {!! Form::text('nationality', $user->nationality, array('placeholder' => 'Nationality','id'=>'nationality','class' => 'selectpicker form-control')) !!}
+                {!! Form::select('nationality',allNationals() ,$user->nationality, array('id'=>'nationality','class' => 'selectpicker form-control')) !!}
             </div>
         </div>
-        <div class="col col-lg-4 col-md-4 col-sm-12 col-12">
+<!--        <div class="col col-lg-4 col-md-4 col-sm-12 col-12">
             <div class="form-group label-floating is-select">
                 <label class="control-label">Your Country</label>
                 {!! Form::select('country',allCountry() ,$user->country, array('id'=>'country','class' => 'selectpicker form-control')) !!}
@@ -60,7 +60,7 @@
                 <label class="control-label">Your City</label>
                 {!! Form::text('address', $user->address, array('placeholder' => 'City','id'=>'address','class' => '  form-control')) !!}
             </div>
-        </div>
+        </div>-->
 
         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="form-group label-floating">
