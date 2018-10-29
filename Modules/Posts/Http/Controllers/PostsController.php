@@ -28,8 +28,6 @@ class PostsController extends SiteController {
 //            View::share('title', $title);
             $posts = Post::OrderBy('created_at', 'desc')->get();
             $reactions = Reaction::where('is_active', 1)->get();
-//        dd(Auth::user());
-//        return $posts;
             return view('posts::newsfeed', compact('user','posts', 'reactions', 'admin_panel', 'user_key'));
         } else {
             return redirect()->route('close');
