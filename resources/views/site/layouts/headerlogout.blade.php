@@ -15,7 +15,7 @@
             </a>
 
             <a href="#" class="open-responsive-menu js-open-responsive-menu">
-                <svg class="olymp-menu-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-menu-icon"></use></svg>
+                <svg class="olymp-menu-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-menu-icon"></use></svg>
             </a>
 
             <div class="nav nav-pills nav1 header-menu">
@@ -85,17 +85,17 @@
                             <a href="#" class="nav-link">Privacy Policy</a>
                         </li>
                         <li class="close-responsive-menu js-close-responsive-menu">
-                            <svg class="olymp-close-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-close-icon"></use></svg>
+                            <svg class="olymp-close-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-close-icon"></use></svg>
                         </li>
                         <li class="nav-item js-expanded-menu">
                             <a href="#" class="nav-link">
-                                <svg class="olymp-menu-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-menu-icon"></use></svg>
-                                <svg class="olymp-close-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-close-icon"></use></svg>
+                                <svg class="olymp-menu-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-menu-icon"></use></svg>
+                                <svg class="olymp-close-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-close-icon"></use></svg>
                             </a>
                         </li>
                         <li class="shoping-cart more">
                             <a href="#" class="nav-link">
-                                <svg class="olymp-shopping-bag-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-shopping-bag-icon"></use></svg>
+                                <svg class="olymp-shopping-bag-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-shopping-bag-icon"></use></svg>
                                 <span class="count-product">2</span>
                             </a>
                             <div class="more-dropdown shop-popup-cart">
@@ -128,7 +128,7 @@
                                         </div>
                                         <div class="product-price">$20</div>
                                         <div class="more">
-                                            <svg class="olymp-little-delete"><use xlink:href="svg-icons/sprites/icons.svg#olymp-little-delete"></use></svg>
+                                            <svg class="olymp-little-delete"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-little-delete"></use></svg>
                                         </div>
                                     </li>
                                     <li class="cart-product-item">
@@ -159,7 +159,7 @@
                                         </div>
                                         <div class="product-price">$40</div>
                                         <div class="more">
-                                            <svg class="olymp-little-delete"><use xlink:href="svg-icons/sprites/icons.svg#olymp-little-delete"></use></svg>
+                                            <svg class="olymp-little-delete"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-little-delete"></use></svg>
                                         </div>
                                     </li>
                                 </ul>

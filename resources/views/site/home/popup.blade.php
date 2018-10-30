@@ -5,7 +5,7 @@
     <div class="modal-dialog window-popup update-header-photo" role="document">
         <div class="modal-content">
             <a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">
-                <svg class="olymp-close-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-close-icon"></use></svg>
+                <svg class="olymp-close-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-close-icon"></use></svg>
             </a>
 
             <div class="modal-header">
@@ -14,7 +14,7 @@
 
             <div class="modal-body">
                 <a href="#" class="upload-photo-item">
-                    <svg class="olymp-computer-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-computer-icon"></use></svg>
+                    <svg class="olymp-computer-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-computer-icon"></use></svg>
 
                     <h6>Upload Photo</h6>
                     <span>Browse your computer.</span>
@@ -22,7 +22,7 @@
 
                 <a href="#" class="upload-photo-item" data-toggle="modal" data-target="#choose-from-my-photo">
 
-                    <svg class="olymp-photos-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-photos-icon"></use></svg>
+                    <svg class="olymp-photos-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-photos-icon"></use></svg>
 
                     <h6>Choose from My Photos</h6>
                     <span>Choose from your uploaded photos</span>
@@ -42,7 +42,7 @@
 
         <div class="modal-content">
             <a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">
-                <svg class="olymp-close-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-close-icon"></use></svg>
+                <svg class="olymp-close-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-close-icon"></use></svg>
             </a>
             <div class="modal-header">
                 <h6 class="title">Choose from My Photos</h6>
@@ -51,12 +51,12 @@
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" data-toggle="tab" href="#home" role="tab" aria-expanded="true">
-                            <svg class="olymp-photos-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-photos-icon"></use></svg>
+                            <svg class="olymp-photos-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-photos-icon"></use></svg>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#profile" role="tab" aria-expanded="false">
-                            <svg class="olymp-albums-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-albums-icon"></use></svg>
+                            <svg class="olymp-albums-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-albums-icon"></use></svg>
                         </a>
                     </li>
                 </ul>
@@ -231,8 +231,8 @@
             <span class="icon-status online"></span>
             <h6 class="title" >Chat</h6>
             <div class="more">
-                <svg class="olymp-three-dots-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use></svg>
-                <svg class="olymp-little-delete js-chat-open"><use xlink:href="svg-icons/sprites/icons.svg#olymp-little-delete"></use></svg>
+                <svg class="olymp-three-dots-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use></svg>
+                <svg class="olymp-little-delete js-chat-open"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-little-delete"></use></svg>
             </div>
         </div>
         <div class="modal-body">
@@ -278,11 +278,11 @@
                     <textarea class="form-control" placeholder=""></textarea>
                     <div class="add-options-message">
                         <a href="#" class="options-message">
-                            <svg class="olymp-computer-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-computer-icon"></use></svg>
+                            <svg class="olymp-computer-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-computer-icon"></use></svg>
                         </a>
                         <div class="options-message smile-block">
 
-                            <svg class="olymp-happy-sticker-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-happy-sticker-icon"></use></svg>
+                            <svg class="olymp-happy-sticker-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-happy-sticker-icon"></use></svg>
 
                             <ul class="more-dropdown more-with-triangle triangle-bottom-right">
                                 <li>
