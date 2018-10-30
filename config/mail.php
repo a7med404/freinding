@@ -29,8 +29,8 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-
+//    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'smtp.sendgrid.net'),
     /*
     |--------------------------------------------------------------------------
     | SMTP Host Port
@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'port' => env('MAIL_PORT', 587),
+    'port' => env('MAIL_PORT', 587),  //465  //25
 
     /*
     |--------------------------------------------------------------------------
@@ -56,9 +56,17 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'no_replay@whatsappqatar.com'),
+        'name' => env('MAIL_FROM_NAME', 'Friending'),
     ],
+    
+//  account email on server    
+//    email: no_replay@whatsappqatar.com
+//    password :  gT&0}4?8]r7c
+
+//    in signup.sendgrid.com
+//    name : friending
+//    password :  friending12$21
 
     /*
     |--------------------------------------------------------------------------
@@ -120,4 +128,10 @@ return [
         ],
     ],
 
+    'pretend' => false,
+    'auth' =>true,
+    'SMTPAuth' =>true,
+    'WordWrap' =>70,
+    'CharSet' =>'UTF-8',
+    'isHTML' =>true,
 ];

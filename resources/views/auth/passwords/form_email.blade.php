@@ -1,0 +1,32 @@
+<div class="title h6">Reset Password</div>
+<form class="content" role="form" method="POST" action="{{ route('password.email') }}">
+    {{ csrf_field() }}
+    <div class="row">
+        <div class="col col-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+            <div class="form-group label-floating is-empty mb-10">
+                @include('site.layouts.alert_save')
+            </div>
+            <div class="form-group label-floating is-empty mb-10">
+                @if (session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
+                </div>
+                @endif
+            </div>
+
+            <div class="form-group label-floating is-empty {{ $errors->has('email') ? ' has-error' : '' }}">
+                <label for="email" class="control-label">Your Email</label>
+                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
+                @if ($errors->has('email'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('email') }}</strong>
+                </span>
+                @endif
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary full-width">Send Password Reset Link</button>
+            <div class="or"></div>
+
+            <p>Don’t you have an account? <a href="{{ route('register') }}">Register Now!</a> it’s really simple and you can start enjoing all the benefits!</p>
+        </div>
+    </div>
+</form>

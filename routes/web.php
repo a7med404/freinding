@@ -20,7 +20,11 @@ $admin_panel = 'admin';
 //if ($admin_panel == '' || $admin_panel == NULL) {
 //    $admin_panel = 'admin';
 //}
-
+$site_open =1;// DB::table('options')->where('option_key', 'site_open')->value('option_value');
+if ($site_open == 0 || $site_open == "0") {
+// Close
+    Route::get('close', ['as' => 'close', 'uses' => 'Site\SiteController@close']);
+}
 Route::group([
     'namespace' => 'Site',
         ], function () {
