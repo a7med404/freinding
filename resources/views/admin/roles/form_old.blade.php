@@ -27,18 +27,14 @@
 
                 @if(Auth::user()->can('access-all'))
                 <div class="form-group">
+
                     <label>Roles:</label>
-                    <div class="row">
-                        @foreach ($permission as $key_rol => $val_rol)
-                        <div class="col-sm-4 col-xs-6 col-lg-4">
-                            <div class="checkbox">
-                                <label><input name="permission[]" type="checkbox" class="custom-checkbox" value="{{$val_rol->id}}" @if(in_array($val_rol->id,$rolePermissions)) checked="" @endif>&nbsp; {{$val_rol->display_name}}</label>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
+
+                    {!! Form::select('permission[]', $permission,$rolePermissions, array('class' => 'select2 form-control','multiple')) !!}
+
                 </div>
                 @endif
+
                 <div class="box-footer text-center">
                     <!--<a href="{{$link_return}}" class="btn btn-info">Return</a>-->
                     <button type="submit" class="btn btn-success" >Save</button>

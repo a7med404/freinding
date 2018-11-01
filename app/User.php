@@ -104,5 +104,6 @@ class User extends Authenticatable {
     {
         return ($value ? asset(self::USERS_IMAGE_PATH . $value) : asset('storage/images/users/avatar.jpg'));
     }
+    
 
 }

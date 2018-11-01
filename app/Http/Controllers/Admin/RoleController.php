@@ -49,7 +49,7 @@ class RoleController extends AdminController {
             return $this->pageUnauthorized();
         }
 
-        $permission = Permission::pluck('display_name', 'id');
+        $permission = Permission::get();//pluck('display_name', 'id');
         $rolePermissions = [];
         $link_return = route('admin.roles.index');
         return view('admin.roles.create', compact('link_return','permission', 'rolePermissions'));
@@ -89,7 +89,6 @@ class RoleController extends AdminController {
         $role->description = $input['description'];
         $role->save();
 //        $role = Role::create($input);
-
         if (!empty($request->input('permission'))) {
             foreach ($request->input('permission') as $key => $value) {
                 $role->attachPermission(stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING))));
@@ -146,8 +145,9 @@ class RoleController extends AdminController {
 
         if (!empty($role)) {
 
-            $permission = Permission::pluck('display_name', 'id');
+            $permission = Permission::get();//pluck('display_name', 'id');
             $rolePermissions = $role->permissions->pluck('id', 'id')->toArray();
+            
             $link_return = route('admin.roles.index');
             return view('admin.roles.edit', compact('link_return','role', 'permission', 'rolePermissions'));
         } else {
@@ -229,7 +229,8 @@ class RoleController extends AdminController {
         $role = Role::find($id);
         if (!empty($role)) {
             if ($id != 1) {
-                Role::find($id)->delete();
+                Role::where('id',$id)->delete();
+//                Role::find($id)->delete();
                 return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully');
             } else {
                 return redirect()->route('admin.roles.index')->with('error', 'Role deleted successfully');
