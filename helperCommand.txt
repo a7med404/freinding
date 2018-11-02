@@ -46,3 +46,4 @@ php artisan module:make-seed modelName ModuleName
       module:use
 
 
+عدد الاصدقاء المشتركين في dialog الاصدقاء المتفاعلين

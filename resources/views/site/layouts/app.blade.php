@@ -7,7 +7,7 @@
     </head>
     <body  data-url="{{ route('home') }}" data-user="{{ $user_id }}" @if(empty($user_key)) class="landing-page" @endif>
         {!! $google_analytic !!} 
-        @include('site.layouts.header')
+        {{--@include('site.layouts.header')--}}
         
         @yield('content')
         

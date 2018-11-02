@@ -13,4 +13,7 @@
 
 Route::prefix('posts')->group(function() {
     Route::get('/', 'PostsController@index');
+    Route::post('/react', 'PostsController@react')->name('react');
+    Route::post('/users-reactions', 'PostsController@usersReactions')->name('users-reactions');
+    Route::post('/new-comment', 'PostsController@newComment')->name('new-comment');
 });

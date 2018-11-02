@@ -8,6 +8,8 @@
             $(s).focus();
         });
 
+        //for reactions
+
         // $('[id^=react]').hover(function () {
         //     post_id1=$(this).attr('id');
         //     post_id1=post_id1.substring(5);
@@ -50,8 +52,158 @@
         //     console.log(reaction_id,4);
         // });
 
-              {{--id="post_{{$post->id}}"--}}
-            {{--id="reaction{{$reaction->id}}"--}}
+        $('[id^=btn_react]').click(function () {
+            var _token = $("input[name='_token']").val();
+            var post = $(this);
+            var post_id = post.attr('id');
+            post_id = post_id.substring(9);
+            $.ajax({
+                type: 'POST',
+                url: '{{route('react')}}',
+                data: {_token: _token, id: post_id},
+                cache: false,
+                success: function (data) {
+                    if (data['success']) {
+                        $('#engagement_count'+post_id).text(data['engagement']);
+                        $('#comment_count'+post_id).text(data['comment_count']);
+                        $('#reactioners_name'+post_id).html(data['reactioners']);
+                        $('#reactioners_photos'+post_id).html(data['reactioners_photos']);
+                        $('#reactions_count'+post_id).text(data['react_count']);
+                       if (data['like']){
+                           post.css('background-color','red');
+                       }else {
+                           post.css('background-color','');
+                       }
+                    }else{
+                        console.log(data);
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        });
 
+        $('.post_reacts_users').click(function () {
+            var btn = $(this);
+            var id = btn.attr('id')
+            $('#users_reaction_'+id).html('');
+            $('#reactions').modal('show');
+            var _token = $("input[name='_token']").val();
+            $('#wait').show();
+            $.ajax({
+                type: 'POST',
+                url: '{{route('users-reactions')}}',
+                data: {_token: _token, id:id},
+                cache: false,
+                success: function (data) {
+                    var lis="<div id=\"wait\" style=\"\n" +
+                        "  display:    none;\n" +
+                        "  position:   fixed;\n" +
+                        "  z-index:    1000;\n" +
+                        "  top:        0;\n" +
+                        "  left:       0;\n" +
+                        "  height:     100%;\n" +
+                        "  width:      100%;\n" +
+                        "  background: rgba( 255, 255, 255, .8 )\n" +
+                        "  url('http://i.stack.imgur.com/FhHRx.gif')\n" +
+                        "  50% 50%\n" +
+                        "  no-repeat;\"\n" +
+                        "  ></div>";
+                    for(item in data){
+                        lis+=' <li class="inline-items">\n' +
+                            '     <div class="author-thumb">\n' +
+                            '         <img width="36px" height="36px" src="'+data[item].user.image+'"\n' +
+                            '              alt="author">\n' +
+                            '     </div>\n' +
+                            '     <div class="notification-event">\n' +
+                            '         <a href="#"\n' +
+                            '            class="h6 notification-friend">'+data[item].user.display_name+'</a>\n' +
+                            '         <span class="chat-message-item">8 Frinds In Common</span>\n' +
+                            '     </div>\n' +
+                            '     <span class="notification-icon post-control-button "\n' +
+                            '           data-toggle="tooltip" data-placement="top"\n' +
+                            '           data-original-title="ADD TO YOUR FREINDS">\n' +
+                            '         <a class="btn btn-control" href="#">\n' +
+                            '             <svg class="olymp-star-icon"><use\n' +
+                            '                 xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-plus-icon"></use></svg>\n' +
+                            '         </a>\n' +
+                            '     </span>\n' +
+                            ' </li>';
+                    }
+                    $('#users_reaction').html(lis);
+                    $('#wait').hide();
+                },
+                error: function (data) {
+                    $('#wait').hide();
+                    console.log(data);
+                }
+            });
+        });
+
+        $('[id^=btn_comment_]').click(function(e){
+            var _token = $("input[name='_token']").val();
+            var btn = $(this);
+            e.preventDefault();
+            var post_id = btn.attr('id');
+            post_id = post_id.substring(12);
+            var comment = $('#comment_post_form'+post_id).val();
+            if(comment.length>0){
+                $.ajax({
+                    type: 'POST',
+                    url: '{{route('new-comment')}}',
+                    data: {_token: _token, id: post_id,comment:comment},
+                    cache: false,
+                    success: function (data) {
+                        console.log(data);
+                        if (data['success']) {
+                            $('#comment_post_form'+post_id).val('');
+                            $('#engagement_count'+post_id).text(data['engagement']);
+                            $('#comment_count'+post_id).text(data['comment_count']);
+                            $('#reactioners_name'+post_id).html(data['reactioners']);
+                            $('#reactioners_photos'+post_id).html(data['reactioners_photos']);
+                            $('#reactions_count'+post_id).text(data['react_count']);
+                            $('#newestComment'+post_id).html(
+                            '<div class="post__author author vcard inline-items">\n' +
+                                '           <img src="'+data['newestComment'].user.image+'" alt="author">\n' +
+                                '\n' +
+                                '           <div class="author-date">\n' +
+                                '               <a class="h6 post__author-name fn" href="#">'+data['newestComment'].user.display_name+'</a>\n' +
+                                '               <div class="post__date">\n' +
+                                '                   <time class="published" datetime="2004-07-24T18:18">\n' +
+                                '                     '+data['newestComment'].humansDate+'\n' +
+                                '                   </time>\n' +
+                                '               </div>\n' +
+                                '           </div>\n' +
+                                '\n' +
+                                '           <a href="#" class="more">\n' +
+                                '               <svg class="olymp-three-dots-icon">\n' +
+                                '               <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>\n' +
+                                '               </svg>\n' +
+                                '           </a>\n' +
+                                '\n' +
+                                '       </div>\n' +
+                                '\n' +
+                                '       <p>'+data['newestComment'].text+'\n' +
+                                '       </p>\n' +
+                                '\n' +
+                                '       <a href="#" class="post-add-icon inline-items">\n' +
+                                '           <svg class="olymp-heart-icon">\n' +
+                                '           <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>\n' +
+                                '           </svg>\n' +
+                                '           <span>'+data['newestComment'].commentReactions+'</span>\n' +
+                                '       </a>\n' +
+                                '       <a href="#" class="reply">Reply</a>'
+                            );
+                        }else{
+                            console.log(data);
+                        };
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+            };
+        });
     });
 </script>
