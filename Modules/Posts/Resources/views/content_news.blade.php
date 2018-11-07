@@ -178,7 +178,6 @@
 
             <div id="newsfeed-items-grid">
                 <div class="container">
-
                     <div class="modal fade" id="reactions" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog window-popup create-friend-group "
                              role="document">
@@ -194,9 +193,9 @@
                                     <h6 class="title">Users Who Reactioned With This Post</h6>
                                 </div>
 
-                                <div class="modal-body">
+                                <div class="modal-body" style="max-height: 500px; overflow-y: scroll">
                                     <ul id="users_reaction"
-                                        class="widget w-friend-pages-added notification-list friend-requests">
+                                        class="widget w-friend-pages-added notification-list friend-requests dynamicContent">
                                         <div id="wait" style="
                                     display:    none;
                                     position:   fixed;
@@ -211,7 +210,8 @@
                                     no-repeat;"
                                         ></div>
                                     </ul>
-                                    <a href="javascript:void(0)" class="btn btn-blue btn-lg full-width"
+
+                                    <a href="javascript:void(0)" class="btn btn-blue btn-lg full-width test"
                                        data-dismiss="modal">Close</a>
                                 </div>
                             </div>
@@ -301,7 +301,7 @@
                                                     </a>
                                                 </li>
                                             @else
-                                                break;
+                                                    @break
                                             @endif
                                         @endforeach
                                     </ul>

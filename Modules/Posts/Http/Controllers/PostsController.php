@@ -157,7 +157,12 @@ class PostsController extends SiteController
     }
 
     public function usersReactions(Request $request){
-        $data = PostReaction::where('post_id',$request->id)->get();
+        $data = PostReaction::where('post_id',$request->id)->paginate(25);
+//        dd($data->count());
+//        dd($data->currentPage());
+//        dd($data->hasMorePages());
+//        dd($data->nextPageUrl());
+//        dd($data->items());
         return $data;
     }
 
