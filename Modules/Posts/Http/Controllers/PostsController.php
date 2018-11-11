@@ -31,6 +31,7 @@ class PostsController extends SiteController
 //            $title = 'Posts' . " &#8211; " . $this->site_title;
 //            View::share('title', $title);
             $posts = Post::OrderBy('created_at', 'desc')->get();
+//            return $posts;
             $reactions = Reaction::where('is_active', 1)->get();
             return view('posts::newsfeed', compact('user', 'posts', 'reactions', 'admin_panel', 'user_key'));
         } else {

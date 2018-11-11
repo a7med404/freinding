@@ -260,6 +260,32 @@
                                 </div>
 
                                 <p>{{$post->text}}</p>
+
+                                @if($post->type == 'picture')
+
+                                            <div class="swiper-container" data-slide="fade">
+                                                <div class="swiper-wrapper">
+                                                    @foreach($post->files as $file)
+                                                        <div class="swiper-slide">
+                                                            <div class="photo-item" style="display:block;">
+                                                                <img src="{{$file->store_name}}"
+                                                                     alt="photo">
+                                                                <div class="overlay"></div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+
+                                                </div>
+
+                                                <svg class="btn-next-without olymp-popup-right-arrow">
+                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                                </svg>
+
+                                                <svg class="btn-prev-without olymp-popup-left-arrow">
+                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                                </svg>
+                                            </div>
+                                @endif
                                 <div style="display: inline-block;">
                                     <ul>
                                         @foreach($post->topics as $topic)
@@ -301,7 +327,7 @@
                                                     </a>
                                                 </li>
                                             @else
-                                                    @break
+                                                @break
                                             @endif
                                         @endforeach
                                     </ul>
@@ -383,49 +409,49 @@
                             </article>
 
                             <!-- Comments -->
+                            @if($post->newest_comment)
+                                <ul class="comments-list">
+                                    <li id="newestComment{{$post->id}}" class="comment-item">
+                                        <div class="post__author author vcard inline-items">
+                                            <img src="{{$post->newest_comment->user->image}}" alt="author">
 
-                            <ul class="comments-list">
-                                <li id="newestComment{{$post->id}}" class="comment-item">
-                                    <div class="post__author author vcard inline-items">
-                                        <img src="{{$post->newest_comment->user->image}}" alt="author">
-
-                                        <div class="author-date">
-                                            <a class="h6 post__author-name fn"
-                                               href="#">{{$comment->user->display_name}}</a>
-                                            <div class="post__date">
-                                                <time class="published" datetime="2004-07-24T18:18">
-                                                    {{$post->newest_comment->created_at->diffForHumans()}}
-                                                </time>
+                                            <div class="author-date">
+                                                <a class="h6 post__author-name fn"
+                                                   href="#">{{$comment->user->display_name}}</a>
+                                                <div class="post__date">
+                                                    <time class="published" datetime="2004-07-24T18:18">
+                                                        {{$post->newest_comment->created_at->diffForHumans()}}
+                                                    </time>
+                                                </div>
                                             </div>
+
+                                            <a href="#" class="more">
+                                                <svg class="olymp-three-dots-icon">
+                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                                </svg>
+                                            </a>
+
                                         </div>
 
-                                        <a href="#" class="more">
-                                            <svg class="olymp-three-dots-icon">
-                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                        <p>{{$post->newest_comment->text}}
+                                        </p>
+
+                                        <a href="#" class="post-add-icon inline-items">
+                                            <svg class="olymp-heart-icon">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>
                                             </svg>
+                                            <span>{{$post->newest_comment->reactions->count()}}</span>
                                         </a>
+                                        <a href="#" class="reply">Reply</a>
+                                    </li>
+                                </ul>
 
-                                    </div>
+                                <!-- ... end Comments -->
 
-                                    <p>{{$post->newest_comment->text}}
-                                    </p>
+                                <a href="#" class="more-comments">View more comments <span>+</span></a>
+                        @endif
 
-                                    <a href="#" class="post-add-icon inline-items">
-                                        <svg class="olymp-heart-icon">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>
-                                        </svg>
-                                        <span>{{$post->newest_comment->reactions->count()}}</span>
-                                    </a>
-                                    <a href="#" class="reply">Reply</a>
-                                </li>
-                            </ul>
-
-                            <!-- ... end Comments -->
-
-                            <a href="#" class="more-comments">View more comments <span>+</span></a>
-
-
-                            <!-- Comment Form  -->
+                        <!-- Comment Form  -->
 
                             <form class="comment-form inline-items">
 
