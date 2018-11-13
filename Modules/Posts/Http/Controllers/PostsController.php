@@ -216,6 +216,41 @@ class PostsController extends SiteController
         $newestComment['commentReactions'] = $newestComment->reactions->count();
         return Response::json(['success' => $success, 'engagement' => $engagement, 'comment_count' => $comment_count,
             'reactioners' => $reactioners, 'reactioners_photos' => $reactioners_photos, 'react_count' => $react_count
-        ,'newestComment'=>$newestComment]);
+        ,'newestComment'=>$newestComment,'newCommentId'=>$newComment->id]);
     }
+    public function deletePost(Request $request)
+    {
+	
+        $post=Post::where('user_id', Auth::id())->where('id', $request->id)->first();
+if($post)
+{
+    $success = $post->Delete();
+
+    return Response::json(['success' => true, 'message' => 'Post deleted'],200);
+}
+else
+{
+    return Response::json(['success' => false, 'message' => 'The Post has not been deleted'],404);
+}
+}
+public function commentDelete(Request $request)
+{
+
+//$comment= Comment::where('user_id', Auth::id())->orwhere('comments.user_id', Auth::id());
+$canDelete = false;
+$comment = Comment::where('id',$request->id)->with(['post'])->first();
+
+if($comment->user_id==Auth::id()||$comment->post->user_id==Auth::id()){ 
+$success = $comment->Delete();
+
+return ['success' => true, 'message' => ' comment deleted',200];
+}
+else 
+{
+
+
+return ['success' => false, 'message' => 'The comment has not been deleted',404];
+}
+}
+
 }

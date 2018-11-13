@@ -10,6 +10,7 @@ class File extends Model
     use SoftDeletes;
 
     const IMAGES_POSTS_PATH = "/storage/images/posts/";
+    const VIDEOS_POSTS_PATH = "/storage/videos/posts/";
 
     protected $fillable = ['dependent_id', 'type', 'real_name', 'store_name', 'extension'];
 
@@ -29,6 +30,6 @@ class File extends Model
     }
 
     public function getStoreNameAttribute($value){
-        return asset(self::IMAGES_POSTS_PATH.$value.'.'.$this->extension);
+        return $this->extension=='mp4'?asset(self::VIDEOS_POSTS_PATH.$value.'.'.$this->extension):asset(self::IMAGES_POSTS_PATH.$value.'.'.$this->extension);
     }
 }

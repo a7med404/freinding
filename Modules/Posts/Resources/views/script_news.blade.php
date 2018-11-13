@@ -84,6 +84,7 @@
         });
 
         $('[id^=btn_comment_]').click(function (e) {
+		console.log('something');
             var _token = $("input[name='_token']").val();
             var btn = $(this);
             e.preventDefault();
@@ -99,6 +100,7 @@
                     success: function (data) {
                         console.log(data);
                         if (data['success']) {
+						var newCommentID=data['newCommentId'];
                             $('#comment_post_form' + post_id).val('');
                             $('#engagement_count' + post_id).text(data['engagement']);
                             $('#comment_count' + post_id).text(data['comment_count']);
@@ -118,11 +120,20 @@
                                 '               </div>\n' +
                                 '           </div>\n' +
                                 '\n' +
-                                '           <a href="#" class="more">\n' +
-                                '               <svg class="olymp-three-dots-icon">\n' +
-                                '               <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>\n' +
-                                '               </svg>\n' +
-                                '           </a>\n' +
+                                '<div class="more">'+
+                                        '<svg class="olymp-three-dots-icon">'+
+                                                   '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>'+
+                                               '</svg>'+
+                                        '<ul class="more-dropdown">'+
+                                            '<li>'+
+                                                '<a href="#">Edit comment</a>'+
+                                            '</li>'+
+                                            '<li>'+
+                                                '<a href="javascript:void(0)" class="comment-delete" id="'+newCommentID+'">Delete comment</a>'+
+                                            '</li>'+
+                                           
+                                        '</ul>'+
+                                    '</div>'+
                                 '\n' +
                                 '       </div>\n' +
                                 '\n' +
@@ -325,7 +336,43 @@
         //     return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));}
 
 
-
+        $('.post-delete').click(function (){
+		var post=$(this);//not post but delete button
+            var id = post.attr('id');
+			var _token = $("input[name='_token']").val();
+			console.log(id);
+            $.ajax({
+                type: 'post',
+                url: '{{route('delete-post')}}',//route function take route name == url("/posts/delete-post")
+                data: {_token: _token, id: id},
+                success: function (data) {
+                  console.log(data);
+				  $('#AllPostDiv'+id).html("");
+                },
+            error : function(err) {
+                console.log('Error!', err);
+            },
+        });
+        });
+		 $('.comment-delete').click(function (){
+		 console.log('good');
+		var btn_comment=$(this);//not post but delete button
+            var id = btn_comment.attr('id');
+			var _token = $("input[name='_token']").val();
+			console.log(id);
+            $.ajax({
+                type: 'post',
+                url: '{{route('comment-delete')}}',//route function take route name == url("/posts/delete-post")
+                data: {_token: _token, id: id},
+                success: function (data) {
+                  console.log(data);
+				  $('.Allcommentul'+id).html("");
+                },
+            error : function(err) {
+                console.log('Error!', err);
+            },
+        });
+        });
 
 
 

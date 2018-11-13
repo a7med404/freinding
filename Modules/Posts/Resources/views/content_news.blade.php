@@ -174,7 +174,8 @@
                     </div>
                 </div>
 
-                <!-- ... end News Feed Form  -->            </div>
+                <!-- ... end News Feed Form  -->      
+				</div>
 
             <div id="newsfeed-items-grid">
                 <div class="container">
@@ -220,7 +221,7 @@
 
                     @foreach($posts as $post)
 
-                        <div class="ui-block">
+                        <div id="AllPostDiv{{$post->id}}" class="ui-block">
 
                             <article class="hentry post video">
 
@@ -246,7 +247,7 @@
                                                 <a href="#">Edit Post</a>
                                             </li>
                                             <li>
-                                                <a href="#">Delete Post</a>
+                                                <a href="javascript:void(0)" class="post-delete" id="{{$post->id}}">Delete Post</a>
                                             </li>
                                             <li>
                                                 <a href="#">Turn Off Notifications</a>
@@ -263,28 +264,42 @@
 
                                 @if($post->type == 'picture')
 
-                                            <div class="swiper-container" data-slide="fade">
-                                                <div class="swiper-wrapper">
-                                                    @foreach($post->files as $file)
-                                                        <div class="swiper-slide">
-                                                            <div class="photo-item" style="display:block;">
-                                                                <img src="{{$file->store_name}}"
-                                                                     alt="photo">
-                                                                <div class="overlay"></div>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-
+                                    <div class="swiper-container" data-slide="fade">
+                                        <div class="swiper-wrapper">
+                                            @foreach($post->files as $file)
+                                                <div class="swiper-slide">
+                                                    <div class="photo-item" style="display:block;">
+                                                        <img src="{{$file->store_name}}"
+                                                             alt="photo">
+                                                        <div class="overlay"></div>
+                                                    </div>
                                                 </div>
+                                            @endforeach
 
-                                                <svg class="btn-next-without olymp-popup-right-arrow">
-                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
-                                                </svg>
+                                        </div>
 
-                                                <svg class="btn-prev-without olymp-popup-left-arrow">
-                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
-                                                </svg>
-                                            </div>
+                                        <svg class="btn-next-without olymp-popup-right-arrow">
+                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                        </svg>
+
+                                        <svg class="btn-prev-without olymp-popup-left-arrow">
+                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                        </svg>
+                                    </div>
+                                @elseif($post->type == 'video')
+                                    @foreach($post->files as $file)
+                                        <div>
+                                            <video controls style="right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    background-size: cover;">
+                                                <source src="{{$file->store_name}}" type="video/mp4">
+                                            </video>
+                                        </div>
+                                    @endforeach
                                 @endif
                                 <div style="display: inline-block;">
                                     <ul>
@@ -410,14 +425,14 @@
 
                             <!-- Comments -->
                             @if($post->newest_comment)
-                                <ul class="comments-list">
-                                    <li id="newestComment{{$post->id}}" class="comment-item">
-                                        <div class="post__author author vcard inline-items">
+                                <ul  class="comments-list">
+                                    <li  id="newestComment{{$post->id}}" class="comment-item Allcommentul{{$post->newest_comment->id}}">
+                                        <div  class="post__author author vcard inline-items">
                                             <img src="{{$post->newest_comment->user->image}}" alt="author">
 
                                             <div class="author-date">
                                                 <a class="h6 post__author-name fn"
-                                                   href="#">{{$comment->user->display_name}}</a>
+                                                   href="#">{{$post->newest_comment->user->display_name}}</a>
                                                 <div class="post__date">
                                                     <time class="published" datetime="2004-07-24T18:18">
                                                         {{$post->newest_comment->created_at->diffForHumans()}}
@@ -425,11 +440,21 @@
                                                 </div>
                                             </div>
 
-                                            <a href="#" class="more">
-                                                <svg class="olymp-three-dots-icon">
-                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
-                                                </svg>
-                                            </a>
+                                     
+										    <div class="more">
+                                        <svg class="olymp-three-dots-icon">
+                                                   <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                               </svg>
+                                        <ul class="more-dropdown">
+                                            <li>
+                                                <a href="#">Edit comment</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)" class="comment-delete" id="{{$post->newest_comment->id}}">Delete comment</a>
+                                            </li>
+                                           
+                                        </ul>
+                                    </div>
 
                                         </div>
 
@@ -455,7 +480,7 @@
 
                             <form class="comment-form inline-items">
 
-                                <div class="post__author author vcard inline-items">
+                                <div  class="post__author author vcard inline-items">
                                     <img src="olympus/img/author-page.jpg" alt="author">
 
                                     <div class="form-group with-icon-right ">
