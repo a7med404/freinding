@@ -16,4 +16,6 @@ Route::prefix('posts')->group(function() {
     Route::post('/react', 'PostsController@react')->name('react');
     Route::post('/users-reactions', 'PostsController@usersReactions')->name('users-reactions');
     Route::post('/new-comment', 'PostsController@newComment')->name('new-comment');
+    Route::post('/delete-post', 'PostsController@deletePost')->name('delete-post');
+	Route::post('/comment-delete', 'PostsController@commentDelete')->name('comment-delete');
 });
