@@ -6,6 +6,18 @@
             s = '#comment_post_form' + id.substring(12);
             $(s).focus();
         });
+        $( window ).resize(function() {
+            $('[id^=video_post_]').each(function () {
+                console.log($(this));
+                var cw = $(this).width();
+                $(this).css({'height':cw+'px'});
+            });
+        });
+        $('[id^=video_post_]').each(function () {
+            console.log($(this));
+            var cw = $(this).width();
+            $(this).css({'height':cw+'px'});
+        });
 
         //for reactions
 

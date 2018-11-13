@@ -263,28 +263,37 @@
 
                                 @if($post->type == 'picture')
 
-                                            <div class="swiper-container" data-slide="fade">
-                                                <div class="swiper-wrapper">
-                                                    @foreach($post->files as $file)
-                                                        <div class="swiper-slide">
-                                                            <div class="photo-item" style="display:block;">
-                                                                <img src="{{$file->store_name}}"
-                                                                     alt="photo">
-                                                                <div class="overlay"></div>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-
+                                    <div class="swiper-container" data-slide="fade">
+                                        <div class="swiper-wrapper">
+                                            @foreach($post->files as $file)
+                                                <div class="swiper-slide">
+                                                    <div class="photo-item" style="display:block;">
+                                                        <img src="{{$file->store_name}}"
+                                                             alt="photo">
+                                                        <div class="overlay"></div>
+                                                    </div>
                                                 </div>
+                                            @endforeach
 
-                                                <svg class="btn-next-without olymp-popup-right-arrow">
-                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
-                                                </svg>
+                                        </div>
 
-                                                <svg class="btn-prev-without olymp-popup-left-arrow">
-                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
-                                                </svg>
-                                            </div>
+                                        <svg class="btn-next-without olymp-popup-right-arrow">
+                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                        </svg>
+
+                                        <svg class="btn-prev-without olymp-popup-left-arrow">
+                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                        </svg>
+                                    </div>
+                                @elseif($post->type == 'video')
+                                    @foreach($post->files as $file)
+                                        <div style="background-color: black;display: flex;justify-content: center;
+    align-items: center;" id="video_post_{{$post->id}}">
+                                            <video controls style="width: 100%;height: auto;">
+                                                <source src="{{$file->store_name}}" type="video/mp4">
+                                            </video>
+                                        </div>
+                                    @endforeach
                                 @endif
                                 <div style="display: inline-block;">
                                     <ul>
