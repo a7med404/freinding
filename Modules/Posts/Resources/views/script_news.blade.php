@@ -6,6 +6,7 @@
             s = '#comment_post_form' + id.substring(12);
             $(s).focus();
         });
+
         $( window ).resize(function() {
             $('[id^=video_post_]').each(function () {
                 console.log($(this));
@@ -13,6 +14,7 @@
                 $(this).css({'height':cw+'px'});
             });
         });
+
         $('[id^=video_post_]').each(function () {
             console.log($(this));
             var cw = $(this).width();
@@ -110,7 +112,6 @@
                     data: {_token: _token, id: post_id, comment: comment},
                     cache: false,
                     success: function (data) {
-                        console.log(data);
                         if (data['success']) {
 						var newCommentID=data['newCommentId'];
                             $('#comment_post_form' + post_id).val('');
@@ -119,7 +120,8 @@
                             $('#reactioners_name' + post_id).html(data['reactioners']);
                             $('#reactioners_photos' + post_id).html(data['reactioners_photos']);
                             $('#reactions_count' + post_id).text(data['react_count']);
-                            $('#newestComment' + post_id).html(
+                            $('.comments-list--' + post_id).html(
+                                '<li  id="newestComment'+post_id+'" class="comment-item Allcommentul'+newCommentID+'">'+
                                 '<div class="post__author author vcard inline-items">\n' +
                                 '           <img src="' + data['newestComment'].user.image + '" alt="author">\n' +
                                 '\n' +
@@ -158,7 +160,8 @@
                                 '           </svg>\n' +
                                 '           <span>' + data['newestComment'].commentReactions + '</span>\n' +
                                 '       </a>\n' +
-                                '       <a href="#" class="reply">Reply</a>'
+                                '       <a href="#" class="reply">Reply</a>'+
+                                '</li>'
                             );
                         } else {
                             console.log(data);
@@ -366,25 +369,46 @@
             },
         });
         });
-		 $('.comment-delete').click(function (){
-		 console.log('good');
-		var btn_comment=$(this);//not post but delete button
+
+        $('body').on('click', '.comment-delete', function () {
+            console.log('good');
+            var btn_comment=$(this);//not post but delete button
             var id = btn_comment.attr('id');
-			var _token = $("input[name='_token']").val();
-			console.log(id);
+            var _token = $("input[name='_token']").val();
+            console.log(id);
             $.ajax({
                 type: 'post',
                 url: '{{route('comment-delete')}}',//route function take route name == url("/posts/delete-post")
                 data: {_token: _token, id: id},
                 success: function (data) {
-                  console.log(data);
-				  $('.Allcommentul'+id).html("");
+                    console.log(data);
+                    $('.Allcommentul'+id).html("");
                 },
-            error : function(err) {
-                console.log('Error!', err);
-            },
+                error : function(err) {
+                    console.log('Error!', err);
+                },
+            });
         });
-        });
+
+		 {{--$('.comment-delete').click(function (){--}}
+		 {{--console.log('good');--}}
+        {{--var btn_comment=$(this);//not post but delete button--}}
+            {{--var id = btn_comment.attr('id');--}}
+			{{--var _token = $("input[name='_token']").val();--}}
+			{{--console.log(id);--}}
+            {{--$.ajax({--}}
+                {{--type: 'post',--}}
+                {{--url: '{{route('comment-delete')}}',//route function take route name == url("/posts/delete-post")--}}
+                {{--data: {_token: _token, id: id},--}}
+                {{--success: function (data) {--}}
+                  {{--console.log(data);--}}
+				  {{--$('.Allcommentul'+id).html("");--}}
+                {{--},--}}
+            {{--error : function(err) {--}}
+                {{--console.log('Error!', err);--}}
+            {{--},--}}
+        {{--});--}}
+        {{--});--}}
 
 
 

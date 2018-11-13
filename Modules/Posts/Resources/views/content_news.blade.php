@@ -288,20 +288,10 @@
                                     </div>
                                 @elseif($post->type == 'video')
                                     @foreach($post->files as $file)
-<<<<<<< HEAD
+
                                         <div style="background-color: black;display: flex;justify-content: center;
     align-items: center;" id="video_post_{{$post->id}}">
                                             <video controls style="width: 100%;height: auto;">
-=======
-                                        <div>
-                                            <video controls style="right: 0;
-    bottom: 0;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    background-size: cover;">
->>>>>>> a594527d120f63c6de8ac961b35641cdfafe403d
                                                 <source src="{{$file->store_name}}" type="video/mp4">
                                             </video>
                                         </div>
@@ -430,8 +420,9 @@
                             </article>
 
                             <!-- Comments -->
+                            <ul  class="comments-list comments-list--{{$post->id}}">
                             @if($post->newest_comment)
-                                <ul  class="comments-list">
+
                                     <li  id="newestComment{{$post->id}}" class="comment-item Allcommentul{{$post->newest_comment->id}}">
                                         <div  class="post__author author vcard inline-items">
                                             <img src="{{$post->newest_comment->user->image}}" alt="author">
@@ -475,12 +466,13 @@
                                         </a>
                                         <a href="#" class="reply">Reply</a>
                                     </li>
-                                </ul>
+
 
                                 <!-- ... end Comments -->
 
                                 <a href="#" class="more-comments">View more comments <span>+</span></a>
                         @endif
+                            </ul>
 
                         <!-- Comment Form  -->
 
