@@ -5,7 +5,6 @@
         <div class="col col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
             <div class="landing-content">
                 @include('auth.form_title')
-                <a href="{{ route('login') }}" class="btn btn-md btn-border c-white">Login Now!</a>
             </div>
         </div>
         <div class="col col-xl-5 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -23,6 +22,5 @@
         </div>
     </div>
 </div>
-
 @endsection
 

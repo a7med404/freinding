@@ -7,20 +7,21 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
-class LoginController extends SiteController
-{
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
+use App\Model\SessionTime;
 
-    use AuthenticatesUsers;
+class LoginController extends SiteController {
+    /*
+      |--------------------------------------------------------------------------
+      | Login Controller
+      |--------------------------------------------------------------------------
+      |
+      | This controller handles authenticating users for the application and
+      | redirecting them to your home screen. The controller uses a trait
+      | to conveniently provide its functionality to your applications.
+      |
+     */
+
+use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
@@ -34,18 +35,17 @@ class LoginController extends SiteController
             Auth::logout();
         }
     }
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
+
         $this->middleware('guest')->except('logout');
     }
-    
-    
 
     /**
      * Handle a login request to the application.
@@ -77,10 +77,24 @@ class LoginController extends SiteController
 
         return $this->sendFailedLoginResponse($request);
     }
-    
+
     public function authenticated($request, $user) {
-//        print_r('expression');die;
+        $input['user_id'] = $user->id;
+        $date = strtotime(time());
+        $input['day_name'] = date('D', time());
+        $input['hour_in'] = date('H:i:s'); //date('H:i:s', time());
+        SessionTime::create($input);
 //        return redirect(session()->pull('url.intended', $this->redirectTo));
-        
     }
+
+    public function logout(Request $request) {
+        $user = Auth::User();
+        $user_sesstion = SessionTime::getSessionTime($user->id, 'hour_out', NULL);
+        $date = strtotime(time());
+        $input['hour_out'] = date('H:i:s'); //date('H:i:s', time());
+        $user_sesstion->update($input);
+        Auth::logout();
+        return redirect()->intended($this->redirectPath());
+    }
+
 }

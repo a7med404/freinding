@@ -38,13 +38,8 @@ class User extends Authenticatable {
     public function userMeta() {
         return $this->hasMany(\App\Model\UserMeta::class);
     }
-
-    public function categories() {
-        return $this->hasMany(\App\Model\Category::class);
-    }
-
-    public function posts() {
-        return $this->hasMany(\App\Model\Post::class);
+    public function SessionTime() {
+        return $this->hasMany(\App\Model\SessionTime::class);
     }
 
     public function isActive() {

@@ -47,7 +47,7 @@
                 <label for="password-confirm" class="control-label">Confirm Password</label>
                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
             </div>
-            <div class="form-group date-time-picker label-floating">
+            <div class="form-group date-time-picker label-floating hidden">
                 <label class="control-label">Your Birthday</label>
                 <input name="datetimepicker" value="10/24/1984" />
                 <!--<input name="birthdate" value="10/24/1984" />-->
@@ -55,7 +55,7 @@
                     <svg class="olymp-calendar-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-calendar-icon"></use></svg>
                 </span>
             </div>
-            <div class="form-group label-floating is-select">
+            <div class="form-group label-floating is-select hidden">
                 <label class="control-label">Your Gender</label>
                 <select name="gender" class="selectpicker form-control">
                     <option value="male">Male</option>

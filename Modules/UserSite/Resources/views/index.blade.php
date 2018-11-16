@@ -1,9 +1,5 @@
 @extends('site.layouts.app')
 @section('content')
-@include('usersite::profilelist')
-@include('site.home.sideleft')
-@include('site.home.sideright')
-@include('site.layouts.header')
 @include('usersite::profileheader')
 <div class="container">
     <div class="row">

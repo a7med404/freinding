@@ -1,6 +1,3 @@
-@include('site.home.sideleft')
-@include('site.home.sideright')
-@include('site.layouts.header')
 <div class="container">
     <div class="row">
 

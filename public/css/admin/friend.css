@@ -86,3 +86,9 @@ label{
 .dataTables_filter .input-sm {
     font-size: 14px;
 }
+.statics-num{
+    font-size:18px;font-weight: bold;
+}
+.statics-icon{
+   font-size: 65px;
+}

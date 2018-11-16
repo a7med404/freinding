@@ -1309,6 +1309,149 @@ function arabic_date_number($date) {
     echo $last_date;
 //    echo $ar_month;
 }
+function week_select($week = null) {
+
+    $week_array = array(
+        'Sat' => 'السبت',
+        'Sun' => 'الاحد',
+        'Mon' => 'الاثنين',
+        'Tue' => 'الثلاثاء',
+        'Wed' => 'الاربعاء',
+        'Thu' => 'الخميس',
+        'Fri' => 'الجمعة'
+    );
+    $output = '<select name="week[]" id="week" class="select select2" multiple style="width:100%">';
+    foreach ($week_array as $key => $week_name) {
+        $output .= '<option value="' . $key . '"';
+        $weeks = isset($week) ? $week : array();
+        if (!empty($weeks)) {
+            foreach ($weeks as $values) {
+                if ($values == $key) {
+                    $output .= ' selected';
+                }
+            }
+        }
+        if ($week == $key) {
+            $output .= ' selected';
+        }
+        $output .= '>' . $week_name . '</option>';
+    }
+    $output .= '</select>';
+    return $output;
+}
+
+function week_name($week = null) {
+    $output = '';
+    $week_array = array(
+        'Sat' => 'السبت',
+        'Sun' => 'الاحد',
+        'Mon' => 'الاثنين',
+        'Tue' => 'الثلاثاء',
+        'Wed' => 'الاربعاء',
+        'Thu' => 'الخميس',
+        'Fri' => 'الجمعة'
+    );
+    foreach ($week_array as $key => $week_name) {
+        if ($week == $key) {
+            $output = $week_name;
+        }
+    }
+    return $output;
+}
+
+function date_day_number_select($day, $week = null) {
+
+    $week_array = array(
+        '1' => '1',
+        '2' => '2',
+        '3' => '3',
+        '4' => '4',
+        '5' => '5',
+        '6' => '6',
+        '7' => '7',
+        '8' => '8',
+        '9' => '9',
+        '10' => '10',
+        '11' => '11',
+        '12' => '12',
+        '13' => '13',
+        '14' => '14',
+        '15' => '15',
+        '16' => '16',
+        '17' => '17',
+        '18' => '18',
+        '19' => '19',
+        '20' => '20',
+        '21' => '21',
+        '22' => '22',
+        '23' => '23',
+        '24' => '24',
+        '25' => '25',
+        '26' => '26',
+        '27' => '27',
+        '28' => '28',
+        '29' => '29',
+        '30' => '30',
+        '31' => '31'
+    );
+    $output = '<select name="' . $day . '" id="day" class="select select2" style="width:100%">';
+    foreach ($week_array as $key => $week_name) {
+        $output .= '<option value="' . $key . '"';
+        if ($week == $key) {
+            $output .= ' selected';
+        }
+        $output .= '>' . $week_name . '</option>';
+    }
+    $output .= '</select>';
+    return $output;
+}
+
+function date_day_select($day, $week = null) {
+
+    $week_array = array(
+        '1' => '1',
+        '2' => '2',
+        '3' => '3',
+        '4' => '4',
+        '5' => '5',
+        '6' => '6',
+        '7' => '7',
+        '8' => '8',
+        '9' => '9',
+        '10' => '10',
+        '11' => '11',
+        '12' => '12',
+        '13' => '13',
+        '14' => '14',
+        '15' => '15',
+        '16' => '16',
+        '17' => '17',
+        '18' => '18',
+        '19' => '19',
+        '20' => '20',
+        '21' => '21',
+        '22' => '22',
+        '23' => '23',
+        '24' => '24',
+        '25' => '25',
+        '26' => '26',
+        '27' => '27',
+        '28' => '28',
+        '29' => '29',
+        '30' => '30',
+        '31' => '31'
+    );
+    $output = '<select name="' . $day . '" id="day" class="select select2" style="width:100%">';
+    foreach ($week_array as $key => $week_name) {
+        $output .= '<option value="' . $key . '"';
+        if ($week == $key) {
+            $output .= ' selected';
+        }
+        $output .= '>' . $week_name . '</option>';
+    }
+    $output .= '</select>';
+    return $output;
+}
 
 function genderName($gender = null) {
     $gender_array = array(

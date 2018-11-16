@@ -1,12 +1,11 @@
 @extends('admin.layouts.app')
-@section('title') Public Users Statistics Page
+@section('title')  Age/Gender Type Statistics Page
 @stop
 @section('head_content')
 @include('admin.statistics.head')
 @stop
 @section('content')      
 <!-- Main content -->
-
 <section class="content">
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-6 margin_10 animated fadeInRightBig">
@@ -81,7 +80,7 @@
                 <div class="panel-body squarebox square_boxs">
                     <div class="col-xs-12 pull-left nopadmar">
                         <div class="row">
-                            <div class="square_box col-xs-7 pull-left">
+                            <div class="square_box col-xs-7 text-right">
                                 <span> New Users Number Day</span>
                                 <div class="number" id="myTargetElement1"></div>
                             </div>
