@@ -70,7 +70,8 @@
                     </label>
                 </div>
             </div>
-            <button type="submit" class="btn btn-purple btn-lg full-width">Registration</button>                               
+            <button type="submit" class="btn btn-purple btn-lg full-width">Registration</button>
+            @include('auth.social')
             <p>Do you have an account? <a href="{{ route('login') }}">Login Now!</a></p>
         </div>
     </div>

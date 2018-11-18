@@ -42,7 +42,7 @@
 <script src="{{ asset('js/admin/jquery.fancybox.js') }}"></script>
 <script src="{{ asset('js/admin/jquery.fancybox.pack.js') }}"></script>
 
-@include('admin.users.repeater')
+<!--admin.users.repeater-->
 <script type="text/javascript">
     $('body').on('click', '.data_form', function () {
         var id = $(this).attr('data-id');

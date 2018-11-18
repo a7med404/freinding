@@ -452,7 +452,7 @@ function allNationals() {
 
 function nationalityData($type = null) {
     $type_array = array(
-       'Afghan' => 'Afghan',
+        'Afghan' => 'Afghan',
         'Albanian' => 'Albanian',
         'Algerian' => 'Algerian',
         'American' => 'American',
@@ -1001,7 +1001,7 @@ function Country_select($country = null) {
               'MT' => 'مالطا',
               'ML' => 'مالي',
               'MY' => 'ماليزيا',
-              'YT' => 'مايوت',
+              'YT' => 'Mayت',
               'MG' => 'مدغشقر',
               'MK' => 'مقدونيا',
               'MW' => 'ملاوي',
@@ -1261,18 +1261,18 @@ function showTypes() {
 
 function arabic_date($date) {
     $months = array(
-        "Jan" => "يناير",
-        "Feb" => "فبراير",
-        "Mar" => "مارس",
-        "Apr" => "أبريل",
-        "May" => "مايو",
-        "Jun" => "يونيو",
-        "Jul" => "يوليو",
-        "Aug" => "أغسطس",
-        "Sep" => "سبتمبر",
-        "Oct" => "أكتوبر",
-        "Nov" => "نوفمبر",
-        "Dec" => "ديسمبر"
+        "Jan" => "January",
+        "Feb" => "February",
+        "Mar" => "March",
+        "Apr" => "April",
+        "May" => "May",
+        "Jun" => "June",
+        "Jul" => "July",
+        "Aug" => "August",
+        "Sep" => "September",
+        "Oct" => "October",
+        "Nov" => "November",
+        "Dec" => "December"
     );
     $en_month = date("M", strtotime($date));
 
@@ -1283,21 +1283,39 @@ function arabic_date($date) {
     echo $last_date;
 }
 
-function arabic_date_number($date) {
+function stringMonth_number($num) {
+    $months = array(
+        "01" => "January",
+        "02" => "February",
+        "03" => "March",
+        "04" => "April",
+        "05" => "May",
+        "06" => "June",
+        "07" => "July",
+        "08" => "August",
+        "09" => "September",
+        "10" => "October",
+        "11" => "November",
+        "12" => "December"
+    );
+    return $months[$num];
+}
+
+function string_date_number($date) {
     $date_slash = $date . '/';
     $months = array(
-        "01" => "يناير",
-        "02" => "فبراير",
-        "03" => "مارس",
-        "04" => "أبريل",
-        "05" => "مايو",
-        "06" => "يونيو",
-        "07" => "يوليو",
-        "08" => "أغسطس",
-        "09" => "سبتمبر",
-        "10" => "أكتوبر",
-        "11" => "نوفمبر",
-        "12" => "ديسمبر"
+        "01" => "January",
+        "02" => "February",
+        "03" => "March",
+        "04" => "April",
+        "05" => "May",
+        "06" => "June",
+        "07" => "July",
+        "08" => "August",
+        "09" => "September",
+        "10" => "October",
+        "11" => "November",
+        "12" => "December"
     );
     $en_month = date("m", strtotime($date));
 
@@ -1309,6 +1327,7 @@ function arabic_date_number($date) {
     echo $last_date;
 //    echo $ar_month;
 }
+
 function week_select($week = null) {
 
     $week_array = array(

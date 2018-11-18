@@ -4,3 +4,13 @@
 .hidden,.hide{
     display: none;
 }
+.header--standard-landing.headroom--not-top{background-color: transparent;}
+.img-wrap .logo-colored{display: none;}
+.header--standard-landing.headroom--not-top .logo,
+.header--standard-landing.headroom--not-top .logo .logo-title{color: #fff;}
+
+/*.header--standard-landing.headroom--not-top .header-menu .nav-item a, 
+.header--standard-landing.headroom--not-top .header-menu .nav-item a:hover,
+.header--standard-landing.headroom--not-top .header-menu li .nav-link,
+.header--standard-landing.headroom--not-top .header-menu li .nav-link:hover
+{color: #fff;}*/

@@ -21,6 +21,10 @@ class SessionTime extends Model {
         return static::where('user_id', $user_id)->delete();
     }
 
+    public static function get_FirstRow() {
+        $data = static::orderBy('id', 'ASC')->first();
+        return $data;
+    }
     public static function get_LastRow($user_id) {
         $data = static::where('user_id', $user_id)->orderBy('id', 'DESC')->first();
         return $data;
@@ -78,7 +82,12 @@ class SessionTime extends Model {
         return $count[0]->count;
     }
 
-    public static function lastYear($day, $date) {
+    public static function lastYear($year, $month) {
+       $post = static::whereYear('created_at', '=', $year)
+              ->whereMonth('created_at', '=', $month)
+              ->get();
+    }
+    public static function GetYear($day, $date) {
         $data = static::select('id', 'title', 'created_at')
                 ->get()
                 ->groupBy(function($date) {
@@ -87,6 +96,21 @@ class SessionTime extends Model {
         });
     }
 
+    //********************************************   
+    public static function DataMonth($month_num,$num) {
+        $vat_data['month'] = stringMonth_number($month_num);
+        $vat_data['from'] = $start_date = date('Y') . $num . '-01';
+        $vat_data['to'] = $end_date = date('Y') . $num . '-31';
+        $vat_data['count'] = static::lastMonth($start_date, $end_date);
+        return $vat_data;
+    }
+    public static function DataYear($year_num) {
+        $vat_data['year'] = $year_num;
+        $vat_data['from'] = $start_date = $year_num . '-01-01';
+        $vat_data['to'] = $end_date = $year_num . '-12-31';
+        $vat_data['count'] = static::lastMonth($start_date, $end_date);
+        return $vat_data;
+    }
 }
 
 //$start_time = Carbon::yesterday('UTC');

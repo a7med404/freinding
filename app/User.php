@@ -24,6 +24,7 @@ class User extends Authenticatable {
         'is_active', 'site_register', 'country', 'gender', 'social_status', 'address_jop',
         'nationality', 'birthdate', 'occupation', 'about_me'
     ];
+
     const USERS_IMAGE_PATH = "/storage/images/users/";
 
     /**
@@ -38,6 +39,7 @@ class User extends Authenticatable {
     public function userMeta() {
         return $this->hasMany(\App\Model\UserMeta::class);
     }
+
     public function SessionTime() {
         return $this->hasMany(\App\Model\SessionTime::class);
     }
@@ -85,20 +87,30 @@ class User extends Authenticatable {
     }
 
     public static function lastDay($day, $date) {
-
         $count = static::select(DB::raw('COUNT(*)  count'))->whereBetween(DB::raw('created_at'), [$day, $date])->get();
         return $count[0]->count;
     }
-    
+    public static function countBirthdate($statr_date, $end_date) {
+        $count = static::select(DB::raw('COUNT(*)  count'))->where('birthdate','<=',$statr_date)->where('birthdate','>=',$end_date)->get();
+        return $count[0]->count;
+    }
+    public static function countAge($colum,$condtion_value,$colum_value) {
+        $count = static::select(DB::raw('COUNT(*)  count'))->where($colum,$condtion_value,$colum_value)->get();
+        return $count[0]->count;
+    }
+    public static function countColum($colum,$colum_value) {
+
+        $count = static::select(DB::raw('COUNT(*)  count'))->where($colum,$colum_value)->get();
+        return $count[0]->count;
+    }
+
     public static function SendEmailTOUser($user_id, $type = 'register') {
         return true;
     }
 
-
-    public function getImageAttribute($value)
-    {
+    public function getImageAttribute($value) {
         return ($value ? asset(self::USERS_IMAGE_PATH . $value) : asset('storage/images/users/avatar.jpg'));
     }
-    
+
 
 }

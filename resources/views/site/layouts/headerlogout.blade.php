@@ -2,7 +2,8 @@
 <!-- Header Standard Landing  -->
 <div class="header--standard header--standard-landing" id="header--standard">
     <div class="container">
-        <div class="header--standard-wrap">
+        <div class="">
+        <!--header--standard-wrap-->
             <a href="{{ route('home') }}" class="logo">
                 <div class="img-wrap">
                     <img src="{{ asset('olympus/img/logo.png') }}" alt="Friending">

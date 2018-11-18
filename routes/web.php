@@ -56,6 +56,8 @@ Route::group([
     Route::get('statisticslifetime', ['as' => 'statisticslifetime', 'uses' => 'StatisticsReportController@statisticslifetime']);
     Route::get('statisticsagegender', ['as' => 'statisticsagegender', 'uses' => 'StatisticsReportController@statistics_ageGender']);
     Route::get('statisticspublic', ['as' => 'statisticspublic', 'uses' => 'StatisticsReportController@statisticsPublic']);
+   
+    Route::get('test', ['as' => 'test', 'uses' => 'StatisticsReportController@test']);
 
     //User
     Route::get('users/{id}/type/{name}', ['as' => 'users.posttype', 'uses' => 'UserController@postType']);

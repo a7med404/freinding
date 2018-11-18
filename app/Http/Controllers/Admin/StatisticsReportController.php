@@ -59,29 +59,37 @@ class StatisticsReportController extends AdminController {
         $midnight_count = SessionTime::lastHour('00:00:01', '05:59:59.999999');
         //day
         $saturday_count = SessionTime::countDay('Sat');
-        $Sunday_count =SessionTime::countDay('Sun');
+        $Sunday_count = SessionTime::countDay('Sun');
         $Monday_count = SessionTime::countDay('Mon');
         $Tuesday_count = SessionTime::countDay('Tue');
         $Wednesday_count = SessionTime::countDay('Wed');
         $Thursday_count = SessionTime::countDay('Thu');
         $Friday_count = SessionTime::countDay('Fri');
         //month
-        $month = Carbon::now()->subMonth()->toDateString();
-        $week = Carbon::now()->subWeek()->toDateString();
-        $day = Carbon::now()->subDay()->toDateString();
-        $date = Carbon::now()->addDay()->toDateString();
-
-        $user_count = User::count();
-        $user_count_month = User::lastMonth($month, $date);
-        $user_count_week = User::lastMonth($week, $date);
-        $user_count_day = User::lastDay($day, $date);
-
+        $data_month = $data_year = [];
+        for ($month = 1; $month <= 9; $month++) {
+            $month_num = '0' . $month;
+            $num = '-' . $month_num;
+            $data_month[] = SessionTime::DataMonth($month_num, $num);
+        }
+        for ($last_month = 10; $last_month <= 12; $last_month++) {
+            $month_num = '-' . $last_month;
+            $data_month[] = SessionTime::DataMonth($last_month, $month_num);
+        }
+        //year
+        $first_row = SessionTime::get_FirstRow();
+        $year_end = $yearFirst = date('Y');
+        if (isset($first_row->created_at)) {
+            $yearFirst = Carbon::parse($first_row->created_at)->format('Y');
+        }
+        for ($year = $yearFirst; $year <= $year_end; $year++) {
+            $data_year[] = SessionTime::DataYear($year);
+        }
 
         return view('admin.statistics.register', compact(
                         'title', 'morning_count', 'afternoon_count', 'night_count', 'midnight_count'
                         , 'saturday_count', 'Sunday_count', 'Monday_count', 'Tuesday_count', 'Wednesday_count'
-                        , 'Thursday_count', 'Friday_count'
-                        , 'user_count', 'user_count_month', 'user_count_week', 'user_count_day'
+                        , 'Thursday_count', 'Friday_count', 'data_month', 'data_year'
         ));
     }
 
@@ -114,26 +122,68 @@ class StatisticsReportController extends AdminController {
             return $this->pageUnauthorized();
         }
         $title = 'Age/Gender type Statistics';
-        $user_id = 1;
-        $month = Carbon::now()->subMonth()->toDateString();
-        $week = Carbon::now()->subWeek()->toDateString();
-        $day = Carbon::now()->subDay()->toDateString();
-        $date = Carbon::now()->addDay()->toDateString();
+        $data_age = [];
 
-        $user_count = User::count();
+        $male_count = User::countColum('gender', 'male');
+        $femal_count = User::countColum('gender', 'female');
 
-        $user_count_month = User::lastMonth($month, $date);
+        $array_age = [18 => 24, 25 => 35, 36 => 45, 36 => 45, 46 => 60];
+        $date_current = Carbon::now()->addDay()->toDateString(); //date('Y')
 
-        $user_count_week = User::lastMonth($week, $date);
+        //********less than 18-
+        $data_val['age'] = '18-';
+        $date = new \DateTime($date_current);
+        $date->sub(new \DateInterval('P17Y'));
+        $end_birthdate = $date->format('d/m/Y');
+        $data_val['from'] = 'Less Than : ' . $end_birthdate;
+        $data_val['to'] = $end_birthdate;
+        $data_val['count'] = User::countAge('birthdate', '>', $end_birthdate);
+        $data_age[] = $data_val;
+        //*********
+        $data_val = [];
+        foreach ($array_age as $key_age => $val_vale) {
+            $date = new \DateTime($date_current);
+            $date->sub(new \DateInterval('P' . $key_age . 'Y'));
+            $first_birthdate = $date->format('d/m/Y');
 
-        $user_count_day = User::lastDay($day, $date);
+            $date_end = new \DateTime($date_current);
+            $date_end->sub(new \DateInterval('P' . $val_vale . 'Y'));
+            $end_birthdate = $date_end->format('d/m/Y');
 
+
+            $data_val['age'] = $key_age . ' - ' . $val_vale;
+            $data_val['from'] = $first_birthdate;
+            $data_val['to'] = $end_birthdate;
+
+            $data_val['count'] = User::countBirthdate($first_birthdate, $end_birthdate);
+            $data_age[] = $data_val;
+        }
+        //********more than 60+
+        $data_val = [];
+        $data_val['age'] = '60+';
+        $date = new \DateTime($date_current);
+        $date->sub(new \DateInterval('P61Y'));
+        $first_birthdate = $date->format('d/m/Y');
+
+        $data_val['from'] = $first_birthdate;
+        $data_val['to'] = 'More Than : ' . $first_birthdate;
+        $data_val['count'] = User::countAge('birthdate', '<', $first_birthdate);
+        $data_age[] = $data_val;
+        //*********
         return view('admin.statistics.age_gender', compact(
-                        'title', 'user_count', 'user_count_month', 'user_count_week', 'user_count_day'
+                        'title', 'data_age', 'male_count', 'femal_count'
         ));
     }
 
 //********************************report of site**************************************
+    public function test() {
+        if (!$this->user->can('access-all')) {
+            return $this->pageUnauthorized();
+        }
+        $image =$video= '';
+
+        return view('admin.test.create', compact('image','video'));
+    }
     public function statisticsPublic() {
         if (!$this->user->can('access-all')) {
             return $this->pageUnauthorized();
