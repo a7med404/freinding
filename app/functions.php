@@ -452,7 +452,7 @@ function allNationals() {
 
 function nationalityData($type = null) {
     $type_array = array(
-       'Afghan' => 'Afghan',
+        'Afghan' => 'Afghan',
         'Albanian' => 'Albanian',
         'Algerian' => 'Algerian',
         'American' => 'American',
@@ -1001,7 +1001,7 @@ function Country_select($country = null) {
               'MT' => 'مالطا',
               'ML' => 'مالي',
               'MY' => 'ماليزيا',
-              'YT' => 'مايوت',
+              'YT' => 'Mayت',
               'MG' => 'مدغشقر',
               'MK' => 'مقدونيا',
               'MW' => 'ملاوي',
@@ -1261,18 +1261,18 @@ function showTypes() {
 
 function arabic_date($date) {
     $months = array(
-        "Jan" => "يناير",
-        "Feb" => "فبراير",
-        "Mar" => "مارس",
-        "Apr" => "أبريل",
-        "May" => "مايو",
-        "Jun" => "يونيو",
-        "Jul" => "يوليو",
-        "Aug" => "أغسطس",
-        "Sep" => "سبتمبر",
-        "Oct" => "أكتوبر",
-        "Nov" => "نوفمبر",
-        "Dec" => "ديسمبر"
+        "Jan" => "January",
+        "Feb" => "February",
+        "Mar" => "March",
+        "Apr" => "April",
+        "May" => "May",
+        "Jun" => "June",
+        "Jul" => "July",
+        "Aug" => "August",
+        "Sep" => "September",
+        "Oct" => "October",
+        "Nov" => "November",
+        "Dec" => "December"
     );
     $en_month = date("M", strtotime($date));
 
@@ -1283,21 +1283,39 @@ function arabic_date($date) {
     echo $last_date;
 }
 
-function arabic_date_number($date) {
+function stringMonth_number($num) {
+    $months = array(
+        "01" => "January",
+        "02" => "February",
+        "03" => "March",
+        "04" => "April",
+        "05" => "May",
+        "06" => "June",
+        "07" => "July",
+        "08" => "August",
+        "09" => "September",
+        "10" => "October",
+        "11" => "November",
+        "12" => "December"
+    );
+    return $months[$num];
+}
+
+function string_date_number($date) {
     $date_slash = $date . '/';
     $months = array(
-        "01" => "يناير",
-        "02" => "فبراير",
-        "03" => "مارس",
-        "04" => "أبريل",
-        "05" => "مايو",
-        "06" => "يونيو",
-        "07" => "يوليو",
-        "08" => "أغسطس",
-        "09" => "سبتمبر",
-        "10" => "أكتوبر",
-        "11" => "نوفمبر",
-        "12" => "ديسمبر"
+        "01" => "January",
+        "02" => "February",
+        "03" => "March",
+        "04" => "April",
+        "05" => "May",
+        "06" => "June",
+        "07" => "July",
+        "08" => "August",
+        "09" => "September",
+        "10" => "October",
+        "11" => "November",
+        "12" => "December"
     );
     $en_month = date("m", strtotime($date));
 
@@ -1308,6 +1326,150 @@ function arabic_date_number($date) {
     $last_date = str_replace('/', ' ', $last_date);
     echo $last_date;
 //    echo $ar_month;
+}
+
+function week_select($week = null) {
+
+    $week_array = array(
+        'Sat' => 'السبت',
+        'Sun' => 'الاحد',
+        'Mon' => 'الاثنين',
+        'Tue' => 'الثلاثاء',
+        'Wed' => 'الاربعاء',
+        'Thu' => 'الخميس',
+        'Fri' => 'الجمعة'
+    );
+    $output = '<select name="week[]" id="week" class="select select2" multiple style="width:100%">';
+    foreach ($week_array as $key => $week_name) {
+        $output .= '<option value="' . $key . '"';
+        $weeks = isset($week) ? $week : array();
+        if (!empty($weeks)) {
+            foreach ($weeks as $values) {
+                if ($values == $key) {
+                    $output .= ' selected';
+                }
+            }
+        }
+        if ($week == $key) {
+            $output .= ' selected';
+        }
+        $output .= '>' . $week_name . '</option>';
+    }
+    $output .= '</select>';
+    return $output;
+}
+
+function week_name($week = null) {
+    $output = '';
+    $week_array = array(
+        'Sat' => 'السبت',
+        'Sun' => 'الاحد',
+        'Mon' => 'الاثنين',
+        'Tue' => 'الثلاثاء',
+        'Wed' => 'الاربعاء',
+        'Thu' => 'الخميس',
+        'Fri' => 'الجمعة'
+    );
+    foreach ($week_array as $key => $week_name) {
+        if ($week == $key) {
+            $output = $week_name;
+        }
+    }
+    return $output;
+}
+
+function date_day_number_select($day, $week = null) {
+
+    $week_array = array(
+        '1' => '1',
+        '2' => '2',
+        '3' => '3',
+        '4' => '4',
+        '5' => '5',
+        '6' => '6',
+        '7' => '7',
+        '8' => '8',
+        '9' => '9',
+        '10' => '10',
+        '11' => '11',
+        '12' => '12',
+        '13' => '13',
+        '14' => '14',
+        '15' => '15',
+        '16' => '16',
+        '17' => '17',
+        '18' => '18',
+        '19' => '19',
+        '20' => '20',
+        '21' => '21',
+        '22' => '22',
+        '23' => '23',
+        '24' => '24',
+        '25' => '25',
+        '26' => '26',
+        '27' => '27',
+        '28' => '28',
+        '29' => '29',
+        '30' => '30',
+        '31' => '31'
+    );
+    $output = '<select name="' . $day . '" id="day" class="select select2" style="width:100%">';
+    foreach ($week_array as $key => $week_name) {
+        $output .= '<option value="' . $key . '"';
+        if ($week == $key) {
+            $output .= ' selected';
+        }
+        $output .= '>' . $week_name . '</option>';
+    }
+    $output .= '</select>';
+    return $output;
+}
+
+function date_day_select($day, $week = null) {
+
+    $week_array = array(
+        '1' => '1',
+        '2' => '2',
+        '3' => '3',
+        '4' => '4',
+        '5' => '5',
+        '6' => '6',
+        '7' => '7',
+        '8' => '8',
+        '9' => '9',
+        '10' => '10',
+        '11' => '11',
+        '12' => '12',
+        '13' => '13',
+        '14' => '14',
+        '15' => '15',
+        '16' => '16',
+        '17' => '17',
+        '18' => '18',
+        '19' => '19',
+        '20' => '20',
+        '21' => '21',
+        '22' => '22',
+        '23' => '23',
+        '24' => '24',
+        '25' => '25',
+        '26' => '26',
+        '27' => '27',
+        '28' => '28',
+        '29' => '29',
+        '30' => '30',
+        '31' => '31'
+    );
+    $output = '<select name="' . $day . '" id="day" class="select select2" style="width:100%">';
+    foreach ($week_array as $key => $week_name) {
+        $output .= '<option value="' . $key . '"';
+        if ($week == $key) {
+            $output .= ' selected';
+        }
+        $output .= '>' . $week_name . '</option>';
+    }
+    $output .= '</select>';
+    return $output;
 }
 
 function genderName($gender = null) {

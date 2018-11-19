@@ -55,4 +55,5 @@
 <!-- Main Styles CSS -->
 <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/main.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/fonts.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/custom.css') }}">
 

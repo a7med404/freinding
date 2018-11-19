@@ -44,5 +44,5 @@
 <!--<script src="{{ asset('js/admin/tinymce/tinymce.min.js') }}"></script>-->
 <script src="{{ asset('js/admin/jquery.fancybox.js') }}"></script>
 <script src="{{ asset('js/admin/jquery.fancybox.pack.js') }}"></script>
-@include('admin.users.repeater')
+<!--admin.users.repeater-->
 @stop

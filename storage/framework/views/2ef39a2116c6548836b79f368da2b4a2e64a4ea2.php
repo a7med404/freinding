@@ -1,10 +1,9 @@
-@extends('site.layouts.app')
-@section('content')
 <div class="container">
     <div class="row display-flex">
         <div class="col col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
             <div class="landing-content">
-                @include('auth.form_title')
+                <?php echo $__env->make('auth.form_title', \Illuminate\Support\Arr::except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                <a href="<?php echo e(route('register')); ?>" class="btn btn-md btn-border c-white">Register Now!</a>
             </div>
         </div>
         <div class="col col-xl-5 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -13,8 +12,8 @@
                 <!-- Nav tabs -->
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div class="tab-pane active" id="home" role="tabpanel" data-mh="log-tab">
-                        @include('auth.form_register')
+                    <div class="tab-pane active" id="profile" role="tabpanel" data-mh="log-tab">
+                        <?php echo $__env->make('auth.form_login', \Illuminate\Support\Arr::except(get_defined_vars(), array('__data', '__path')))->render(); ?>
                     </div>
                 </div>
             </div>
@@ -22,5 +21,3 @@
         </div>
     </div>
 </div>
-@endsection
-

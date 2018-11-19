@@ -33,12 +33,7 @@
                 <a href="{{ route('password.request') }}" class="forgot">Forgot my Password</a>
             </div>
             <button type="submit" class="btn btn-lg btn-primary full-width">Login</button>
-            <div class="or"></div>
-
-            <a href="#" class="btn btn-lg bg-facebook full-width btn-icon-left"><i class="fab fa-facebook-f" aria-hidden="true"></i>Login with Facebook</a>
-
-            <a href="#" class="btn btn-lg bg-twitter full-width btn-icon-left"><i class="fab fa-twitter" aria-hidden="true"></i>Login with Twitter</a>
-
+            @include('auth.social')
             <p>Don’t you have an account? <a href="{{ route('register') }}">Register Now!</a> it’s really simple and you can start enjoing all the benefits!</p>
         </div>
     </div>
