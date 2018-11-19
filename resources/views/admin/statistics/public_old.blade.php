@@ -1,8 +1,7 @@
 @extends('admin.layouts.app')
-@section('title') Home Page
+@section('title') Public Statistics Page
 @stop
 @section('head_content')
-
 @stop
 @section('content')
 
@@ -11,7 +10,7 @@
     <strong>Success:</strong> You have successfully logged in.
 </div>
 <!-- Main content -->
-<section class="content-header">
+<!--<section class="content-header">
     <h1>Welcome to Dashboard</h1>
     <ol class="breadcrumb">
         <li class="active">
@@ -20,7 +19,7 @@
             </a>
         </li>
     </ol>
-</section>
+</section>-->
 <section class="content">
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-6 margin_10 animated fadeInLeftBig">

@@ -51,9 +51,13 @@ Route::group([
 
     //Statistics
     Route::get('', ['as' => 'index', 'uses' => 'StatisticsReportController@homeAdmin']);
-    Route::get('statisticsorders', ['as' => 'statisticsorders', 'uses' => 'StatisticsReportController@statisticsOrders']);
+    Route::get('statisticsregisters', ['as' => 'statisticsregisters', 'uses' => 'StatisticsReportController@statisticsregisters']);
     Route::get('statisticsusers', ['as' => 'statisticsusers', 'uses' => 'StatisticsReportController@statisticsUsers']);
+    Route::get('statisticslifetime', ['as' => 'statisticslifetime', 'uses' => 'StatisticsReportController@statisticslifetime']);
+    Route::get('statisticsagegender', ['as' => 'statisticsagegender', 'uses' => 'StatisticsReportController@statistics_ageGender']);
     Route::get('statisticspublic', ['as' => 'statisticspublic', 'uses' => 'StatisticsReportController@statisticsPublic']);
+   
+    Route::get('test', ['as' => 'test', 'uses' => 'StatisticsReportController@test']);
 
     //User
     Route::get('users/{id}/type/{name}', ['as' => 'users.posttype', 'uses' => 'UserController@postType']);

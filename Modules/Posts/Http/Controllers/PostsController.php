@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Auth;
 use Illuminate\Support\Facades\Response;
 use Modules\Posts\Entities\Comment;
+use Modules\Posts\Entities\File;
 use Modules\Posts\Entities\Post;
 use Modules\Posts\Entities\PostReaction;
 use Modules\Posts\Entities\Reaction;
@@ -157,8 +158,9 @@ class PostsController extends SiteController
 
     }
 
-    public function usersReactions(Request $request){
-        $data = PostReaction::where('post_id',$request->id)->paginate(25);
+    public function usersReactions(Request $request)
+    {
+        $data = PostReaction::where('post_id', $request->id)->paginate(25);
 //        dd($data->count());
 //        dd($data->currentPage());
 //        dd($data->hasMorePages());
@@ -167,12 +169,13 @@ class PostsController extends SiteController
         return $data;
     }
 
-    public function newComment(Request $request){
-       $newComment = new Comment();
-       $newComment->user_id=Auth::id();
-       $newComment->post_id=$request->id;
-       $newComment->text=$request->comment;
-       $success = $newComment->save();
+    public function newComment(Request $request)
+    {
+        $newComment = new Comment();
+        $newComment->user_id = Auth::id();
+        $newComment->post_id = $request->id;
+        $newComment->text = $request->comment;
+        $success = $newComment->save();
 
         $post = Post::wherekey($request->id)->first();
 
@@ -216,41 +219,99 @@ class PostsController extends SiteController
         $newestComment['commentReactions'] = $newestComment->reactions->count();
         return Response::json(['success' => $success, 'engagement' => $engagement, 'comment_count' => $comment_count,
             'reactioners' => $reactioners, 'reactioners_photos' => $reactioners_photos, 'react_count' => $react_count
-        ,'newestComment'=>$newestComment,'newCommentId'=>$newComment->id]);
+            , 'newestComment' => $newestComment, 'newCommentId' => $newComment->id]);
     }
+
     public function deletePost(Request $request)
     {
-	
-        $post=Post::where('user_id', Auth::id())->where('id', $request->id)->first();
-if($post)
-{
-    $success = $post->Delete();
 
-    return Response::json(['success' => true, 'message' => 'Post deleted'],200);
-}
-else
-{
-    return Response::json(['success' => false, 'message' => 'The Post has not been deleted'],404);
-}
-}
-public function commentDelete(Request $request)
-{
+        $post = Post::where('user_id', Auth::id())->where('id', $request->id)->first();
+        if ($post) {
+            $success = $post->Delete();
+
+            return Response::json(['success' => true, 'message' => 'Post deleted'], 200);
+        } else {
+            return Response::json(['success' => false, 'message' => 'The Post has not been deleted'], 404);
+        }
+    }
+
+    public function commentDelete(Request $request)
+    {
 
 //$comment= Comment::where('user_id', Auth::id())->orwhere('comments.user_id', Auth::id());
-$canDelete = false;
-$comment = Comment::where('id',$request->id)->with(['post'])->first();
+        $canDelete = false;
+        $comment = Comment::where('id', $request->id)->with(['post'])->first();
 
-if($comment->user_id==Auth::id()||$comment->post->user_id==Auth::id()){ 
-$success = $comment->Delete();
+        if ($comment->user_id == Auth::id() || $comment->post->user_id == Auth::id()) {
+            $success = $comment->Delete();
 
-return ['success' => true, 'message' => ' comment deleted',200];
-}
-else 
-{
+            return ['success' => true, 'message' => ' comment deleted', 200];
+        } else {
 
 
-return ['success' => false, 'message' => 'The comment has not been deleted',404];
-}
-}
+            return ['success' => false, 'message' => 'The comment has not been deleted', 404];
+        }
+    }
 
-}
+    public function newPost(Request $request)
+    {
+        $newpost = new Post();
+        $newpost->user_id = Auth::id();
+        $newpost->text = $request->text_of_post;
+        $newpost->type="text";
+        $newpost->dir="ltr";
+
+        $htmlnewpost = "";
+//        if ($request->file()) {
+//            $newfile = new File();
+//            $newfile = $request->file;
+//            $newfile->post_id = $newpost->id;
+
+//            if ($newfile->extension == "mp4") {
+//                $newpost->type = "video";
+//                foreach ($newpost->files as $file) {
+//                    $htmlnewpost = $htmlnewpost' <div style="background-color: black;display: flex;justify-content: center;  align-items: center;" id="video_post_'newpost->id'">
+//                                            <video controls style="width: 100%;height: auto;">
+//                                                <source src="' + $newpost->file->name_store + '" type="video/mp4">
+//                                           </video>
+//                                        </div>'
+//
+//
+//								  }
+//            }
+//            elseif ($newfile->extension == "jpg" | $newfile->extension == "png") {
+//                $newpost->type = "picture";
+//                $htmlnewpost = '<div class="swiper-container" data-slide="fade">' +
+//                    '< div class="swiper-wrapper" >';
+//                foreach ($newpost->files as $file) {
+//                    $htmlnewpost += ' <div class="swiper-slide" >'+
+//                                                   ' <div class="photo-item" style = "display:block;" >'+
+//                                                     '  <img src = "' + $newpost->file->name_store + '"'+
+//                                                            ' alt = "photo" >'+
+//                                                        '<div class="overlay" ></div >'+
+//                                                  '  </div > '+
+//												}
+//                $htmlnewpost += ' </div >	'+
+//                                       ' <svg class="btn-next-without olymp-popup-right-arrow" >'+
+//                                         ' <use xlink:href = "olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow" ></use>'+
+//                                       '</svg >'+
+//                                       '<svg class="btn-prev-without olymp-popup-left-arrow" >'+
+//                                            '<use xlink:href = "olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow" ></use>'+
+//                                        '</svg >'+
+//                                    '</div > ';
+//	   }
+//            $newfile->save();
+
+
+        $success = $newpost->save();
+        $newpost['humansDate'] = $newpost->created_at->diffForHumans();
+        $newpost['id']  =$newpost->id;
+
+        return Response::json(['success' => $success,
+            'htmlnewpost' => $htmlnewpost,
+            'newpost' => $newpost,
+            'user_image'=>Auth::user()->image,
+            'user_name'=>Auth::user()->display_name
+        ]);
+        }
+    }

@@ -29,7 +29,7 @@
             <!-- BEGIN SIDEBAR MENU -->
             <ul id="menu" class="page-sidebar-menu">
                 <li class="active">
-                    <a href="index.html">
+                    <a href="{{ route('admin.index') }}">
                         <i class="livicon" data-name="home" data-size="18" data-c="#418BCA" data-hc="#418BCA" data-loop="true"></i>
                         <span class="title">Dashboard</span>
                     </a>
@@ -435,6 +435,29 @@
 <!--                        <li><a href="{{ route('admin.users.search') }}">
                                 <i class="fa fa-search"></i> <span>Users Search</span> 
                             </a></li>-->
+                    </ul>
+                </li>
+                @endif
+                @if($access_all == 1)
+                <li @if(in_array($name_list,['statisticsregisters','statisticsusers','statisticslifetime','statisticsagegender']))class="active"@endif  >
+                    <a href="#">
+                        <i class="fa fa-dashboard" data-size="18" data-c="#00bc8c" data-hc="#00bc8c" data-loop="true"></i>
+                        <span class="title">Statistics</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li @if($name_list=='statisticsusers')class="active" id="active" @endif ><a href="{{ route('admin.statisticsusers') }}">
+                                <i class="fa fa-users"></i> <span>Public Statistics</span> 
+                            </a></li>
+                        <li @if($name_list=='statisticsregisters')class="active" id="active" @endif ><a href="{{ route('admin.statisticsregisters') }}">
+                                <i class="fa fa-rocket"></i> <span>Registration Period Type</span> 
+                            </a></li>
+                        <li @if($name_list=='statisticslifetime')class="active" id="active" @endif ><a href="{{ route('admin.statisticslifetime') }}">
+                                <i class="fa fa-fire"></i> <span>Lifetime type</span> 
+                            </a></li>
+                        <li @if($name_list=='statisticsagegender')class="active" id="active" @endif ><a href="{{ route('admin.statisticsagegender') }}">
+                                <i class="fa fa-database"></i> <span>Age/Gender type</span> 
+                            </a></li>
                     </ul>
                 </li>
                 @endif

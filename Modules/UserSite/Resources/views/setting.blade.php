@@ -1,9 +1,5 @@
 @extends('site.layouts.app')
 @section('content')
-@include('usersite::profilelist')
-@include('site.home.sideleft')
-@include('site.home.sideright')
-@include('site.layouts.header')
 @include('usersite::settingheader')
 <!-- Your Account Personal Information -->
 <div class="container">

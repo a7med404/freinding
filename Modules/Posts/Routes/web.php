@@ -18,4 +18,6 @@ Route::prefix('posts')->group(function() {
     Route::post('/new-comment', 'PostsController@newComment')->name('new-comment');
     Route::post('/delete-post', 'PostsController@deletePost')->name('delete-post');
 	Route::post('/comment-delete', 'PostsController@commentDelete')->name('comment-delete');
+	Route::post('/new-post', 'PostsController@newPost')->name('new-post');
+
 });
