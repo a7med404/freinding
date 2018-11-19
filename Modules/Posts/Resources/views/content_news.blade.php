@@ -346,12 +346,10 @@
                                     <div class="swiper-container" data-slide="fade">
                                         <div class="swiper-wrapper">
                                     @foreach($post->files as $file)
-                                        <div style="background-color: black;
-                                        display: flex;
                                                 <div class="swiper-slide">
                                                     <div class="photo-item" style="display:block;">
-                                        justify-content: center;
-                                        align-items: center;" id="video_post_{{$post->id}}"
+                                                        <div style="background-color: black;display: flex;justify-content: center;
+                                                        align-items: center;" id="video_post_{{$post->id}}">
                                             <video controls  autoplay muted style="width: 100%;height: auto;">
                                                 <source src="{{$file->store_name}}" type="video/mp4">
                                             </video>
@@ -1444,6 +1442,7 @@
 
                         </article>
                     </div>
+
                 </div>
                 <a id="load-more-button" href="#" class="btn btn-control btn-more" data-load-link="items-to-load.html"
                    data-container="newsfeed-items-grid">
