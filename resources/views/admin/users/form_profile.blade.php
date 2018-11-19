@@ -173,7 +173,7 @@
                         {!! Form::select('country',allCountry() ,null, array('id'=>'country','class' => 'select2 form-control')) !!}
                         @endif
                     </td>
-                </tr>
+                </tr>-->
                 <tr>
                     <td>Address</td>
                     <td>
@@ -184,15 +184,15 @@
                         {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => '  form-control')) !!}
                         @endif
                     </td>
-                </tr>-->
+                </tr>
                 <tr>
-                    <td>Occupation </td>
+                    <td>Jop Title</td>
                     <td>
                         @if(isset($user->occupation))
-                        <a data-pk="1" class="editable  data_form" data-id="occupation" data-title="Edit Occupation">{!!$user->occupation!!}</a>
-                        {!! Form::text('occupation', null, array('placeholder' => 'Occupation','id'=>'occupation','class' => ' hidden form-control')) !!}
+                        <a data-pk="1" class="editable  data_form" data-id="occupation" data-title="Edit Jop Title">{!!$user->occupation!!}</a>
+                        {!! Form::text('occupation', null, array('placeholder' => 'Jop Title','id'=>'occupation','class' => ' hidden form-control')) !!}
                         @else
-                        {!! Form::text('occupation', null, array('placeholder' => 'Occupation','id'=>'occupation','class' => '  form-control')) !!}
+                        {!! Form::text('occupation', null, array('placeholder' => 'Jop Title','id'=>'occupation','class' => '  form-control')) !!}
                         @endif
                     </td>
                 </tr>

@@ -31,9 +31,14 @@ Route::group([
 // Pages
     Route::get('', ['as' => 'home', 'uses' => 'HomeController@home']);
 });
-
+//step register
+Route::get('register/second', ['as' => 'register.second', 'uses' => 'Auth\RegisterController@secondregister']);
+//ajax
+if (Request::ajax()){
+    require __DIR__ . '/ajax_site.php';
+}
 // Auth
-Auth::routes();
+Auth::routes();  
 
 // Auth Admin
 Route::get($admin_panel . '/login', ['as' => 'admin.login', 'uses' => 'Auth\LoginAdminController@showLoginForm']);

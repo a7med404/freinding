@@ -38,6 +38,8 @@
 
 <script src="{{ asset('olympus/Bootstrap/dist/js/bootstrap.bundle.js') }}"></script>
 
+<script src="{{ asset('js/site/ajax.js') }}"></script>
+
 
 
 

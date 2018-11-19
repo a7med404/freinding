@@ -57,6 +57,10 @@ class User extends Authenticatable {
             return '';
         }
     }
+    public static function userDataCol($column = 'display_name',$valColum) {
+        $user = static::where($column,$valColum)->first();
+         return $user;
+    }
 
     public static function foundUser($name, $column = 'name') {
         $user = static::where($column, $name)->first();
