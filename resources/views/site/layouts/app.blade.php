@@ -5,7 +5,7 @@
         @yield('after_head')
         {!! $facebook_pixel !!}
     </head>
-    <body  data-url="{{ route('home') }}" data-user="{{ $user_id }}" @if(empty($user_key)) class="landing-page" @endif>
+    <body site-Homeurl="{{ route('home') }}" data-user="{{ $user_key }}" @if(empty($user_key)) class="landing-page" @endif>
         {!! $google_analytic !!} 
         @include('site.layouts.header')
         @yield('content')

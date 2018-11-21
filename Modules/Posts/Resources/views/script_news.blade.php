@@ -8,19 +8,20 @@
         });
 
         $(window).resize(function () {
-            $('[id^=video_post_]').each(function () {
-                console.log($(this));
+            Resize();
+        });
+
+        // $('.video_post_element').each(function () {
+        //    $(this).attr('src',$(this).data('src'));
+        // });
+
+        Resize();
+        function Resize(){
+            $('.video_post').each(function () {
                 var cw = $(this).width();
-                $(this).css({'height': cw + 'px'});
+                $(this).css({'height':cw+'px'});
             });
-        });
-
-        $('[id^=video_post_]').each(function () {
-            console.log($(this));
-            var cw = $(this).width();
-            $(this).css({'height': cw + 'px'});
-        });
-
+        }
         //for reactions
 
         // $('[id^=react]').hover(function () {
@@ -177,7 +178,6 @@
         });
 
         $('.post_reacts_users').click(function () {
-
             var btn = $(this);
             var id = btn.attr('id');
             var lis = "<div id='wait' style=\"\n" +
@@ -364,6 +364,7 @@
                 url: '{{route('delete-post')}}',//route function take route name == url("/posts/delete-post")
                 data: {_token: _token, id: id},
                 success: function (data) {
+                    console.log(data);
                     $('#AllPostDiv' + id).html("");
                     notify_delete_post();
                 },
@@ -413,6 +414,21 @@
         {{--});--}}
         {{--});--}}
         $('body').on('click', '#myNewPost', function (e) {
+         flexFont = function () {
+             var divs = document.getElementsByClassName("flexFont");
+             for(var i = 0; i < divs.length; i++) {
+                 var relFontsize = divs[i].offsetWidth*0.05;
+                 divs[i].style.fontSize = relFontsize+'px';
+             }
+         };
+        window.onload = function(event) {
+            flexFont();
+        };
+        window.onresize = function(event) {
+            flexFont();
+        };
+        $('#myNewPost').submit(function (e) {
+        $('#myNewPost').submit(function (e) {
             $this = $(this)
             var _token = $("input[name='_token']").val();
             var data = $('#myNewPost').serialize();
@@ -531,7 +547,6 @@
         $('#uploadPhotoClick').click(function () {
             console.log("555");
             $("#file_field").click();
-
         });
 
         function notifyaddpost() {

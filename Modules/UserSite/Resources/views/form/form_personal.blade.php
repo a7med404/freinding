@@ -48,12 +48,6 @@
                 {!! Form::select('country',allCountry() ,$user->country, array('id'=>'country','class' => 'selectpicker form-control')) !!}
 
             </div>
-        </div>
-        <div class="col col-lg-4 col-md-4 col-sm-12 col-12">
-            <div class="form-group label-floating is-select">
-                <label class="control-label">Your City</label>
-                {!! Form::text('address', $user->address, array('placeholder' => 'City','id'=>'address','class' => '  form-control')) !!}
-            </div>
         </div>-->
         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="form-group label-floating">
@@ -61,8 +55,12 @@
                 {!! Form::textarea('about_me', $user->about_me, array('placeholder' => 'About me','id'=>'about_me','rows'=>'3','class' => '  form-control')) !!}
             </div>
             <div class="form-group label-floating">
-                <label class="control-label">Your Occupation</label>
-                {!! Form::text('occupation', $user->occupation, array('placeholder' => 'Occupation','id'=>'occupation','class' => '  form-control')) !!}
+                <label class="control-label">Jop Title</label>
+                {!! Form::text('occupation', $user->occupation, array('placeholder' => 'Jop Title','id'=>'occupation','class' => '  form-control')) !!}
+            </div>
+            <div class="form-group label-floating">
+                <label class="control-label">Working at</label>
+                {!! Form::text('address_jop', $user->address_jop, array('placeholder' => 'Working at','id'=>'address_jop','class' => '  form-control')) !!}
             </div>
         </div>
         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
@@ -70,13 +68,14 @@
                 <label class="control-label">Your Nationality</label>
                 {!! Form::select('nationality',allNationals() ,$user->nationality, array('id'=>'nationality','class' => 'selectpicker form-control')) !!}
             </div>
+            
+            <div class="form-group label-floating is-select">
+                <label class="control-label">Your City</label>
+                {!! Form::text('address', $user->address, array('placeholder' => 'City','id'=>'address','class' => '  form-control')) !!}
+            </div>
               <div class="form-group label-floating is-select">
                 <label class="control-label">Social Status</label>
                 {!! Form::select('social_status',socialstatusType() ,$user->social_status, array('id'=>'social_status','class' => 'selectpicker form-control')) !!}
-            </div>
-            <div class="form-group label-floating">
-                <label class="control-label">Working at</label>
-                {!! Form::text('address_jop', $user->address_jop, array('placeholder' => 'Working at','id'=>'address_jop','class' => '  form-control')) !!}
             </div>
         </div>
         <!--    <div class="col col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">

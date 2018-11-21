@@ -14,7 +14,15 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-pane active" id="home" role="tabpanel" data-mh="log-tab">
-                        @include('auth.form_register')
+                        <div class="title h6">Register to Friending</div>
+                        <form class="content" role="form" method="POST" action="">
+                            {{ csrf_field() }}
+                            <div class="row">
+                                <div class="col col-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    @include('auth.form_register')
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

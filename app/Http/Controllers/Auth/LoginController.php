@@ -79,11 +79,7 @@ use AuthenticatesUsers;
     }
 
     public function authenticated($request, $user) {
-        $input['user_id'] = $user->id;
-        $date = strtotime(time());
-        $input['day_name'] = date('D', time());
-        $input['hour_in'] = date('H:i:s'); //date('H:i:s', time());
-        SessionTime::create($input);
+        SessionTime::InsertData($user->id);
 //        return redirect(session()->pull('url.intended', $this->redirectTo));
     }
 

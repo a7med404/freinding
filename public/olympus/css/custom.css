@@ -14,3 +14,11 @@
 .header--standard-landing.headroom--not-top .header-menu li .nav-link,
 .header--standard-landing.headroom--not-top .header-menu li .nav-link:hover
 {color: #fff;}*/
+
+.error-span{
+    background: #ef0a0a61;
+    color: #900909;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12px;
+}

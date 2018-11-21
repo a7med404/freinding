@@ -279,6 +279,39 @@
                                 </div>
                                 <p>{{$post->text}}</p>
                                 @if($post->type == 'picture')
+                                    <div class="modal fade" id="open-photo-popup-v1{{$post->id}}" tabindex="-1" role="dialog" aria-labelledby="open-photo-popup-v1" aria-hidden="true">
+                                        <div class="modal-dialog window-popup open-photo-popup open-photo-popup-v1" role="document">
+                                            <div class="modal-content">
+                                                <a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">
+                                                    <svg class="olymp-close-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-close-icon"></use></svg>
+                                                </a>
+                                                <div class="modal-body">
+                                                    <div class="open-photo-thumb">
+                                                        <div class="swiper-container" data-slide="fade">
+                                                            <div class="swiper-wrapper">
+
+                                                                @foreach($post->files as $file)
+                                                                    <div class="swiper-slide">
+                                                                        <div class="photo-item " style="display:block;">
+                                                                            <img src="{{$file->store_name}}"
+                                                                                 alt="photo">
+                                                                            <div class="overlay"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+
+                                                            <!--Prev Next Arrows-->
+
+                                                            <svg class="btn-next-without olymp-popup-right-arrow"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use></svg>
+
+                                                            <svg class="btn-prev-without olymp-popup-left-arrow"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use></svg>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="swiper-container" data-slide="fade">
                                         <div class="swiper-wrapper">
                                             @foreach($post->files as $file)
@@ -286,13 +319,22 @@
                                                     <div class="photo-item" style="display:block;">
                                                         <img src="{{$file->store_name}}"
                                                              alt="photo">
+                                                        <div class="flexFont" style="position: absolute;
+                                                        bottom: 1%;
+                                                        border-radius: 5px;
+                                                        -ms-transform: rotate(45deg); /* IE 9 */
+                                                        -webkit-transform: rotate(45deg); /* Safari 3-8 */
+                                                        transform: rotate(45deg);">
+                                                            <p style="padding: 10px;
+                                                            color: #f2f3f7;
+                                                            background-color: #9a9fbf85;
+                                                            border-radius: 50px;">Friending</p></div>
                                                         <div class="overlay"></div>
                                                     </div>
                                                 </div>
                                             @endforeach
-
+                                                <a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}" href="#" class="full-block"></a>
                                         </div>
-
                                         <svg class="btn-next-without olymp-popup-right-arrow">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
                                         </svg>
@@ -302,17 +344,28 @@
                                         </svg>
                                     </div>
                                 @elseif($post->type == 'video')
+                                    <div class="swiper-container" data-slide="fade">
+                                        <div class="swiper-wrapper">
                                     @foreach($post->files as $file)
-                                        <div style="background-color: black;
-                                        display: flex;
-                                        justify-content: center;
-                                        align-items: center;" id="video_post_{{$post->id}}"
-                                        >
-                                            <video controls style="width: 100%;height: auto;">
-                                                <source src="{{$file->store_name}}" type="video/mp4">
+                                                <div class="swiper-slide">
+                                                    <div class="photo-item" style="display:block;">
+                                                        <div style="background-color: black;display: flex;justify-content: center;
+                                                        align-items: center;" class="video_post">
+                                            <video class="video_post_element" controls autoplay muted  oncanplay="this.muted=true"  src="{{$file->store_name}}" {{--data-src=""--}} type="video/mp4" style="width: 100%;height: auto;">
                                             </video>
                                         </div>
+                                                    </div>
+                                                </div>
                                     @endforeach
+                                        </div>
+                                        <svg class="btn-next-without olymp-popup-right-arrow">
+                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                        </svg>
+
+                                        <svg class="btn-prev-without olymp-popup-left-arrow">
+                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                        </svg>
+                                    </div>
                                 @endif
                                 <div style="display: inline-block;">
                                     <ul>
@@ -1392,6 +1445,7 @@
 
                         </article>
                     </div>
+
                 </div>
                 <a id="load-more-button" href="#" class="btn btn-control btn-more" data-load-link="items-to-load.html"
                    data-container="newsfeed-items-grid">

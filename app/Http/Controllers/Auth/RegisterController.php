@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Model\SessionTime;
 use App\Http\Controllers\Site\SiteController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -63,7 +64,7 @@ use RegistersUsers;
      */
     protected function MakeConfirmValidat(array $input) {
         $wrong_form = $correct_form = NULL;
-        if (isset($input['optionsCheckboxes']) && $input['optionsCheckboxes'] == "on") { //optionsCheckboxes=terms
+        if (isset($input['terms']) && $input['terms'] == "on") { //terms=terms
             if (strlen($input['password']) >= 8 && strlen($input['password']) <= 100) {
                 if ($input['password'] == $input['password_confirmation']) {
                     if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL) === false) {
@@ -73,7 +74,7 @@ use RegistersUsers;
                             $user_name_id = User::foundUser($input['name'], 'name');
                             if ($user_name_id <= 0) {
                                 if (strlen($input['name']) >= 3 && strlen($input['name']) <= 100) {
-                                    if (strlen($input['display_name']) >= 3 && strlen($input['display_name']) <= 100) {
+//                                    if (strlen($input['display_name']) >= 3 && strlen($input['display_name']) <= 100) {
 //                                if (preg_match("/^[0-9]{8,16}$/", $input['phone'])) {
                                         //confirm not use phone
 //                                    $user_phone_id = User::foundUser($input['phone'], 'phone');
@@ -86,9 +87,9 @@ use RegistersUsers;
 //                                } else {
 //                                    $wrong_form = 'Please enter your phone number correctly';
 //                                }
-                                    } else {
-                                        $wrong_form = 'Display name must be at least 3 characters and not more than 100 characters';
-                                    }
+//                                    } else {
+//                                        $wrong_form = 'Display name must be at least 3 characters and not more than 100 characters';
+//                                    }
                                 } else {
                                     $wrong_form = 'User name must be at least 3 characters and not more than 100 characters';
                                 }
@@ -129,10 +130,10 @@ use RegistersUsers;
         $is_active = is_numeric($user_active) ? $user_active : 0;
         return User::create([
                     'name' => stripslashes(trim(filter_var($data['name'], FILTER_SANITIZE_STRING))),
-                    'display_name' => stripslashes(trim(filter_var($data['display_name'], FILTER_SANITIZE_STRING))),
+//                    'display_name' => stripslashes(trim(filter_var($data['display_name'], FILTER_SANITIZE_STRING))),
                     'email' => stripslashes(trim(filter_var($data['email'], FILTER_VALIDATE_EMAIL))),
-                    'gender' => stripslashes(trim(filter_var($data['gender'], FILTER_VALIDATE_EMAIL))),
-                    'birthdate' => stripslashes(trim(filter_var($data['datetimepicker'], FILTER_VALIDATE_EMAIL))),
+//                    'gender' => stripslashes(trim(filter_var($data['gender'], FILTER_VALIDATE_EMAIL))),
+//                    'birthdate' => stripslashes(trim(filter_var($data['datetimepicker'], FILTER_VALIDATE_EMAIL))),
                     'password' => bcrypt($data['password']),
                     'is_active' => $is_active,
         ]);
@@ -143,15 +144,50 @@ use RegistersUsers;
         foreach ($input as $key => $value) {
             $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
         }
+        $register=1;
         $wrong_form = $correct_form = NULL;
         $wrong_form = $this->MakeConfirmValidat($input);
         if (empty($wrong_form)) {
             $user = $this->addCreate($request, $input);
+            //save SessionTime
+            SessionTime::InsertData($user['id']);
             //send email
             $sen_email = User::SendEmailTOUser($user['id'], 'register');
             return $this->registered($request, $user) ?: redirect($this->redirectPath());
         } else {
-            return view('auth.register', compact('wrong_form', 'correct_form'));
+            return view('auth.register', compact('wrong_form', 'correct_form','register'));
+        }
+    }
+    //*************************** ajax register ****************************************
+    public function ajax_add_register_first(Request $request) {
+        if ($request->ajax()) {
+            $input = $request->input();
+            foreach ($input as $key => $value) {
+                $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
+            }
+            //$name,$email,$password,$password_confirmation,
+            $response = $status  = 0;
+            $wrong_form = $correct_form = NULL;
+            $wrong_form = $this->MakeConfirmValidat($input);
+            if (empty($wrong_form)) {
+                $status = 1;
+                $user = $this->addCreate($request, $input);
+                //save SessionTime
+                SessionTime::InsertData($user['id']);
+                //send email
+                $sen_email = User::SendEmailTOUser($user['id'], 'register');
+                $this->registered($request, $user); //?: redirect($this->redirectPath());
+                $data_user['user_id']=$user['id'];
+                $data_user['user_key']=$user['name'];
+                $data_user['register']=2;
+                $response = view('auth.form_register', $data_user)->render();
+            } else {
+                $status = 0;
+                $data_course['wrong_form'] = $wrong_form;
+                $data_course['correct_form'] = $correct_form;
+                $response = view('site.layouts.alert_save', compact('wrong_form', 'correct_form'))->render();
+            }
+            return response()->json(['status' => $status, 'response' => $response]);
         }
     }
 
