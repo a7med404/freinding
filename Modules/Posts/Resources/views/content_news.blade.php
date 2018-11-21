@@ -349,9 +349,8 @@
                                                 <div class="swiper-slide">
                                                     <div class="photo-item" style="display:block;">
                                                         <div style="background-color: black;display: flex;justify-content: center;
-                                                        align-items: center;" id="video_post_{{$post->id}}">
-                                            <video controls  autoplay muted style="width: 100%;height: auto;">
-                                                <source src="{{$file->store_name}}" type="video/mp4">
+                                                        align-items: center;" class="video_post">
+                                            <video class="video_post_element" controls autoplay muted  oncanplay="this.muted=true"  src="{{$file->store_name}}" {{--data-src=""--}} type="video/mp4" style="width: 100%;height: auto;">
                                             </video>
                                         </div>
                                                     </div>

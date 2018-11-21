@@ -11,10 +11,13 @@
             Resize();
         });
 
+        // $('.video_post_element').each(function () {
+        //    $(this).attr('src',$(this).data('src'));
+        // });
 
         Resize();
         function Resize(){
-            $('[id^=video_post_]').each(function () {
+            $('.video_post').each(function () {
                 var cw = $(this).width();
                 $(this).css({'height':cw+'px'});
             });
