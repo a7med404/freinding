@@ -226,9 +226,10 @@ class PostsController extends SiteController
     {
 
         $post = Post::where('user_id', Auth::id())->where('id', $request->id)->first();
+        $file=File::where('dependent_id ',id);
         if ($post) {
             $success = $post->Delete();
-
+            $file->Delete();
             return Response::json(['success' => true, 'message' => 'Post deleted'], 200);
         } else {
             return Response::json(['success' => false, 'message' => 'The Post has not been deleted'], 404);

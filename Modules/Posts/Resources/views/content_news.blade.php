@@ -57,7 +57,8 @@
                                 </div>
                                 <div class="form-group with-icon label-floating is-empty">
                                     <label class="control-label">Share what you are thinking here...</label>
-                                    <textarea class="form-control" id="textpost" name="text_of_post" placeholder=""></textarea>
+                                    <textarea class="form-control" id="textpost" name="text_of_post"
+                                              placeholder=""></textarea>
                                     <ul id="choosephoto"></ul>
                                 </div>
                                 <div class="add-options-message">
@@ -440,21 +441,23 @@
                                             @endif
                                         @endforeach
                                     </ul>
-                                    <a href="#" class="post-add-icon inline-items"
-                                    style="position: absolute;right: 20%;">
-
-                                        <?php
-                                        $engagement = $post->reactions->count();
-                                        $engagement += $post->supportFriends->count();
-                                        $engagement += $post->comments_count;
-                                        foreach ($post->comments as $comment) {
-                                            $engagement += $comment->replies->count();
-                                        }
-                                        ?>
-                                        <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
+                                    <a href="javascript:void(0)" class="post_reacts_users" id="{{$post->id}}">
+                                        <a  class="post-add-icon inline-items"  style="position: absolute;right: 20%;">
+                                            <?php
+                                            $engagement = $post->reactions->count();
+                                            $engagement += $post->supportFriends->count();
+                                            $engagement += $post->comments_count;
+                                            foreach ($post->comments as $comment) {
+                                                $engagement += $comment->replies->count();
+                                            }
+                                            ?>
+                                            <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
+                                        </a>
+                                        <span style="position: absolute;right: 5%;">Engagements</span>
                                     </a>
-                                    <span style="position: absolute;right: 5%;">Engagements</span>
                                 </div>
+
+
                                 <!-- old reactions -->
                             <!-- <div style="position: absolute; top: 18px;right:20px;">
                                         <ul hidden  id="post_{{$post->id}}" style=" display: flex;margin-right: -5px;">
@@ -489,6 +492,7 @@
 
                                 </div>-->
                             </article>
+
 
                             <!-- Comments -->
                             <ul class="comments-list comments-list--{{$post->id}}">

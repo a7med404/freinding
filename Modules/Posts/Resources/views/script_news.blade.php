@@ -177,6 +177,7 @@
         });
 
         $('.post_reacts_users').click(function () {
+
             var btn = $(this);
             var id = btn.attr('id');
             var lis = "<div id='wait' style=\"\n" +
@@ -247,7 +248,7 @@
             }
         });
 
-        function users_who_react() {
+         function users_who_react() {
             if (last_page != current_page) {
                 var _token = $("input[name='_token']").val();
                 $.ajax({
@@ -357,13 +358,14 @@
             var id = post.attr('id');
             var _token = $("input[name='_token']").val();
             console.log(id);
+
             $.ajax({
                 type: 'post',
                 url: '{{route('delete-post')}}',//route function take route name == url("/posts/delete-post")
                 data: {_token: _token, id: id},
                 success: function (data) {
-                    console.log(data);
                     $('#AllPostDiv' + id).html("");
+                    notify_delete_post();
                 },
                 error: function (err) {
                     console.log('Error!', err);
@@ -410,8 +412,7 @@
         {{--},--}}
         {{--});--}}
         {{--});--}}
-
-        $('#myNewPost').submit(function (e) {
+        $('body').on('click', '#myNewPost', function (e) {
             $this = $(this)
             var _token = $("input[name='_token']").val();
             var data = $('#myNewPost').serialize();
@@ -430,72 +431,72 @@
                     console.log(data.newpost.humansDate);
                     if (data['success']) {
                         $('#AreaForPost').prepend(
-                            '<div id="AllPostDiv'+data.newpost.id+'" class="ui-block">'+
+                            '<div id="AllPostDiv' + data.newpost.id + '" class="ui-block">' +
                             '<article class="hentry post video">' +
-                                '<div class="post__author author vcard inline-items">' +
-                                    '<img src="' + data.user_image+ '" alt="author">' +
-                                    '<div class="author-date">' +
-                                        '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
-                                        '  <div class="post__date">' +
-                                        '  <time class="published" datetime="2004-07-24T18:18">' +
-                                        ' '+data.newpost.humansDate+' '+
-                                        ' </time>' +
-                                        ' </div>' +
-                                    '</div>' +
-                                    '<div class="more">' +
-                                        '  <svg class="olymp-three-dots-icon">' +
-                                        '  <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
-                                        ' </svg>' +
-                                        '<ul class="more-dropdown">' +
-                                        ' <li>' +
-                                        ' <a href="#">Edit Post</a>' +
-                                        ' </li>' +
-                                        ' <li>' +
-                                        ' <a href="javascript:void(0)" class="post-delete" id="' + data.newpost.id + '">Delete Post</a>' +
-                                        ' </li>' +
-                                        '<li>' +
-                                        ' <a href="#">Turn Off Notifications</a>' +
-                                        ' </li>' +
-                                        ' <li>' +
-                                        ' <a href="#">Select as Featured</a>' +
-                                        ' </li>' +
-                                        '</ul>' +
-                                    '</div>' +
-                                '</div>' +
-                                    '<p>' + data.newpost.text + '</p>'+
-                                    '<div style="display: inline-block;">' +
-                                        '<ul>' +
-                                        '</ul>' +
-                                    '</div>'+
-                                    '<div class="post-additional-info form-inline post-control-button">' +
-                                        '<a id="btn_react'+data.newpost.id+'" class="btn btn-control " style="background-color: ">' +
-                                            '<svg class="olymp-like-post-icon">' +
-                                                '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>' +
-                                            '</svg>' +
-                                        '</a>' +
-                                        '<a id="comment_post'+data.newpost.id+'" class="btn btn-control ">' +
-                                            '<svg class="olymp-comments-post-icon">' +
-                                                 '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>' +
-                                            '</svg>' +
-                                        '</a>' +
-                                        '<a href="#" class="btn btn-control ">' +
-                                            '<svg class="olymp-share-icon">' +
-                                                '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>' +
-                                            '</svg>' +
-                                        '</a>' +
-                                            '<ul id="reactioners_photos'+data.newpost.id+'" style=" position: absolute; right: 27%;" class="friends-harmonic inline-items float-right">' +
-                                            '</ul>' +
-                                        '<a href="#" class="post-add-icon inline-items" style="position: absolute;right: 20%;">' +
-                                            '<span id="engagement_count1058">0</span>' +
-                                        '</a>' +
-                                            '<span style="position: absolute;right: 5%;">Engagements</span>' +
-                                    '</div>'+
-                                '</article>'+
-                                '<form class="comment-form inline-items">' +
+                            '<div class="post__author author vcard inline-items">' +
+                            '<img src="' + data.user_image + '" alt="author">' +
+                            '<div class="author-date">' +
+                            '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
+                            '  <div class="post__date">' +
+                            '  <time class="published" datetime="2004-07-24T18:18">' +
+                            ' ' + data.newpost.humansDate + ' ' +
+                            ' </time>' +
+                            ' </div>' +
+                            '</div>' +
+                            '<div class="more">' +
+                            '  <svg class="olymp-three-dots-icon">' +
+                            '  <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
+                            ' </svg>' +
+                            '<ul class="more-dropdown">' +
+                            ' <li>' +
+                            ' <a href="#">Edit Post</a>' +
+                            ' </li>' +
+                            ' <li>' +
+                            ' <a href="javascript:void(0)" class="post-delete" id="' + data.newpost.id + '">Delete Post</a>' +
+                            ' </li>' +
+                            '<li>' +
+                            ' <a href="#">Turn Off Notifications</a>' +
+                            ' </li>' +
+                            ' <li>' +
+                            ' <a href="#">Select as Featured</a>' +
+                            ' </li>' +
+                            '</ul>' +
+                            '</div>' +
+                            '</div>' +
+                            '<p>' + data.newpost.text + '</p>' +
+                            '<div style="display: inline-block;">' +
+                            '<ul>' +
+                            '</ul>' +
+                            '</div>' +
+                            '<div class="post-additional-info form-inline post-control-button">' +
+                            '<a id="btn_react' + data.newpost.id + '" class="btn btn-control " style="background-color: ">' +
+                            '<svg class="olymp-like-post-icon">' +
+                            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>' +
+                            '</svg>' +
+                            '</a>' +
+                            '<a id="comment_post' + data.newpost.id + '" class="btn btn-control ">' +
+                            '<svg class="olymp-comments-post-icon">' +
+                            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>' +
+                            '</svg>' +
+                            '</a>' +
+                            '<a href="#" class="btn btn-control ">' +
+                            '<svg class="olymp-share-icon">' +
+                            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>' +
+                            '</svg>' +
+                            '</a>' +
+                            '<ul id="reactioners_photos' + data.newpost.id + '" style=" position: absolute; right: 27%;" class="friends-harmonic inline-items float-right">' +
+                            '</ul>' +
+                            '<a href="#" class="post-add-icon inline-items" style="position: absolute;right: 20%;">' +
+                            '<span id="engagement_count1058">0</span>' +
+                            '</a>' +
+                            '<span style="position: absolute;right: 5%;">Engagements</span>' +
+                            '</div>' +
+                            '</article>' +
+                            '<form class="comment-form inline-items">' +
                             '        <div class="post__author author vcard inline-items">' +
                             '        <img src="olympus/img/author-page.jpg" alt="author">' +
                             '             <div class="form-group with-icon-right is-empty">' +
-                            '                <textarea id="comment_post'+data.newpost.id+'" class="form-control" placeholder="Your Comment Here" required=""></textarea>' +
+                            '                <textarea id="comment_post' + data.newpost.id + '" class="form-control" placeholder="Your Comment Here" required=""></textarea>' +
                             '                     <div class="add-options-message">' +
                             '                         <a href="#" class="options-message" data-toggle="modal" data-target="#update-header-photo">' +
                             '                             <svg class="olymp-camera-icon">' +
@@ -503,19 +504,19 @@
                             '                             </svg>' +
                             '                         </a>' +
                             '                     </div>' +
-                            '                <span class="material-input"></span>'+
-                                          '</div>' +
-                            '       </div>' +
-                            '       <button id="btn_comment'+data.newpost.id+'" class="btn btn-md-2 btn-primary">Post Comment'+
+                            '                <span class="material-input"></span>' +
+                            '</div>' +
+                            '</div>' +
+                            '       <button id="btn_comment' + data.newpost.id + '" class="btn btn-md-2 btn-primary">Post Comment' +
                             '       </button>' +
                             '       <button class="btn btn-md-2 btn-border-think c-grey btn-transparent custom-color">Cancel' +
                             '       </button>' +
-                            '   </form>'+
-                                '</div>'
+                            '   </form>' +
+                            '</div>'
                         );
                         // data['htmlnewpost']
-
-
+                        $('#textpost').val('');
+                        notifyaddpost();
                     } else {
                         console.log(data);
                     }
@@ -533,6 +534,45 @@
 
         });
 
+        function notifyaddpost() {
+
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+            }
+            // Let's check whether notification permissions have already been granted
+            else if (Notification.permission === "granted") {
+                // If it's okay let's create a notification
+                var notification = new Notification("add new post successfully");
+            }
+            else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(function (permission) {
+                    // If the user accepts, let's create a notification
+                    if (permission === "granted") {
+                        var notification = new Notification("add new post successfully");
+                    }
+                });
+            }
+        }
+
+        function notify_delete_post() {
+
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+            }
+            // Let's check whether notification permissions have already been granted
+            else if (Notification.permission === "granted") {
+                // If it's okay let's create a notification
+                var notification = new Notification(" post deleted successfully");
+            }
+            else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(function (permission) {
+                    // If the user accepts, let's create a notification
+                    if (permission === "granted") {
+                        var notification = new Notification("post deleted successfully");
+                    }
+                });
+            }
+        }
 
     });
 
