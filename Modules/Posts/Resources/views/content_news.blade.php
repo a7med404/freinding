@@ -494,8 +494,8 @@
                                             @endif
                                         @endforeach
                                     </ul>
-                                    <a href="javascript:void(0)" class="post_reacts_users" id="{{$post->id}}">
-                                        <a  class="post-add-icon inline-items"  style="position: absolute;right: 20%;">
+                                    <div class="post_reacts_users" id="{{$post->id}}" style="position: absolute;right: 5%;">
+                                        <a  class="post-add-icon inline-items"  >
                                             <?php
                                             $engagement = $post->reactions->count();
                                             $engagement += $post->supportFriends->count();
@@ -506,8 +506,8 @@
                                             ?>
                                             <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
                                         </a>
-                                        <span style="position: absolute;right: 5%;">Engagements</span>
-                                    </a>
+                                        <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>
+                                    </div>
                                 </div>
 
 
