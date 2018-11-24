@@ -453,28 +453,31 @@
 
                                 </div>-->
                                 <!-- new reactions -->
-                                <div class="post-additional-info form-inline post-control-button">
-                                    <a id="btn_react{{$post->id}}" class="btn btn-control "
-                                       style="background-color: {{$liked?'red':''}}">
-                                        <svg class="olymp-like-post-icon">
+                                <div class="post-additional-info form-inline post-control-button" style="width: 100%;">
+                                    <a id="btn_react{{$post->id}}" class="btn btn-control reaction"
+                                       style="background-color: {{$liked?'red':''}} ; ">
+                                        <svg class="olymp-like-post-icon" >
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
                                         </svg>
 
                                     </a>
 
-                                    <a id="comment_post{{$post->id}}" class="btn btn-control ">
+                                    <a id="comment_post{{$post->id}}" class="btn btn-control  reaction" >
                                         <svg class="olymp-comments-post-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>
                                         </svg>
 
                                     </a>
 
-                                    <a href="#" class="btn btn-control ">
+                                    <a href="#" class="btn btn-control reaction" >
                                         <svg class="olymp-share-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>
                                         </svg>
 
                                     </a>
+                                    <style>
+                                        @media only screen and (width < 300px){.reaction{ width:10%}}
+                                    </style>
                                     <ul id="reactioners_photos{{$post->id}}"
                                         style=" position: absolute; right: 27%;"
                                         class="friends-harmonic inline-items float-right">
