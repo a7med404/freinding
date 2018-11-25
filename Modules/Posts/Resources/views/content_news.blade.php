@@ -396,7 +396,7 @@
 
 
                                     <ul id="reactioners_photos{{$post->id}}" class="friends-harmonic">
-                                        @php($liked=false)
+                                      @php($liked=false)
                             @foreach($post->reactions as $reaction)
                                 <?php
                                 $liked = $reaction->user->id == Auth::id() || $liked
@@ -453,8 +453,8 @@
 
                                 </div>-->
                                 <!-- new reactions -->
-                                <div class="post-additional-info form-inline post-control-button" style="width: 100%;">
-                                    <a id="btn_react{{$post->id}}" class="btn btn-control reaction"
+                                <div class="post-additional-info form-inline post-control-button flex-container reaction" >
+                                    <a id="btn_react{{$post->id}}" class="btn btn-control "
                                        style="background-color: {{$liked?'red':''}} ; ">
                                         <svg class="olymp-like-post-icon" >
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
@@ -462,22 +462,20 @@
 
                                     </a>
 
-                                    <a id="comment_post{{$post->id}}" class="btn btn-control  reaction" >
+                                    <a id="comment_post{{$post->id}}" class="btn btn-control  " >
                                         <svg class="olymp-comments-post-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>
                                         </svg>
 
                                     </a>
 
-                                    <a href="#" class="btn btn-control reaction" >
+                                    <a href="#" class="btn btn-control " >
                                         <svg class="olymp-share-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>
                                         </svg>
 
                                     </a>
-                                    <style>
-                                        @media only screen and (width < 300px){.reaction{ width:10%}}
-                                    </style>
+
                                     <ul id="reactioners_photos{{$post->id}}"
                                         style=" position: absolute; right: 27%;"
                                         class="friends-harmonic inline-items float-right">
@@ -511,6 +509,13 @@
                                         </a>
                                         <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>
                                     </div>
+                                    <style>
+                                        @media only screen and (max-width:481px){.reaction{
+                                            display: flex;
+                                            flex-direction: row;
+                                            width: 100%;
+                                        }}
+                                    </style>
                                 </div>
 
 

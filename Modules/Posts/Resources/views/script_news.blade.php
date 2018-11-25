@@ -105,6 +105,7 @@
             var post_id = btn.attr('id');
             post_id = post_id.substring(12);
             var comment = $('#comment_post_form' + post_id).val();
+          //  var x = document.getElementById("myDIV");
             if (comment.length > 0) {
                 $.ajax({
                     type: 'POST',
@@ -134,6 +135,7 @@
                                 '               </div>\n' +
                                 '           </div>\n' +
                                 '\n' +
+
                                 '<div class="more">' +
                                 '<svg class="olymp-three-dots-icon">' +
                                 '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
@@ -579,7 +581,6 @@
             }
         }
 
-        $(document).stylesheet[0].insertRule("@media only screen and (width < 300px){.reaction{ width:10%}}");
     });
 
 
