@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Auth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use Modules\Posts\Entities\Comment;
 use Modules\Posts\Entities\File;
 use Modules\Posts\Entities\Post;
@@ -38,6 +39,10 @@ class PostsController extends SiteController
         } else {
             return redirect()->route('close');
         }
+    }
+
+    public function storePostsPhotosInTemp(Request $request){
+        Storage::disk('public')->put('/temp',$request->avatar);
     }
 
     /**

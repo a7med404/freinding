@@ -11,17 +11,16 @@
             Resize();
         });
 
-        // $('.video_post_element').each(function () {
-        //    $(this).attr('src',$(this).data('src'));
-        // });
 
         Resize();
-        function Resize(){
+
+        function Resize() {
             $('.video_post').each(function () {
                 var cw = $(this).width();
-                $(this).css({'height':cw+'px'});
+                $(this).css({'height': cw + 'px'});
             });
         }
+
         //for reactions
 
         // $('[id^=react]').hover(function () {
@@ -299,7 +298,7 @@
         }
 
 
-        function isScrolledIntoView(elem) {
+        function isScrolledIntoModalBody(elem) {
             var $elem = $(elem);
             var $window = $('.modal-body');
 
@@ -313,7 +312,7 @@
 
         $('.modal-body').scroll(function () {
             $('.test').each(function () {
-                if (isScrolledIntoView($(this))) {
+                if (isScrolledIntoModalBody($(this))) {
                     if (processing)
                         $('#wait').show();
                     else $('#wait').hide();
@@ -393,38 +392,41 @@
         });
 
         {{--$('.comment-delete').click(function (){--}}
-        {{--console.log('good');--}}
-        {{--var btn_comment=$(this);}}
-            {{--var id = btn_comment.attr('id');--}}
-        {{--var _token = $("input[name='_token']").val();--}}
-        {{--console.log(id);--}}
-        {{--$.ajax({--}}
-        {{--type: 'post',--}}
-        {{--url: '{{route('comment-delete')}}',}}
-        {{--data: {_token: _token, id: id},--}}
-        {{--success: function (data) {--}}
-        {{--console.log(data);--}}
-        {{--$('.Allcommentul'+id).html("");--}}
-        {{--},--}}
-        {{--error : function(err) {--}}
-        {{--console.log('Error!', err);--}}
-        {{--},--}}
-        {{--});--}}
-        {{--});--}}
+                {{--console.log('good');--}}
+                {{--var btn_comment=$(this);}}
+                    {{--var id = btn_comment.attr('id');--}}
+                {{--var _token = $("input[name='_token']").val();--}}
+                {{--console.log(id);--}}
+                {{--$.ajax({--}}
+                {{--type: 'post',--}}
+                {{--url: '{{route('comment-delete')}}',}}
+                {{--data: {_token: _token, id: id},--}}
+                {{--success: function (data) {--}}
+                {{--console.log(data);--}}
+                {{--$('.Allcommentul'+id).html("");--}}
+                {{--},--}}
+                {{--error : function(err) {--}}
+                {{--console.log('Error!', err);--}}
+                {{--},--}}
+                {{--});--}}
+                {{--});--}}
 
-         flexFont = function () {
-             var divs = document.getElementsByClassName("flexFont");
-             for(var i = 0; i < divs.length; i++) {
-                 var relFontsize = divs[i].offsetWidth*0.05;
-                 divs[i].style.fontSize = relFontsize+'px';
-             }
-         };
-        window.onload = function(event) {
+            flexFont = function () {
+            var divs = document.getElementsByClassName("flexFont");
+            for (var i = 0; i < divs.length; i++) {
+                var relFontsize = divs[i].offsetWidth * 0.05;
+                divs[i].style.fontSize = relFontsize + 'px';
+            }
+        };
+
+        window.onload = function (event) {
             flexFont();
         };
-        window.onresize = function(event) {
+
+        window.onresize = function (event) {
             flexFont();
         };
+
         $('#myNewPost').submit(function (e) {
             $this = $(this)
             var _token = $("input[name='_token']").val();
@@ -444,72 +446,72 @@
                     console.log(data.newpost.humansDate);
                     if (data['success']) {
                         $('#AreaForPost').prepend(
-                            '<div id="AllPostDiv'+data.newpost.id+'" class="ui-block">'+
+                            '<div id="AllPostDiv' + data.newpost.id + '" class="ui-block">' +
                             '<article class="hentry post video">' +
-                                '<div class="post__author author vcard inline-items">' +
-                                    '<img src="' + data.user_image+ '" alt="author">' +
-                                    '<div class="author-date">' +
-                                        '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
-                                        '  <div class="post__date">' +
-                                        '  <time class="published" datetime="2004-07-24T18:18">' +
-                                        ' '+data.newpost.humansDate+' '+
-                                        ' </time>' +
-                                        ' </div>' +
-                                    '</div>' +
-                                    '<div class="more">' +
-                                        '  <svg class="olymp-three-dots-icon">' +
-                                        '  <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
-                                        ' </svg>' +
-                                        '<ul class="more-dropdown">' +
-                                        ' <li>' +
-                                        ' <a href="#">Edit Post</a>' +
-                                        ' </li>' +
-                                        ' <li>' +
-                                        ' <a href="javascript:void(0)" class="post-delete" id="' + data.newpost.id + '">Delete Post</a>' +
-                                        ' </li>' +
-                                        '<li>' +
-                                        ' <a href="#">Turn Off Notifications</a>' +
-                                        ' </li>' +
-                                        ' <li>' +
-                                        ' <a href="#">Select as Featured</a>' +
-                                        ' </li>' +
-                                        '</ul>' +
-                                    '</div>' +
-                                '</div>' +
-                                    '<p>' + data.newpost.text + '</p>'+
-                                    '<div style="display: inline-block;">' +
-                                        '<ul>' +
-                                        '</ul>' +
-                                    '</div>'+
-                                    '<div class="post-additional-info form-inline post-control-button">' +
-                                        '<a id="btn_react'+data.newpost.id+'" class="btn btn-control " style="background-color: ">' +
-                                            '<svg class="olymp-like-post-icon">' +
-                                                '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>' +
-                                            '</svg>' +
-                                        '</a>' +
-                                        '<a id="comment_post'+data.newpost.id+'" class="btn btn-control ">' +
-                                            '<svg class="olymp-comments-post-icon">' +
-                                                 '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>' +
-                                            '</svg>' +
-                                        '</a>' +
-                                        '<a href="#" class="btn btn-control ">' +
-                                            '<svg class="olymp-share-icon">' +
-                                                '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>' +
-                                            '</svg>' +
-                                        '</a>' +
-                                            '<ul id="reactioners_photos'+data.newpost.id+'" style=" position: absolute; right: 27%;" class="friends-harmonic inline-items float-right">' +
-                                            '</ul>' +
-                                        '<a href="#" class="post-add-icon inline-items" style="position: absolute;right: 20%;">' +
-                                            '<span id="engagement_count1058">0</span>' +
-                                        '</a>' +
-                                            '<span style="position: absolute;right: 5%;">Engagements</span>' +
-                                    '</div>'+
-                                '</article>'+
-                                '<form class="comment-form inline-items">' +
+                            '<div class="post__author author vcard inline-items">' +
+                            '<img src="' + data.user_image + '" alt="author">' +
+                            '<div class="author-date">' +
+                            '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
+                            '  <div class="post__date">' +
+                            '  <time class="published" datetime="2004-07-24T18:18">' +
+                            ' ' + data.newpost.humansDate + ' ' +
+                            ' </time>' +
+                            ' </div>' +
+                            '</div>' +
+                            '<div class="more">' +
+                            '  <svg class="olymp-three-dots-icon">' +
+                            '  <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
+                            ' </svg>' +
+                            '<ul class="more-dropdown">' +
+                            ' <li>' +
+                            ' <a href="#">Edit Post</a>' +
+                            ' </li>' +
+                            ' <li>' +
+                            ' <a href="javascript:void(0)" class="post-delete" id="' + data.newpost.id + '">Delete Post</a>' +
+                            ' </li>' +
+                            '<li>' +
+                            ' <a href="#">Turn Off Notifications</a>' +
+                            ' </li>' +
+                            ' <li>' +
+                            ' <a href="#">Select as Featured</a>' +
+                            ' </li>' +
+                            '</ul>' +
+                            '</div>' +
+                            '</div>' +
+                            '<p>' + data.newpost.text + '</p>' +
+                            '<div style="display: inline-block;">' +
+                            '<ul>' +
+                            '</ul>' +
+                            '</div>' +
+                            '<div class="post-additional-info form-inline post-control-button">' +
+                            '<a id="btn_react' + data.newpost.id + '" class="btn btn-control " style="background-color: ">' +
+                            '<svg class="olymp-like-post-icon">' +
+                            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>' +
+                            '</svg>' +
+                            '</a>' +
+                            '<a id="comment_post' + data.newpost.id + '" class="btn btn-control ">' +
+                            '<svg class="olymp-comments-post-icon">' +
+                            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>' +
+                            '</svg>' +
+                            '</a>' +
+                            '<a href="#" class="btn btn-control ">' +
+                            '<svg class="olymp-share-icon">' +
+                            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>' +
+                            '</svg>' +
+                            '</a>' +
+                            '<ul id="reactioners_photos' + data.newpost.id + '" style=" position: absolute; right: 27%;" class="friends-harmonic inline-items float-right">' +
+                            '</ul>' +
+                            '<a href="#" class="post-add-icon inline-items" style="position: absolute;right: 20%;">' +
+                            '<span id="engagement_count1058">0</span>' +
+                            '</a>' +
+                            '<span style="position: absolute;right: 5%;">Engagements</span>' +
+                            '</div>' +
+                            '</article>' +
+                            '<form class="comment-form inline-items">' +
                             '        <div class="post__author author vcard inline-items">' +
                             '        <img src="olympus/img/author-page.jpg" alt="author">' +
                             '             <div class="form-group with-icon-right is-empty">' +
-                            '                <textarea id="comment_post'+data.newpost.id+'" class="form-control" placeholder="Your Comment Here" required=""></textarea>' +
+                            '                <textarea id="comment_post' + data.newpost.id + '" class="form-control" placeholder="Your Comment Here" required=""></textarea>' +
                             '                     <div class="add-options-message">' +
                             '                         <a href="#" class="options-message" data-toggle="modal" data-target="#update-header-photo">' +
                             '                             <svg class="olymp-camera-icon">' +
@@ -517,15 +519,15 @@
                             '                             </svg>' +
                             '                         </a>' +
                             '                     </div>' +
-                            '                <span class="material-input"></span>'+
-                                          '</div>' +
+                            '                <span class="material-input"></span>' +
+                            '</div>' +
                             '       </div>' +
-                            '       <button id="btn_comment'+data.newpost.id+'" class="btn btn-md-2 btn-primary">Post Comment'+
+                            '       <button id="btn_comment' + data.newpost.id + '" class="btn btn-md-2 btn-primary">Post Comment' +
                             '       </button>' +
                             '       <button class="btn btn-md-2 btn-border-think c-grey btn-transparent custom-color">Cancel' +
                             '       </button>' +
-                            '   </form>'+
-                                '</div>'
+                            '   </form>' +
+                            '</div>'
                         );
                         // data['htmlnewpost']
 
@@ -546,7 +548,153 @@
             $("#file_field").click();
         });
 
+        $('.video_post_element').each(function () {
+            var vid = $(this);
+            VisSense.VisMon.Builder(VisSense(vid[0]))
+                .on('fullyvisible', function () {
+                    if ($(vid[0]).parent().parent().parent().hasClass('swiper-slide-active')) {
+                        vid[0].play();
+                    }
+                })
+                .on('hidden', function () {
+                    vid[0].pause();
+                })
+                .build()
+                .start();
+        });
+
+        function isScrolledIntoView(elem,container) {
+            var $elem = $(elem);
+            var $window = $(container);
+
+            var docViewTop = $window.scrollTop();
+            var docViewBottom = docViewTop + $window.height();
+
+            var elemTop = $elem.offset().top;
+            var elemBottom = elemTop + $elem.height();
+
+            console.log(elemBottom,docViewBottom,elemTop,docViewTop,(elemBottom <= docViewBottom),(elemTop >= docViewTop),(elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+            return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+        }
+
+        $('.video_choser').click(function () {
+            // $('.swiper-slide-active.my-video').find("video")[0].play();
+            $('.swiper-slide-active.my-video').each(function () {
+              if(isScrolledIntoView($(this),window)){
+                  $(this).find("video")[0].play();
+              }
+            });
+            $('.swiper-slide.my-video').each(function () {
+                if (!$(this).hasClass("swiper-slide-active")) {
+                    $(this).find("video")[0].pause();
+                }
+            });
+        });
 
     });
 
+</script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', function () {
+        var image = document.getElementById('image');
+        var input = document.getElementById('input');
+        var $modal = $('#modal');
+        var cropper;
+        $('[data-toggle="tooltip"]').tooltip();
+        input.addEventListener('change', function (e) {
+            var files = e.target.files;
+            var done = function (url) {
+                input.value = '';
+                image.src = url;
+                $modal.modal('show');
+            };
+            var reader;
+            var file;
+            var url;
+            if (files && files.length > 0) {
+                file = files[0];
+                if (URL) {
+                    console.log(URL,3);
+                    done(URL.createObjectURL(file));
+                } else if (FileReader) {
+                    console.log(FileReader,4);
+                    reader = new FileReader();
+                    reader.onload = function (e) {
+                        done(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        $modal.on('shown.bs.modal', function () {
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 3,
+            });
+        }).on('hidden.bs.modal', function () {
+            cropper.destroy();
+            cropper = null;
+        });
+
+        document.getElementById('crop').addEventListener('click', function () {
+            var canvas;
+            $modal.modal('hide');
+            if (cropper) {
+                canvas = cropper.getCroppedCanvas({
+                    width: 160,
+                    height: 160,
+                });
+                console.log(canvas,6);
+                var src = canvas.toDataURL();
+                console.log(src,8);
+                $('#choosephoto').append(
+                    '<li style="width: 100px;height: 100px;display: inline-flex;margin: 5px;">' +
+                    ' <img class="rounded"  src="'+src+'">' +
+                    '</li>'
+                );
+                canvas.toBlob(function (blob) {
+                    console.log(blob,9);
+                    var _token = $("input[name='_token']").val();
+                    var formData = new FormData();
+                    formData.append('avatar', blob, 'avatar.jpg');
+                    formData.append('_token', _token);
+                    $.ajax({
+                        method: 'POST',
+                        url: '{{route('storePostsPhotosInTemp')}}',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        /*xhr: function () {
+                            var xhr = new XMLHttpRequest();
+                            xhr.upload.onprogress = function (e) {
+                                var percent = '0';
+                                var percentage = '0%';
+                                if (e.lengthComputable) {
+                                    percent = Math.round((e.loaded / e.total) * 100);
+                                    percentage = percent + '%';
+                                    // $progressBar.width(percentage).attr('aria-valuenow', percent).text(percentage);
+                                }
+                            };
+                            return xhr;
+                        },*/
+                        success: function () {
+                            console.log('success');
+                            // $alert.show().addClass('alert-success').text('Upload success');
+                        },
+                        error: function () {
+                            console.log('error');
+                            // avatar.src = initialAvatarURL;
+                            // $alert.show().addClass('alert-warning').text('Upload error');
+                        },
+                        complete: function () {
+                            console.log('complete');
+                            // $progress.hide();
+                        },
+                    });
+                });
+            }
+        });
+    });
 </script>

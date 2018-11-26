@@ -39,6 +39,11 @@
 <script src="{{ asset('olympus/Bootstrap/dist/js/bootstrap.bundle.js') }}"></script>
 
 <script src="{{ asset('js/site/ajax.js') }}"></script>
+<script src="{{ asset('js/vissense.js') }}"></script>
+
+
+<script src="{{ asset('js/cropper.js') }}"></script>
+<script src="{{ asset('js/jquery-cropper.js') }}"></script>
 
 
 
