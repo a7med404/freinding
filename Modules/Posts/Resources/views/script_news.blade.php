@@ -484,6 +484,7 @@
                 url: '{{route('new-post')}}',
                 data: data,
                 cache: false,
+
                 success: function (data) {
                     console.log(data.newpost.humansDate);
                     if (data['success']) {
@@ -596,8 +597,7 @@
                         // data['htmlnewpost']
                         $('#textpost').val('');
                         notifyaddpost();
-                        //hide loader
-                        $('#containerloader').html('');
+
 
 
                     } else {
@@ -607,6 +607,10 @@
                 },
                 error: function (data) {
                     console.log(data);
+                },
+                complete: function () {
+                    //hide loader
+                    $('#containerloader').html('');
                 }
             });
         });
