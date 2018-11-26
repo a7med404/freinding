@@ -422,8 +422,24 @@
             $this = $(this)
             var _token = $("input[name='_token']").val();
             var data = $('#myNewPost').serialize();
+            //start loader
+            var bar = new ProgressBar.Line(containerloader, {
+                strokeWidth: 4,
+                easing: 'easeInOut',
+                duration: 1400,
+                color: '#FFEA82',
+                trailColor: '#eee',
+                trailWidth: 1,
+                svgStyle: {width: '100%', height: '100%'},
+                from: {color: '#FFEA82'},
+                to: {color: '#ED6A5A'},
+                step: (state, bar) => {
+                    bar.path.setAttribute('stroke', state.color);
+                }
+            });
 
-            //	var files = $('#file_field').fileinput('getFileStack');
+            bar.animate(1.0);  // Number from 0.0 to 1.0
+            //end loader
             console.log($this);
             console.log('something');
 
@@ -525,6 +541,10 @@
                         // data['htmlnewpost']
                         $('#textpost').val('');
                         notifyaddpost();
+                        //hide loader
+                        $('#containerloader').html('');
+
+
                     } else {
                         console.log(data);
                     }
@@ -578,6 +598,14 @@
                         var notification = new Notification("post deleted successfully");
                     }
                 });
+            }
+        }
+        function sleep(milliseconds) {
+            var start = new Date().getTime();
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > milliseconds){
+                    break;
+                }
             }
         }
 

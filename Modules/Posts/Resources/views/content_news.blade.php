@@ -193,8 +193,20 @@
                 </div>
             </div>
             <!-- ... end News Feed Form  -->
-
-
+               <!--loader-->
+            <div id="containerloader"
+                 style=" margin: 20px;  width: 588px;  height: 8px;  " >
+                <style>
+                    @media only screen and (max-width:680px){
+                        #containerloader{
+                            display: flex;
+                            flex-direction: row;
+                            width: 100%;
+                        }
+                    }
+                </style>
+            </div>
+                <!--endloader-->
             <div id="newsfeed-items-grid">
                 <div class="container" id="AreaForPost">
                     <div class="modal fade" id="reactions" tabindex="-1" role="dialog" aria-hidden="true">
