@@ -83,6 +83,9 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <ul id="choosephoto"></ul>
+
                                 </div>
 
                                 <div class="add-options-message">
@@ -222,6 +225,19 @@
             </div>
             <!-- ... end News Feed Form  -->
 
+               <!--loader-->
+            <div id="containerloader" style=" margin: 20px;  width: 588px;  height: 8px;  " >
+                <style>
+                    @media only screen and (max-width:680px){
+                        #containerloader{
+                            display: flex;
+                            flex-direction: row;
+                            width: 100%;
+                        }
+                    }
+                </style>
+            </div>
+                <!--endloader-->
 
             <div id="newsfeed-items-grid">
                 <div class="container" id="AreaForPost">
@@ -439,7 +455,7 @@
 
 
                                     <ul id="reactioners_photos{{$post->id}}" class="friends-harmonic">
-                                        @php($liked=false)
+                                      @php($liked=false)
                             @foreach($post->reactions as $reaction)
                                 <?php
                                 $liked = $reaction->user->id == Auth::id() || $liked
@@ -496,28 +512,29 @@
 
                                 </div>-->
                                 <!-- new reactions -->
-                                <div class="post-additional-info form-inline post-control-button">
+                                <div class="post-additional-info form-inline post-control-button flex-container reaction" >
                                     <a id="btn_react{{$post->id}}" class="btn btn-control "
-                                       style="background-color: {{$liked?'red':''}}">
-                                        <svg class="olymp-like-post-icon">
+                                       style="background-color: {{$liked?'red':''}};">
+                                        <svg class="olymp-like-post-icon" >
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
                                         </svg>
 
                                     </a>
 
-                                    <a id="comment_post{{$post->id}}" class="btn btn-control ">
+                                    <a id="comment_post{{$post->id}}" class="btn btn-control  " >
                                         <svg class="olymp-comments-post-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>
                                         </svg>
 
                                     </a>
 
-                                    <a href="#" class="btn btn-control ">
+                                    <a href="#" class="btn btn-control " >
                                         <svg class="olymp-share-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>
                                         </svg>
 
                                     </a>
+
                                     <ul id="reactioners_photos{{$post->id}}"
                                         style=" position: absolute; right: 27%;"
                                         class="friends-harmonic inline-items float-right">
@@ -537,21 +554,39 @@
                                             @endif
                                         @endforeach
                                     </ul>
+
                                     <a href="#" class="post-add-icon inline-items"
                                        style="position: absolute;right: 20%;">
 
-                                        <?php
-                                        $engagement = $post->reactions->count();
-                                        $engagement += $post->supportFriends->count();
-                                        $engagement += $post->comments_count;
-                                        foreach ($post->comments as $comment) {
-                                            $engagement += $comment->replies->count();
-                                        }
-                                        ?>
-                                        <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
-                                    </a>
-                                    <span style="position: absolute;right: 5%;">Engagements</span>
+                                            <?php
+                                            $engagement = $post->reactions->count();
+                                            $engagement += $post->supportFriends->count();
+                                            $engagement += $post->comments_count;
+                                            foreach ($post->comments as $comment) {
+                                                $engagement += $comment->replies->count();
+                                            }
+                                            ?>
+                                            <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
+                                        </a>
+                                        <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>
                                 </div>
+
+                                    <style>
+                                        @media only screen and (max-width:481px){
+                                            .reaction{
+                                            display: flex;
+                                            flex-direction: row;
+                                            width: 100%;
+
+                                        }
+                                            .post-control-button .btn-control {
+                                                margin-top: 10px;
+                                            }
+                                        }
+                                    </style>
+
+
+
                                 <!-- old reactions -->
                             <!-- <div style="position: absolute; top: 18px;right:20px;">
                                         <ul hidden  id="post_{{$post->id}}" style=" display: flex;margin-right: -5px;">
@@ -586,6 +621,7 @@
 
                                 </div>-->
                             </article>
+
 
                             <!-- Comments -->
                             <ul class="comments-list comments-list--{{$post->id}}">

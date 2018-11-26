@@ -64,8 +64,7 @@
         //     reaction_id=reaction_id.substring(8);
         //     console.log(reaction_id,4);
         // });
-
-        $('[id^=btn_react]').click(function () {
+        $('body').on('click', '[id^=btn_react]', function () {
             var _token = $("input[name='_token']").val();
             var post = $(this);
             var post_id = post.attr('id');
@@ -96,15 +95,16 @@
                 }
             });
         });
-
-        $('[id^=btn_comment_]').click(function (e) {
+        $('body').on('click', '[id^=btn_comment_]', function (e) {
             console.log('something');
             var _token = $("input[name='_token']").val();
             var btn = $(this);
             e.preventDefault();
+            console.log('something2');
             var post_id = btn.attr('id');
             post_id = post_id.substring(12);
             var comment = $('#comment_post_form' + post_id).val();
+          //  var x = document.getElementById("myDIV");
             if (comment.length > 0) {
                 $.ajax({
                     type: 'POST',
@@ -134,6 +134,7 @@
                                 '               </div>\n' +
                                 '           </div>\n' +
                                 '\n' +
+
                                 '<div class="more">' +
                                 '<svg class="olymp-three-dots-icon">' +
                                 '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
@@ -163,6 +164,7 @@
                                 '       <a href="#" class="reply">Reply</a>' +
                                 '</li>'
                             );
+
                         } else {
                             console.log(data);
                         }
@@ -176,7 +178,7 @@
             ;
         });
 
-        $('.post_reacts_users').click(function () {
+        $('body').on('click', '.post_reacts_users', function () {
             var btn = $(this);
             var id = btn.attr('id');
             var lis = "<div id='wait' style=\"\n" +
@@ -247,7 +249,7 @@
             }
         });
 
-        function users_who_react() {
+         function users_who_react() {
             if (last_page != current_page) {
                 var _token = $("input[name='_token']").val();
                 $.ajax({
@@ -352,11 +354,12 @@
         //     return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));}
 
 
-        $('.post-delete').click(function () {
+        $('body').on('click', '.post-delete', function () {
             var post = $(this);//not post but delete button
             var id = post.attr('id');
             var _token = $("input[name='_token']").val();
             console.log(id);
+
             $.ajax({
                 type: 'post',
                 url: '{{route('delete-post')}}',//route function take route name == url("/posts/delete-post")
@@ -364,6 +367,7 @@
                 success: function (data) {
                     console.log(data);
                     $('#AllPostDiv' + id).html("");
+                    notify_delete_post();
                 },
                 error: function (err) {
                     console.log('Error!', err);
@@ -392,6 +396,7 @@
         });
 
         {{--$('.comment-delete').click(function (){--}}
+
                 {{--console.log('good');--}}
                 {{--var btn_comment=$(this);}}
                     {{--var id = btn_comment.attr('id');--}}
@@ -427,12 +432,49 @@
             flexFont();
         };
 
+        {{--console.log('good');--}}
+        {{--var btn_comment=$(this);}}
+            {{--var id = btn_comment.attr('id');--}}
+        {{--var _token = $("input[name='_token']").val();--}}
+        {{--console.log(id);--}}
+        {{--$.ajax({--}}
+        {{--type: 'post',--}}
+        {{--url: '{{route('comment-delete')}}',}}
+        {{--data: {_token: _token, id: id},--}}
+        {{--success: function (data) {--}}
+        {{--console.log(data);--}}
+        {{--$('.Allcommentul'+id).html("");--}}
+        {{--},--}}
+        {{--error : function(err) {--}}
+        {{--console.log('Error!', err);--}}
+        {{--},--}}
+        {{--});--}}
+        {{--});--}}
+
+
         $('#myNewPost').submit(function (e) {
+
             $this = $(this)
             var _token = $("input[name='_token']").val();
             var data = $('#myNewPost').serialize();
+            //start loader
+            var bar = new ProgressBar.Line(containerloader, {
+                strokeWidth: 4,
+                easing: 'easeInOut',
+                duration: 1400,
+                color: '#FFEA82',
+                trailColor: '#eee',
+                trailWidth: 1,
+                svgStyle: {width: '100%', height: '100%'},
+                from: {color: '#FFEA82'},
+                to: {color: '#ED6A5A'},
+                step: (state, bar) => {
+                    bar.path.setAttribute('stroke', state.color);
+                }
+            });
 
-            //	var files = $('#file_field').fileinput('getFileStack');
+            bar.animate(1.0);  // Number from 0.0 to 1.0
+            //end loader
             console.log($this);
             console.log('something');
 
@@ -499,6 +541,7 @@
                             '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>' +
                             '</svg>' +
                             '</a>' +
+
                             '<ul id="reactioners_photos' + data.newpost.id + '" style=" position: absolute; right: 27%;" class="friends-harmonic inline-items float-right">' +
                             '</ul>' +
                             '<a href="#" class="post-add-icon inline-items" style="position: absolute;right: 20%;">' +
@@ -507,11 +550,27 @@
                             '<span style="position: absolute;right: 5%;">Engagements</span>' +
                             '</div>' +
                             '</article>' +
+
+                            '<div class="post_reacts_users" id="'+data.newpost.id +'" style="position: absolute;right: 5%;">'+
+                                 ' <a  class="post-add-icon inline-items"  >'+
+                                       ' <span id="engagement_count'+data.newpost.id +'">0</span>'+
+                                   '</a>'+
+                                 ' <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>'+
+                                '</div>'+
+                            '</div>' +
+                            '</article>' +
+                            '<ul class="comments-list comments-list--'+data.newpost.id +'">'+
+                                '</ul>'+
+
                             '<form class="comment-form inline-items">' +
                             '        <div class="post__author author vcard inline-items">' +
                             '        <img src="olympus/img/author-page.jpg" alt="author">' +
                             '             <div class="form-group with-icon-right is-empty">' +
+
                             '                <textarea id="comment_post' + data.newpost.id + '" class="form-control" placeholder="Your Comment Here" required=""></textarea>' +
+
+                            '                <textarea id="comment_post_form' + data.newpost.id + '" class="form-control" placeholder="Your Comment Here" required=""></textarea>' +
+
                             '                     <div class="add-options-message">' +
                             '                         <a href="#" class="options-message" data-toggle="modal" data-target="#update-header-photo">' +
                             '                             <svg class="olymp-camera-icon">' +
@@ -521,8 +580,13 @@
                             '                     </div>' +
                             '                <span class="material-input"></span>' +
                             '</div>' +
+
                             '       </div>' +
                             '       <button id="btn_comment' + data.newpost.id + '" class="btn btn-md-2 btn-primary">Post Comment' +
+
+                            '</div>' +
+                            '       <button id="btn_comment_' + data.newpost.id + '" class="btn btn-md-2 btn-primary">Post Comment' +
+
                             '       </button>' +
                             '       <button class="btn btn-md-2 btn-border-think c-grey btn-transparent custom-color">Cancel' +
                             '       </button>' +
@@ -530,6 +594,10 @@
                             '</div>'
                         );
                         // data['htmlnewpost']
+                        $('#textpost').val('');
+                        notifyaddpost();
+                        //hide loader
+                        $('#containerloader').html('');
 
 
                     } else {
@@ -547,6 +615,7 @@
             console.log("555");
             $("#file_field").click();
         });
+
 
         $('.video_post_element').each(function () {
             var vid = $(this);
@@ -591,7 +660,57 @@
             });
         });
 
+        function notifyaddpost() {
+
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+            }
+            // Let's check whether notification permissions have already been granted
+            else if (Notification.permission === "granted") {
+                // If it's okay let's create a notification
+                var notification = new Notification("add new post successfully");
+            }
+            else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(function (permission) {
+                    // If the user accepts, let's create a notification
+                    if (permission === "granted") {
+                        var notification = new Notification("add new post successfully");
+                    }
+                });
+            }
+        }
+
+        function notify_delete_post() {
+
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+            }
+            // Let's check whether notification permissions have already been granted
+            else if (Notification.permission === "granted") {
+                // If it's okay let's create a notification
+                var notification = new Notification(" post deleted successfully");
+            }
+            else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(function (permission) {
+                    // If the user accepts, let's create a notification
+                    if (permission === "granted") {
+                        var notification = new Notification("post deleted successfully");
+                    }
+                });
+            }
+        }
+        function sleep(milliseconds) {
+            var start = new Date().getTime();
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > milliseconds){
+                    break;
+                }
+            }
+        }
+
+
     });
+
 
 </script>
 

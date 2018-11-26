@@ -14,6 +14,7 @@ use Modules\Posts\Entities\PostReaction;
 use Modules\Posts\Entities\Reaction;
 use App\Http\Controllers\Site\SiteController;
 
+
 class PostsController extends SiteController
 {
 
@@ -231,11 +232,19 @@ class PostsController extends SiteController
     {
 
         $post = Post::where('user_id', Auth::id())->where('id', $request->id)->first();
+        //;
         if ($post) {
-            $success = $post->Delete();
+            if( $post->type = "video" || $post->type = "picture")
+            {
 
+                $file=File::where('dependent_id',$post->id)->where('type','post')->first();
+                Storage::delete($file->store_name.$file->extension);
+                $file->Delete();
+            }
+            $success = $post->Delete();
             return Response::json(['success' => true, 'message' => 'Post deleted'], 200);
-        } else {
+        }
+        else {
             return Response::json(['success' => false, 'message' => 'The Post has not been deleted'], 404);
         }
     }
