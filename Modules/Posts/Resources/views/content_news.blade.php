@@ -455,7 +455,7 @@
                                 <!-- new reactions -->
                                 <div class="post-additional-info form-inline post-control-button flex-container reaction" >
                                     <a id="btn_react{{$post->id}}" class="btn btn-control "
-                                       style="background-color: {{$liked?'red':''}} ; ">
+                                       style="background-color: {{$liked?'red':''}};">
                                         <svg class="olymp-like-post-icon" >
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
                                         </svg>
@@ -510,11 +510,16 @@
                                         <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>
                                     </div>
                                     <style>
-                                        @media only screen and (max-width:481px){.reaction{
+                                        @media only screen and (max-width:481px){
+                                            .reaction{
                                             display: flex;
                                             flex-direction: row;
                                             width: 100%;
-                                        }}
+                                        }
+                                            .post-control-button .btn-control {
+                                                margin-top: 10px;
+                                            }
+                                        }
                                     </style>
                                 </div>
 
