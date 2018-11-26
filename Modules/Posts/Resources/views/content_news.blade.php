@@ -467,7 +467,7 @@
                                 <!-- new reactions -->
                                 <div class="post-additional-info form-inline post-control-button flex-container reaction" >
                                     <a id="btn_react{{$post->id}}" class="btn btn-control "
-                                       style="background-color: {{$liked?'red':''}};">
+                                       style="background-color: {{$liked?'red':''}};  margin-top: 10px;">
                                         <svg class="olymp-like-post-icon" >
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
                                         </svg>
@@ -528,9 +528,9 @@
                                             flex-direction: row;
                                             width: 100%;
                                         }
-                                            .post-control-button .btn-control {
+                                          /*  .post-control-button .btn-control {
                                                 margin-top: 10px;
-                                            }
+                                            }*/
                                         }
                                     </style>
                                 </div>
