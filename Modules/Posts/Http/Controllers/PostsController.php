@@ -42,8 +42,10 @@ class PostsController extends SiteController
         }
     }
 
-    public function storePostsPhotosInTemp(Request $request){
-        Storage::disk('public')->put('/temp',$request->avatar);
+    public function storePostsPhotosInTemp(Request $request)
+    {
+        $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
+        return $x;
     }
 
     /**
@@ -232,19 +234,17 @@ class PostsController extends SiteController
     {
 
         $post = Post::where('user_id', Auth::id())->where('id', $request->id)->first();
-        //;
-        if ($post) {
-            if( $post->type = "video" || $post->type = "picture")
-            {
 
-                $file=File::where('dependent_id',$post->id)->where('type','post')->first();
-                Storage::delete($file->store_name.$file->extension);
+        if ($post) {
+            if ($post->type == "video" || $post->type == "picture") {
+                $file = File::where('dependent_id', $post->id)->where('type', 'post')->first();
+                Storage::delete($file->store_name . $file->extension);
                 $file->Delete();
             }
+
             $success = $post->Delete();
             return Response::json(['success' => true, 'message' => 'Post deleted'], 200);
-        }
-        else {
+        } else {
             return Response::json(['success' => false, 'message' => 'The Post has not been deleted'], 404);
         }
     }
@@ -269,11 +269,17 @@ class PostsController extends SiteController
 
     public function newPost(Request $request)
     {
+
         $newpost = new Post();
         $newpost->user_id = Auth::id();
-        $newpost->text = $request->text_of_post;
-        $newpost->type="text";
-        $newpost->dir="ltr";
+        $newpost->text = $request->text;
+        if ($request->post_has_files) {
+            $newpost->type = "picture";
+        } else {
+            $newpost->type = "text";
+        }
+        $newpost->dir = "ltr";
+
 
         $htmlnewpost = "";
 //        if ($request->file()) {
@@ -319,13 +325,114 @@ class PostsController extends SiteController
 
         $success = $newpost->save();
         $newpost['humansDate'] = $newpost->created_at->diffForHumans();
-        $newpost['id']  =$newpost->id;
+        $newpost['id'] = $newpost->id;
 
-        return Response::json(['success' => $success,
-            'htmlnewpost' => $htmlnewpost,
-            'newpost' => $newpost,
-            'user_image'=>Auth::user()->image,
-            'user_name'=>Auth::user()->display_name
-        ]);
+        $html_for_pictures_popup = "";
+        $html_for_pictures_popup = $html_for_pictures_popup .
+            '<div class="modal fade" id="open-photo-popup-v1' . $newpost->id . '" tabindex="-1"' .
+            ' role="dialog" aria-labelledby="open-photo-popup-v1" aria-hidden="true">' .
+            '<div class="modal-dialog window-popup open-photo-popup open-photo-popup-v1" role="document">' .
+            '<div class="modal-content">' .
+            '<a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">' .
+            '<svg class="olymp-close-icon">' .
+            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-close-icon"></use>' .
+            '</svg>' .
+            '</a>' .
+            '<div class="modal-body">' .
+            '<div class="open-photo-thumb">' .
+            '<div class="swiper-container" data-slide="fade">' .
+            '<div class="swiper-wrapper">';
+
+        $html_for_pictures = "";
+        $html_for_pictures = $html_for_pictures .
+            '<div class="swiper-container" data-slide="fade">' .
+            '<div class="swiper-wrapper">';
+
+        if ($request->post_has_files) {
+            foreach ($request['files'] as $file) {
+                $file_name = explode('.', $file)[0];
+                $file_ext = explode('.', $file)[1];
+                Storage::disk('public')->move('temp/' . $file, 'images/posts/' . $file);
+                $newfile = new File();
+                $newfile->dependent_id = $newpost->id;
+                $newfile->type = 'post';
+                $newfile->real_name = $file_name;
+                $newfile->store_name = $file_name;
+                $newfile->extension = $file_ext;
+                $newfile->save();
+
+                $html_for_pictures_popup = $html_for_pictures_popup .
+                    '<div class="swiper-slide">' .
+                    '<div class="photo-item " style="display:block;">' .
+                    '<img src="' . asset('storage/images/posts/' . $file) . '" alt="photo">' .
+                    '<div class="overlay"></div>' .
+                    '</div>' .
+                    '</div>';
+
+                $html_for_pictures = $html_for_pictures .
+                    '<div class="swiper-slide">' .
+                    '<div class="photo-item" style="display:block;">' .
+                    '<img src="' . asset('storage/images/posts/' . $file) . '" alt="photo">' .
+                    '<div class="flexFont" style="position: absolute;bottom: 1%; border-radius: 5px;' .
+                    '-ms-transform: rotate(45deg); /* IE 9 */' .
+                    '-webkit-transform: rotate(45deg); /* Safari 3-8 */' .
+                    'transform: rotate(45deg);">' .
+                    '<p style="padding: 10px;color: #f2f3f7;' .
+                    'background-color: #9a9fbf85;border-radius: 50px;">Friending' .
+                    '</p>' .
+                    '</div>' .
+                    '<div class="overlay"></div>' .
+                    '</div>' .
+                    '</div>';
+
+            }
+        }
+
+        $html_for_pictures_popup = $html_for_pictures_popup .
+            '</div>' .
+            '<svg class="btn-next-without olymp-popup-right-arrow">' .
+            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>' .
+            '</svg>' .
+            '<svg class="btn-prev-without olymp-popup-left-arrow">' .
+            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>' .
+            '</svg>' .
+            '</div>' .
+            '</div>' .
+            '</div>' .
+            '</div>' .
+            '</div>' .
+            '</div>';
+
+        $html_for_pictures = $html_for_pictures .
+            '<a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"  href="#" class="full-block"></a>' .
+            '</div>' .
+            '<svg class="btn-next-without olymp-popup-right-arrow">' .
+            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>' .
+            '</svg>' .
+            '<svg class="btn-prev-without olymp-popup-left-arrow">' .
+            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>' .
+            '</svg>' .
+            '</div>';
+
+
+        if ($request->post_has_files){
+            return Response::json(['success' => $success,
+                'htmlnewpost' => $htmlnewpost,
+                'newpost' => $newpost,
+                'user_image' => Auth::user()->image,
+                'user_name' => Auth::user()->display_name,
+                'html_for_pictures_popup'=>$html_for_pictures_popup,
+                'html_for_pictures'=>$html_for_pictures,
+                'with_files'=>true
+            ]);
+        }else{
+            return Response::json(['success' => $success,
+                'htmlnewpost' => $htmlnewpost,
+                'newpost' => $newpost,
+                'user_image' => Auth::user()->image,
+                'user_name' => Auth::user()->display_name,
+                'with_files'=>false
+            ]);
         }
     }
+}

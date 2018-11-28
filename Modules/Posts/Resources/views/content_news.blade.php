@@ -63,29 +63,31 @@
                                     </ul>
                                 </div>
 
-                                <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                                <div class="modal fade" id="modal" tabindex="-1" role="dialog"
+                                     aria-labelledby="modalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="modalLabel">Crop the image</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
                                                 <div style="max-width: 100%;">
-                                                    <img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
+                                                    <img id="image"
+                                                         src="https://avatars0.githubusercontent.com/u/3456749">
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                    Cancel
+                                                </button>
                                                 <button type="button" class="btn btn-primary" id="crop">Crop</button>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <ul id="choosephoto"></ul>
-
                                 </div>
 
                                 <div class="add-options-message">
@@ -111,11 +113,6 @@
                                         <input type="file" class="sr-only" id="input" name="image" accept="image/*">
                                     </label>
 
-                                    {{--<a href="#" id="uploadPhotoClick" class="options-message" data-toggle="tooltip"--}}
-                                       {{--data-placement="top"--}}
-                                       {{--data-original-title="ADD PHOTOS">--}}
-                                        {{----}}
-                                    {{--</a>--}}
                                     <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
                                        data-original-title="TAG YOUR FRIENDS">
                                         <svg class="olymp-computer-icon">
@@ -141,7 +138,7 @@
                             </form>
                         </div>
 
-                        <div class="tab-pane" id="profile-1" role="tabpanel" aria-expanded="true">
+                      <!--  <div class="tab-pane" id="profile-1" role="tabpanel" aria-expanded="true">
                             <form>
                                 <div class="author-thumb">
                                     <img src="olympus/img/author-page.jpg" alt="author">
@@ -219,17 +216,17 @@
                                 </div>
 
                             </form>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>
             <!-- ... end News Feed Form  -->
 
-               <!--loader-->
-            <div id="containerloader" style=" margin: 20px;  width: 588px;  height: 8px;  " >
+            <!--loader-->
+            <div id="containerloader" style=" margin: 20px;  width: 588px;  height: 8px;  ">
                 <style>
-                    @media only screen and (max-width:680px){
-                        #containerloader{
+                    @media only screen and (max-width: 680px) {
+                        #containerloader {
                             display: flex;
                             flex-direction: row;
                             width: 100%;
@@ -237,7 +234,7 @@
                     }
                 </style>
             </div>
-                <!--endloader-->
+            <!--endloader-->
 
             <div id="newsfeed-items-grid">
                 <div class="container" id="AreaForPost">
@@ -256,7 +253,7 @@
                                     <h6 class="title">Users Who Reactioned With This Post</h6>
                                 </div>
 
-                                <div class="modal-body" style="max-height: 500px; overflow-y: scroll">
+                                <div class="modal-body modal-body1" style="max-height: 500px; overflow-y: scroll">
                                     <ul id="users_reaction"
                                         class="widget w-friend-pages-added notification-list friend-requests dynamicContent">
                                         <div id="wait" style="
@@ -512,23 +509,23 @@
 
                                 </div>-->
                                 <!-- new reactions -->
-                                <div class="post-additional-info form-inline post-control-button flex-container reaction" >
-                                    <a id="btn_react{{$post->id}}" class="btn btn-control "
-                                       style="background-color: {{$liked?'red':''}};  margin-top: 10px;">
-                                        <svg class="olymp-like-post-icon" >
+                                <div class="post-additional-info form-inline post-control-button flex-container reaction">
+                                    <a id="btn_react{{$post->id}}" class="btn btn-control btn_react_first "
+                                       style="background-color: {{$liked?'red':''}};">
+                                        <svg class="olymp-like-post-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
                                         </svg>
 
                                     </a>
 
-                                    <a id="comment_post{{$post->id}}" class="btn btn-control  " >
+                                    <a id="comment_post{{$post->id}}" class="btn btn-control  ">
                                         <svg class="olymp-comments-post-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>
                                         </svg>
 
                                     </a>
 
-                                    <a href="#" class="btn btn-control " >
+                                    <a href="#" class="btn btn-control ">
                                         <svg class="olymp-share-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>
                                         </svg>
@@ -555,9 +552,9 @@
                                         @endforeach
                                     </ul>
 
-                                    <a href="#" class="post-add-icon inline-items"
-                                       style="position: absolute;right: 20%;">
-
+                                    <div class="post_reacts_users" id="{{$post->id}}"
+                                         style="position: absolute;right: 5%;">
+                                        <a class="post-add-icon inline-items">
                                             <?php
                                             $engagement = $post->reactions->count();
                                             $engagement += $post->supportFriends->count();
@@ -569,24 +566,26 @@
                                             <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
                                         </a>
                                         <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>
-                                </div>
+                                    </div>
 
                                     <style>
-                                        @media only screen and (max-width:481px){
-                                            .reaction{
-                                            display: flex;
-                                            flex-direction: row;
-                                            width: 100%;
+                                        @media only screen and (max-width: 481px) {
+                                            .reaction {
+                                                display: flex;
+                                                flex-direction: row;
+                                                width: 100%;
 
-                                        }
-                                          /*  .post-control-button .btn-control {
+                                            }
+                                            .btn_react_first{
                                                 margin-top: 10px;
-                                            }*/
+                                            }
+
+                                            /*  .post-control-button .btn-control {
+                                                  margin-top: 10px;
+                                              }*/
                                         }
                                     </style>
-
-
-
+                                </div>
                                 <!-- old reactions -->
                             <!-- <div style="position: absolute; top: 18px;right:20px;">
                                         <ul hidden  id="post_{{$post->id}}" style=" display: flex;margin-right: -5px;">

@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function () {
-        $('[id^=comment_post]').click(function () {
+        $('body').on('click','[id^=comment_post]',function () {
             id = $(this).attr('id');
             console.log(id);
             s = '#comment_post_form' + id.substring(12);
@@ -239,11 +239,14 @@
                 }
             });
         });
+
         processing = false;
-        $('.modal-body').scroll(function (e) {
+
+        $('.modal-body1').scroll(function (e) {
+            console.log(processing);
             if (processing)
                 return false;
-            if ($('.modal-body').scrollTop() >= ($('#users_reaction').height() - $('.modal-body').height()) * 0.7) {
+            if ($('.modal-body1').scrollTop() >= ($('#users_reaction').height() - $('.modal-body1').height()) * 0.7) {
                 processing = true;
                 users_who_react();
             }
@@ -300,31 +303,18 @@
         }
 
 
-        function isScrolledIntoModalBody(elem) {
-            var $elem = $(elem);
-            var $window = $('.modal-body');
-
-            var docViewTop = $window.scrollTop();
-            var docViewBottom = docViewTop + $window.height();
-
-            var elemTop = $elem.offset().top;
-            var elemBottom = elemTop + $elem.height();
-            return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
-        }
-
-        $('.modal-body').scroll(function () {
-            $('.test').each(function () {
-                if (isScrolledIntoModalBody($(this))) {
-                    if (processing)
-                        $('#wait').show();
-                    else $('#wait').hide();
-                }
-                else {
-
-                }
-            });
+        $('.test').each(function () {
+            var btn = $(this);
+            VisSense.VisMon.Builder(VisSense(btn[0]))
+                .on('fullyvisible', function () {
+                    $('#wait').show();
+                })
+                .on('hidden', function () {
+                    $('#wait').hide();
+                })
+                .build()
+                .start();
         });
-
 
         // $(document).scroll(function (e) {
         //     if (processing)
@@ -387,7 +377,7 @@
                 data: {_token: _token, id: id},
                 success: function (data) {
                     console.log(data);
-                    $('.Allcommentul' + id).html("");
+                    $('.Allcommentul' + id).parent().html("");
                 },
                 error: function (err) {
                     console.log('Error!', err);
@@ -455,7 +445,6 @@
         $('#myNewPost').submit(function (e) {
 
             $this = $(this)
-            var _token = $("input[name='_token']").val();
             var data = $('#myNewPost').serialize();
             //start loader
             var bar = new ProgressBar.Line(containerloader, {
@@ -475,91 +464,106 @@
 
             bar.animate(1.0);  // Number from 0.0 to 1.0
             //end loader
-            console.log($this);
-            console.log('something');
-
+            var post_has_files = 0;
+            $names = [];
+           if($('#choosephoto').children().length){
+               post_has_files=1;
+               $i=0;
+               $('#choosephoto').children().each(function () {
+                   $names[$i]=$(this).find('img').data('name');
+                   $i++;
+               });
+               console.log($names);
+           }
+            var text = $('#textpost').val();
+            var _token = $("input[name='_token']").val();
             e.preventDefault();
             $.ajax({
                 type: 'POST',
                 url: '{{route('new-post')}}',
-                data: data,
+                data: {
+                    post_has_files,
+                    text,
+                    files:$names,
+                    _token:_token
+                },
                 cache: false,
 
                 success: function (data) {
                     console.log(data.newpost.humansDate);
                     if (data['success']) {
+                        var $photos = "";
+
+                        if(data.with_files){
+                           $photos= data.html_for_pictures_popup+data.html_for_pictures;
+                        }
                         $('#AreaForPost').prepend(
                             '<div id="AllPostDiv' + data.newpost.id + '" class="ui-block">' +
-                            '<article class="hentry post video">' +
-                            '<div class="post__author author vcard inline-items">' +
-                            '<img src="' + data.user_image + '" alt="author">' +
-                            '<div class="author-date">' +
-                            '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
-                            '  <div class="post__date">' +
-                            '  <time class="published" datetime="2004-07-24T18:18">' +
-                            ' ' + data.newpost.humansDate + ' ' +
-                            ' </time>' +
-                            ' </div>' +
-                            '</div>' +
-                            '<div class="more">' +
-                            '  <svg class="olymp-three-dots-icon">' +
-                            '  <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
-                            ' </svg>' +
-                            '<ul class="more-dropdown">' +
-                            ' <li>' +
-                            ' <a href="#">Edit Post</a>' +
-                            ' </li>' +
-                            ' <li>' +
-                            ' <a href="javascript:void(0)" class="post-delete" id="' + data.newpost.id + '">Delete Post</a>' +
-                            ' </li>' +
-                            '<li>' +
-                            ' <a href="#">Turn Off Notifications</a>' +
-                            ' </li>' +
-                            ' <li>' +
-                            ' <a href="#">Select as Featured</a>' +
-                            ' </li>' +
-                            '</ul>' +
-                            '</div>' +
-                            '</div>' +
-                            '<p>' + data.newpost.text + '</p>' +
-                            '<div style="display: inline-block;">' +
-                            '<ul>' +
-                            '</ul>' +
-                            '</div>' +
-                            '<div class="post-additional-info form-inline post-control-button">' +
-                            '<a id="btn_react' + data.newpost.id + '" class="btn btn-control " style="background-color: ">' +
-                            '<svg class="olymp-like-post-icon">' +
-                            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>' +
-                            '</svg>' +
-                            '</a>' +
-                            '<a id="comment_post' + data.newpost.id + '" class="btn btn-control ">' +
-                            '<svg class="olymp-comments-post-icon">' +
-                            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>' +
-                            '</svg>' +
-                            '</a>' +
-                            '<a href="#" class="btn btn-control ">' +
-                            '<svg class="olymp-share-icon">' +
-                            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>' +
-                            '</svg>' +
-                            '</a>' +
-
-                            '<ul id="reactioners_photos' + data.newpost.id + '" style=" position: absolute; right: 27%;" class="friends-harmonic inline-items float-right">' +
-                            '</ul>' +
-                            '<a href="#" class="post-add-icon inline-items" style="position: absolute;right: 20%;">' +
-                            '<span id="engagement_count1058">0</span>' +
-                            '</a>' +
-                            '<span style="position: absolute;right: 5%;">Engagements</span>' +
-                            '</div>' +
-                            '</article>' +
-
-                            '<div class="post_reacts_users" id="'+data.newpost.id +'" style="position: absolute;right: 5%;">'+
-                                 ' <a  class="post-add-icon inline-items"  >'+
-                                       ' <span id="engagement_count'+data.newpost.id +'">0</span>'+
-                                   '</a>'+
-                                 ' <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>'+
-                                '</div>'+
-                            '</div>' +
-                            '</article>' +
+                                '<article class="hentry post video">' +
+                                    '<div class="post__author author vcard inline-items">' +
+                                        '<img src="' + data.user_image + '" alt="author">' +
+                                            '<div class="author-date">' +
+                                                '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
+                                                '  <div class="post__date">' +
+                                                    '  <time class="published" datetime="2004-07-24T18:18">' +
+                                                         ' ' + data.newpost.humansDate + ' ' +
+                                                    ' </time>' +
+                                                ' </div>' +
+                                            '</div>' +
+                                        '<div class="more">' +
+                                            '  <svg class="olymp-three-dots-icon">' +
+                                                 '  <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
+                                            ' </svg>' +
+                                            '<ul class="more-dropdown">' +
+                                                ' <li>' +
+                                                    ' <a href="#">Edit Post</a>' +
+                                                ' </li>' +
+                                                ' <li>' +
+                                                     ' <a href="javascript:void(0)" class="post-delete" id="' + data.newpost.id + '">Delete Post</a>' +
+                                                ' </li>' +
+                                                '<li>' +
+                                                     ' <a href="#">Turn Off Notifications</a>' +
+                                                ' </li>' +
+                                                ' <li>' +
+                                                     ' <a href="#">Select as Featured</a>' +
+                                                ' </li>' +
+                                            '</ul>' +
+                                        '</div>' +
+                                    '</div>' +
+                                     '<p>' + data.newpost.text + '</p>' +
+                              $photos+
+                                    '<div style="display: inline-block;">' +
+                                        '<ul>' +
+                                        '</ul>' +
+                                    '</div>' +
+                                '<div class="post-additional-info form-inline post-control-button">' +
+                                '<a id="btn_react' + data.newpost.id + '" class="btn btn-control " style="background-color: ">' +
+                                '<svg class="olymp-like-post-icon">' +
+                                '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>' +
+                                '</svg>' +
+                                '</a>' +
+                                '<a id="comment_post' + data.newpost.id + '" class="btn btn-control ">' +
+                                '<svg class="olymp-comments-post-icon">' +
+                                '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>' +
+                                '</svg>' +
+                                '</a>' +
+                                '<a href="#" class="btn btn-control ">' +
+                                '<svg class="olymp-share-icon">' +
+                                '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>' +
+                                '</svg>' +
+                                '</a>' +
+                                '<ul id="reactioners_photos'+data.newpost.id+'"\n' +
+                                '                                        style=" position: absolute; right: 27%;"\n' +
+                                '                                        class="friends-harmonic inline-items float-right">'+
+                                '</ul>'+
+                                '<div class="post_reacts_users" id="'+data.newpost.id +'" style="position: absolute;right: 5%;">'+
+                                     ' <a  class="post-add-icon inline-items"  >'+
+                                           ' <span id="engagement_count'+data.newpost.id +'">0</span>'+
+                                       '</a>'+
+                                     ' <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>'+
+                                    '</div>'+
+                                '</div>' +
+                                '</article>' +
                             '<ul class="comments-list comments-list--'+data.newpost.id +'">'+
                                 '</ul>'+
 
@@ -567,11 +571,7 @@
                             '        <div class="post__author author vcard inline-items">' +
                             '        <img src="olympus/img/author-page.jpg" alt="author">' +
                             '             <div class="form-group with-icon-right is-empty">' +
-
-                            '                <textarea id="comment_post' + data.newpost.id + '" class="form-control" placeholder="Your Comment Here" required=""></textarea>' +
-
                             '                <textarea id="comment_post_form' + data.newpost.id + '" class="form-control" placeholder="Your Comment Here" required=""></textarea>' +
-
                             '                     <div class="add-options-message">' +
                             '                         <a href="#" class="options-message" data-toggle="modal" data-target="#update-header-photo">' +
                             '                             <svg class="olymp-camera-icon">' +
@@ -581,13 +581,8 @@
                             '                     </div>' +
                             '                <span class="material-input"></span>' +
                             '</div>' +
-
-                            '       </div>' +
-                            '       <button id="btn_comment' + data.newpost.id + '" class="btn btn-md-2 btn-primary">Post Comment' +
-
                             '</div>' +
                             '       <button id="btn_comment_' + data.newpost.id + '" class="btn btn-md-2 btn-primary">Post Comment' +
-
                             '       </button>' +
                             '       <button class="btn btn-md-2 btn-border-think c-grey btn-transparent custom-color">Cancel' +
                             '       </button>' +
@@ -651,7 +646,6 @@
         }
 
         $('.video_choser').click(function () {
-            // $('.swiper-slide-active.my-video').find("video")[0].play();
             $('.swiper-slide-active.my-video').each(function () {
               if(isScrolledIntoView($(this),window)){
                   $(this).find("video")[0].play();
@@ -703,6 +697,7 @@
                 });
             }
         }
+
         function sleep(milliseconds) {
             var start = new Date().getTime();
             for (var i = 0; i < 1e7; i++) {
@@ -711,10 +706,7 @@
                 }
             }
         }
-
-
     });
-
 
 </script>
 
@@ -761,6 +753,15 @@
             cropper = null;
         });
 
+        function guid() {
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            }
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+        }
+
         document.getElementById('crop').addEventListener('click', function () {
             var canvas;
             $modal.modal('hide');
@@ -769,20 +770,20 @@
                     width: 160,
                     height: 160,
                 });
-                console.log(canvas,6);
                 var src = canvas.toDataURL();
-                console.log(src,8);
+                nameOfphoto = guid()+'.png';
+                console.log(nameOfphoto);
                 $('#choosephoto').append(
                     '<li style="width: 100px;height: 100px;display: inline-flex;margin: 5px;">' +
-                    ' <img class="rounded"  src="'+src+'">' +
+                    ' <img class="rounded" data-name='+nameOfphoto+' src="'+src+'">' +
                     '</li>'
                 );
                 canvas.toBlob(function (blob) {
-                    console.log(blob,9);
                     var _token = $("input[name='_token']").val();
                     var formData = new FormData();
                     formData.append('avatar', blob, 'avatar.jpg');
                     formData.append('_token', _token);
+                    formData.append('name', nameOfphoto);
                     $.ajax({
                         method: 'POST',
                         url: '{{route('storePostsPhotosInTemp')}}',
