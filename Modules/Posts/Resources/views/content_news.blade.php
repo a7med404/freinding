@@ -318,7 +318,7 @@
                                     </div>
 
                                 </div>
-                                <p>{{$post->text}}</p>
+                                <p style="word-wrap: break-word;">{{$post->text}}</p>
                                 @if($post->type == 'picture')
                                     <div class="modal fade" id="open-photo-popup-v1{{$post->id}}" tabindex="-1"
                                          role="dialog" aria-labelledby="open-photo-popup-v1" aria-hidden="true">

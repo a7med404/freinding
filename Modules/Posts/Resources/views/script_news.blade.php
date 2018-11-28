@@ -370,14 +370,64 @@
             var btn_comment = $(this);//not post but delete button
             var id = btn_comment.attr('id');
             var _token = $("input[name='_token']").val();
-            console.log(id);
+
             $.ajax({
                 type: 'post',
                 url: '{{route('comment-delete')}}',//route function take route name == url("/posts/delete-post")
                 data: {_token: _token, id: id},
+                dataType: "json",
                 success: function (data) {
-                    console.log(data);
-                    $('.Allcommentul' + id).parent().html("");
+                    console.log(data.newestcomment.id);
+                    $('.Allcommentul' + id).html("");
+                    $('#comment_post_form' + data.post_id).val('');
+                    $('#engagement_count' + data.post_id).text(data.engengagement);
+                    $('#comment_count' + data.post_id).text(data.comment_count);
+                    $('#reactioners_name' + data.post_id).html(data.reactioners);
+                    $('#reactioners_photos' + data.post_id).html(data.reactioners_photos);
+                    $('#reactions_count' + data.post_id).text(data.react_count);
+                    $('.comments-list--' + data.post_id).html(
+                        '<li  id="newestComment' + data.post_id + '" class="comment-item Allcommentul' + data.newestcomment['id']+ '">' +
+                        '<div class="post__author author vcard inline-items">\n' +
+                        '           <img src="' + data.newestcomment.user.image + '" alt="author">\n' +
+                        '\n' +
+                        '           <div class="author-date">\n' +
+                        '               <a class="h6 post__author-name fn" href="#">' + data.newestcomment.user.display_name + '</a>\n' +
+                        '               <div class="post__date">\n' +
+                        '                   <time class="published" datetime="2004-07-24T18:18">\n' +
+                        '                     ' + data.newestcomment['humansDate'] + '\n' +
+                        '                   </time>\n' +
+                        '               </div>\n' +
+                        '           </div>\n' +
+                        '\n' +
+                        '<div class="more">' +
+                        '<svg class="olymp-three-dots-icon">' +
+                        '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
+                        '</svg>' +
+                        '<ul class="more-dropdown">' +
+                        '<li>' +
+                        '<a href="#">Edit comment</a>' +
+                        '</li>' +
+                        '<li>' +
+                        '<a href="javascript:void(0)" class="comment-delete" id="' + data.newestcomment.id + '">Delete comment</a>' +
+                        '</li>' +
+                        '</ul>' +
+                        '</div>' +
+                        '\n' +
+                        '       </div>\n' +
+                        '\n' +
+                        '       <p>' + data.newestcomment.text + '\n' +
+                        '       </p>\n' +
+                        '\n' +
+                        '       <a href="#" class="post-add-icon inline-items">\n' +
+                        '           <svg class="olymp-heart-icon">\n' +
+                        '           <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>\n' +
+                        '           </svg>\n' +
+                        '           <span>' + data.newestcomment.commentReactions + '</span>\n' +
+                        '       </a>\n' +
+                        '       <a href="#" class="reply">Reply</a>' +
+                        '</li>'
+                    );
+
                 },
                 error: function (err) {
                     console.log('Error!', err);
@@ -530,7 +580,7 @@
                                             '</ul>' +
                                         '</div>' +
                                     '</div>' +
-                                     '<p>' + data.newpost.text + '</p>' +
+                                     '<p style="word-wrap: break-word;">' + data.newpost.text + '</p>' +
                               $photos+
                                     '<div style="display: inline-block;">' +
                                         '<ul>' +

@@ -251,15 +251,57 @@ class PostsController extends SiteController
 
     public function commentDelete(Request $request)
     {
-
-//$comment= Comment::where('user_id', Auth::id())->orwhere('comments.user_id', Auth::id());
         $canDelete = false;
         $comment = Comment::where('id', $request->id)->with(['post'])->first();
+        $post = Post::where('id',$comment->post_id)->first();
 
         if ($comment->user_id == Auth::id() || $comment->post->user_id == Auth::id()) {
             $success = $comment->Delete();
+            $newestcomment=Comment::where('deleted_at',null)->where('post_id',$post->id)->get()->last();
 
-            return ['success' => true, 'message' => ' comment deleted', 200];
+            $engagement = $post->reactions->count();
+            $engagement += $post->supportFriends->count();
+            $engagement += $post->comments_count;
+            foreach ($post->comments as $comment) {
+                $engagement += $comment->replies->count();
+            }
+
+            $comment_count = $post->comments_count;
+
+            $reactioners = "";
+            if ($post->reactions->count() > 2) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name .
+                    '</a>, <a href="#">' . $post->reactions[1]->user->display_name . '</a> and <br>' .
+                    ($post->reactions->count() - 2) . ' more react this';
+            } elseif ($post->reactions->count() == 2) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name . '</a>, <a
+                                    href="#">' . $post->reactions[1]->user->display_name . '</a>';
+            } elseif ($post->reactions->count() == 1) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name . '</a>';
+            }
+
+            $reactioners_photos = '';
+            $loop = 0;
+            foreach ($post->reactions as $reaction) {
+                if ($loop < 5) {
+                    $reactioners_photos = $reactioners_photos . '<li>
+                                    <a href="#">
+                                        <img src="' . $reaction->user->image . '" alt="friend">
+                                    </a>
+                                </li>';
+                    $loop++;
+                } else {
+                    break;
+                }
+            }
+
+            $react_count = $post->reactions->count();
+
+            $newestcomment['humansDate'] = $newestcomment->created_at->diffForHumans();
+            $newestcomment['id']=$newestcomment->id;
+
+            return Response::json(['success' => true, 'message' => ' comment deleted', 200,'newestcomment'=>$newestcomment , 'engagement' => $engagement, 'comment_count' => $comment_count,
+                'reactioners' => $reactioners, 'reactioners_photos' => $reactioners_photos, 'react_count' => $react_count,'post_id'=>$post->id]);
         } else {
 
 
