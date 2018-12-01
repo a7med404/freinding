@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Auth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use Modules\Posts\Entities\Comment;
 use Modules\Posts\Entities\File;
 use Modules\Posts\Entities\Post;
 use Modules\Posts\Entities\PostReaction;
 use Modules\Posts\Entities\Reaction;
 use App\Http\Controllers\Site\SiteController;
+
 
 class PostsController extends SiteController
 {
@@ -38,6 +40,12 @@ class PostsController extends SiteController
         } else {
             return redirect()->route('close');
         }
+    }
+
+    public function storePostsPhotosInTemp(Request $request)
+    {
+        $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
+        return $x;
     }
 
     /**
@@ -224,42 +232,162 @@ class PostsController extends SiteController
 
     public function deletePost(Request $request)
     {
-
         $post = Post::where('user_id', Auth::id())->where('id', $request->id)->first();
-        if ($post) {
-            $success = $post->Delete();
 
+        if ($post) {
+            if ($post->type == "video" || $post->type == "picture") {
+                $file = File::where('dependent_id', $post->id)->where('type', 'post')->first();
+                Storage::delete($file->store_name . $file->extension);
+                $file->Delete();
+            }
+
+            $success = $post->Delete();
             return Response::json(['success' => true, 'message' => 'Post deleted'], 200);
         } else {
-            return Response::json(['success' => false, 'message' => 'The Post has not been deleted'], 404);
+            return Response::json(['success' => false, 'message' => 'The Post has not been deleted'], 200);
         }
     }
 
-    public function commentDelete(Request $request)
+   /* public function commentDelete(Request $request)
     {
-
-//$comment= Comment::where('user_id', Auth::id())->orwhere('comments.user_id', Auth::id());
         $canDelete = false;
         $comment = Comment::where('id', $request->id)->with(['post'])->first();
+        $post = Post::where('id',$comment->post_id)->first();
 
         if ($comment->user_id == Auth::id() || $comment->post->user_id == Auth::id()) {
             $success = $comment->Delete();
+            $newestcomment=Comment::where('deleted_at',null)->where('post_id',$post->id)->get()->last();
 
-            return ['success' => true, 'message' => ' comment deleted', 200];
+            $engagement = $post->reactions->count();
+            $engagement += $post->supportFriends->count();
+            $engagement += $post->comments_count;
+            foreach ($post->comments as $comment) {
+                $engagement += $comment->replies->count();
+            }
+
+            $comment_count = $post->comments_count;
+
+            $reactioners = "";
+            if ($post->reactions->count() > 2) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name .
+                    '</a>, <a href="#">' . $post->reactions[1]->user->display_name . '</a> and <br>' .
+                    ($post->reactions->count() - 2) . ' more react this';
+            } elseif ($post->reactions->count() == 2) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name . '</a>, <a
+                                    href="#">' . $post->reactions[1]->user->display_name . '</a>';
+            } elseif ($post->reactions->count() == 1) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name . '</a>';
+            }
+
+            $reactioners_photos = '';
+            $loop = 0;
+            foreach ($post->reactions as $reaction) {
+                if ($loop < 5) {
+                    $reactioners_photos = $reactioners_photos . '<li>
+                                    <a href="#">
+                                        <img src="' . $reaction->user->image . '" alt="friend">
+                                    </a>
+                                </li>';
+                    $loop++;
+                } else {
+                    break;
+                }
+            }
+
+            $react_count = $post->reactions->count();
+
+            $newestcomment['humansDate'] = $newestcomment->created_at->diffForHumans();
+            $newestcomment['id']=$newestcomment->id;
+
+            return Response::json(['success' => true, 'message' => ' comment deleted', 200,'newestcomment'=>$newestcomment , 'engagement' => $engagement, 'comment_count' => $comment_count,
+                'reactioners' => $reactioners, 'reactioners_photos' => $reactioners_photos, 'react_count' => $react_count,'post_id'=>$post->id]);
         } else {
 
 
+            return ['success' => false, 'message' => 'The comment has not been deleted', 404];
+        }
+    }*/
+	
+	public function commentDelete(Request $request)
+    {
+
+        $canDelete = false;
+        $comment = Comment::where('id', $request->id)->with(['post'])->first();
+        $post = Post::where('id', $comment->post_id)->first();
+
+
+        if ($comment->user_id == Auth::id() || $comment->post->user_id == Auth::id()) {
+            $success = $comment->Delete();
+            $post->comments_count =$post->comments_count-1;
+            $engagement = $post->reactions->count();
+            $engagement += $post->supportFriends->count();
+            $engagement += $post->comments->count();
+
+            foreach ($post->comments as $comment) {
+                $engagement += $comment->replies->count();
+            }
+            $reactioners = "";
+            if ($post->reactions->count() > 2) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name .
+                    '</a>, <a href="#">' . $post->reactions[1]->user->display_name . '</a> and <br>' .
+                    ($post->reactions->count() - 2) . ' more react this';
+            }
+            elseif ($post->reactions->count() == 2) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name . '</a>, <a
+                                    href="#">' . $post->reactions[1]->user->display_name . '</a>';
+            }
+            elseif ($post->reactions->count() == 1) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name . '</a>';
+            }
+            $reactioners_photos = '';
+            $loop = 0;
+            foreach ($post->reactions as $reaction) {
+                if ($loop < 5) {
+                    $reactioners_photos = $reactioners_photos . '<li>
+                                    <a href="#">
+                                        <img src="' . $reaction->user->image . '" alt="friend">
+                                    </a>
+                                </li>';
+                    $loop++;
+                } else {
+                    break;
+                }
+            }
+            $react_count = $post->reactions->count();
+
+
+            if ($post->comments_count > 0) {
+                $newestcomment = Comment::where('deleted_at', null)->where('post_id', $post->id)->get()->last();
+                $newestcomment['humansDate'] = $newestcomment->created_at->diffForHumans();
+                $newestcomment['id'] = $newestcomment->id;
+
+
+
+                return Response::json(['success' => true, 'message' => ' comment deleted', 200,
+                    'newestcomment' => $newestcomment, 'engagement' => $engagement,
+                    'reactioners' => $reactioners, 'reactioners_photos' => $reactioners_photos,
+                    'react_count' => $react_count, 'post' => $post, 'comments_count'=>$post->comments_count ]);
+
+            } else return Response::json(['success' => true, 'message' => ' comment deleted', 200, 'engagement' => $engagement,
+                'reactioners' => $reactioners, 'reactioners_photos' => $reactioners_photos, 'react_count' => $react_count, 'post' => $post]);
+        } else {
             return ['success' => false, 'message' => 'The comment has not been deleted', 404];
         }
     }
 
     public function newPost(Request $request)
     {
+
         $newpost = new Post();
         $newpost->user_id = Auth::id();
-        $newpost->text = $request->text_of_post;
-        $newpost->type="text";
-        $newpost->dir="ltr";
+        $newpost->text = $request->text;
+        if ($request->post_has_files) {
+            $newpost->type = "picture";
+        } else {
+            $newpost->type = "text";
+        }
+        $newpost->dir = "ltr";
+
 
         $htmlnewpost = "";
 //        if ($request->file()) {
@@ -305,13 +433,114 @@ class PostsController extends SiteController
 
         $success = $newpost->save();
         $newpost['humansDate'] = $newpost->created_at->diffForHumans();
-        $newpost['id']  =$newpost->id;
+        $newpost['id'] = $newpost->id;
 
-        return Response::json(['success' => $success,
-            'htmlnewpost' => $htmlnewpost,
-            'newpost' => $newpost,
-            'user_image'=>Auth::user()->image,
-            'user_name'=>Auth::user()->display_name
-        ]);
+        $html_for_pictures_popup = "";
+        $html_for_pictures_popup = $html_for_pictures_popup .
+            '<div class="modal fade" id="open-photo-popup-v1' . $newpost->id . '" tabindex="-1"' .
+            ' role="dialog" aria-labelledby="open-photo-popup-v1" aria-hidden="true">' .
+            '<div class="modal-dialog window-popup open-photo-popup open-photo-popup-v1" role="document">' .
+            '<div class="modal-content">' .
+            '<a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">' .
+            '<svg class="olymp-close-icon">' .
+            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-close-icon"></use>' .
+            '</svg>' .
+            '</a>' .
+            '<div class="modal-body">' .
+            '<div class="open-photo-thumb">' .
+            '<div class="swiper-container" data-slide="fade">' .
+            '<div class="swiper-wrapper">';
+
+        $html_for_pictures = "";
+        $html_for_pictures = $html_for_pictures .
+            '<div class="swiper-container" data-slide="fade">' .
+            '<div class="swiper-wrapper">';
+
+        if ($request->post_has_files) {
+            foreach ($request['files'] as $file) {
+                $file_name = explode('.', $file)[0];
+                $file_ext = explode('.', $file)[1];
+                Storage::disk('public')->move('temp/' . $file, 'images/posts/' . $file);
+                $newfile = new File();
+                $newfile->dependent_id = $newpost->id;
+                $newfile->type = 'post';
+                $newfile->real_name = $file_name;
+                $newfile->store_name = $file_name;
+                $newfile->extension = $file_ext;
+                $newfile->save();
+
+                $html_for_pictures_popup = $html_for_pictures_popup .
+                    '<div class="swiper-slide">' .
+                    '<div class="photo-item " style="display:block;">' .
+                    '<img src="' . asset('storage/images/posts/' . $file) . '" alt="photo">' .
+                    '<div class="overlay"></div>' .
+                    '</div>' .
+                    '</div>';
+
+                $html_for_pictures = $html_for_pictures .
+                    '<div class="swiper-slide">' .
+                    '<div class="photo-item" style="display:block;">' .
+                    '<img src="' . asset('storage/images/posts/' . $file) . '" alt="photo">' .
+                    '<div class="flexFont" style="position: absolute;bottom: 1%; border-radius: 5px;' .
+                    '-ms-transform: rotate(45deg); /* IE 9 */' .
+                    '-webkit-transform: rotate(45deg); /* Safari 3-8 */' .
+                    'transform: rotate(45deg);">' .
+                    '<p style="padding: 10px;color: #f2f3f7;' .
+                    'background-color: #9a9fbf85;border-radius: 50px;">Friending' .
+                    '</p>' .
+                    '</div>' .
+                    '<div class="overlay"></div>' .
+                    '</div>' .
+                    '</div>';
+
+            }
+        }
+
+        $html_for_pictures_popup = $html_for_pictures_popup .
+            '</div>' .
+            '<svg class="btn-next-without olymp-popup-right-arrow">' .
+            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>' .
+            '</svg>' .
+            '<svg class="btn-prev-without olymp-popup-left-arrow">' .
+            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>' .
+            '</svg>' .
+            '</div>' .
+            '</div>' .
+            '</div>' .
+            '</div>' .
+            '</div>' .
+            '</div>';
+
+        $html_for_pictures = $html_for_pictures .
+            '<a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"  href="#" class="full-block"></a>' .
+            '</div>' .
+            '<svg class="btn-next-without olymp-popup-right-arrow">' .
+            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>' .
+            '</svg>' .
+            '<svg class="btn-prev-without olymp-popup-left-arrow">' .
+            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>' .
+            '</svg>' .
+            '</div>';
+
+
+        if ($request->post_has_files){
+            return Response::json(['success' => $success,
+                'htmlnewpost' => $htmlnewpost,
+                'newpost' => $newpost,
+                'user_image' => Auth::user()->image,
+                'user_name' => Auth::user()->display_name,
+                'html_for_pictures_popup'=>$html_for_pictures_popup,
+                'html_for_pictures'=>$html_for_pictures,
+                'with_files'=>true
+            ]);
+        }else{
+            return Response::json(['success' => $success,
+                'htmlnewpost' => $htmlnewpost,
+                'newpost' => $newpost,
+                'user_image' => Auth::user()->image,
+                'user_name' => Auth::user()->display_name,
+                'with_files'=>false
+            ]);
         }
     }
+}

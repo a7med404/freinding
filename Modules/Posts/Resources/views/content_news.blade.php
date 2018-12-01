@@ -57,9 +57,39 @@
                                 </div>
                                 <div class="form-group with-icon label-floating is-empty">
                                     <label class="control-label">Share what you are thinking here...</label>
-                                    <textarea class="form-control" id="textpost" name="text_of_post" placeholder=""></textarea>
-                                    <ul id="choosephoto"></ul>
+                                    <textarea class="form-control" id="textpost" name="text_of_post"
+                                              placeholder=""></textarea>
+                                    <ul id="choosephoto">
+                                    </ul>
                                 </div>
+
+                                <div class="modal fade" id="modal" tabindex="-1" role="dialog"
+                                     aria-labelledby="modalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalLabel">Crop the image</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div style="max-width: 100%;">
+                                                    <img id="image"
+                                                         src="https://avatars0.githubusercontent.com/u/3456749">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                    Cancel
+                                                </button>
+                                                <button type="button" class="btn btn-primary" id="crop">Crop</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="add-options-message">
 
 
@@ -75,15 +105,14 @@
 
                                     <input class="form-control" type="file" hidden id="file_field" name="imagefile"
                                            accept="video/*,  video/x-m4v, video/webm, video/x-ms-wmv, video/x-msvideo, video/3gpp, video/flv, video/x-flv, video/mp4, video/quicktime, video/mpeg, video/ogv, .ts, .mkv, image/*, image/heic, image/heif">
-                                    <a href="#" id="uploadPhotoClick" class="options-message" data-toggle="tooltip"
-                                       data-placement="top"
-                                       data-original-title="ADD PHOTOS">
 
-                                        <svg class="olymp-camera-icon">
+                                    <label class="options-message" data-toggle="tooltip" title="ADD PHOTOS">
+                                        <svg class="olymp-camera-icon" style="margin-bottom: -8px;">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-camera-icon"></use>
                                         </svg>
+                                        <input type="file" class="sr-only" id="input" name="image" accept="image/*">
+                                    </label>
 
-                                    </a>
                                     <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
                                        data-original-title="TAG YOUR FRIENDS">
                                         <svg class="olymp-computer-icon">
@@ -109,7 +138,7 @@
                             </form>
                         </div>
 
-                        <div class="tab-pane" id="profile-1" role="tabpanel" aria-expanded="true">
+                      <!--  <div class="tab-pane" id="profile-1" role="tabpanel" aria-expanded="true">
                             <form>
                                 <div class="author-thumb">
                                     <img src="olympus/img/author-page.jpg" alt="author">
@@ -187,12 +216,25 @@
                                 </div>
 
                             </form>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>
             <!-- ... end News Feed Form  -->
 
+            <!--loader-->
+            <div id="containerloader" style=" margin: 20px;  /*width: 588px;*/  height: 8px;  ">
+                <style>
+                    @media only screen and (max-width: 680px) {
+                        #containerloader {
+                            display: flex;
+                            flex-direction: row;
+                            width: 100%;
+                        }
+                    }
+                </style>
+            </div>
+            <!--endloader-->
 
             <div id="newsfeed-items-grid">
                 <div class="container" id="AreaForPost">
@@ -211,7 +253,7 @@
                                     <h6 class="title">Users Who Reactioned With This Post</h6>
                                 </div>
 
-                                <div class="modal-body" style="max-height: 500px; overflow-y: scroll">
+                                <div class="modal-body modal-body1" style="max-height: 500px; overflow-y: scroll">
                                     <ul id="users_reaction"
                                         class="widget w-friend-pages-added notification-list friend-requests dynamicContent">
                                         <div id="wait" style="
@@ -276,13 +318,18 @@
                                     </div>
 
                                 </div>
-                                <p>{{$post->text}}</p>
+                                <p style="word-wrap: break-word;">{{$post->text}}</p>
                                 @if($post->type == 'picture')
-                                    <div class="modal fade" id="open-photo-popup-v1{{$post->id}}" tabindex="-1" role="dialog" aria-labelledby="open-photo-popup-v1" aria-hidden="true">
-                                        <div class="modal-dialog window-popup open-photo-popup open-photo-popup-v1" role="document">
+                                    <!--<div class="modal fade" id="open-photo-popup-v1{{$post->id}}" tabindex="-1"
+                                         role="dialog" aria-labelledby="open-photo-popup-v1" aria-hidden="true">
+                                        <div class="modal-dialog window-popup open-photo-popup open-photo-popup-v1"
+                                             role="document">
                                             <div class="modal-content">
-                                                <a href="#" class="close icon-close" data-dismiss="modal" aria-label="Close">
-                                                    <svg class="olymp-close-icon"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-close-icon"></use></svg>
+                                                <a href="#" class="close icon-close" data-dismiss="modal"
+                                                   aria-label="Close">
+                                                    <svg class="olymp-close-icon">
+                                                        <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-close-icon"></use>
+                                                    </svg>
                                                 </a>
                                                 <div class="modal-body">
                                                     <div class="open-photo-thumb">
@@ -300,17 +347,19 @@
                                                                 @endforeach
                                                             </div>
 
-                                                            <!--Prev Next Arrows-->
+                                                            <svg class="btn-next-without olymp-popup-right-arrow">
+                                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                                            </svg>
 
-                                                            <svg class="btn-next-without olymp-popup-right-arrow"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use></svg>
-
-                                                            <svg class="btn-prev-without olymp-popup-left-arrow"><use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use></svg>
+                                                            <svg class="btn-prev-without olymp-popup-left-arrow">
+                                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                                            </svg>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="swiper-container" data-slide="fade">
                                         <div class="swiper-wrapper">
                                             @foreach($post->files as $file)
@@ -332,7 +381,8 @@
                                                     </div>
                                                 </div>
                                             @endforeach
-                                                <a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}" href="#" class="full-block"></a>
+                                          <!--  <a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"
+                                               href="#" class="full-block"></a>-->
                                         </div>
                                         <svg class="btn-next-without olymp-popup-right-arrow">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
@@ -345,24 +395,28 @@
                                 @elseif($post->type == 'video')
                                     <div class="swiper-container" data-slide="fade">
                                         <div class="swiper-wrapper">
-                                    @foreach($post->files as $file)
-                                                <div class="swiper-slide">
+                                            @foreach($post->files as $file)
+                                                <div class="swiper-slide my-video">
                                                     <div class="photo-item" style="display:block;">
                                                         <div style="background-color: black;display: flex;justify-content: center;
-                                                        align-items: center;" id="video_post_{{$post->id}}">
-                                            <video controls  autoplay muted style="width: 100%;height: auto;">
-                                                <source src="{{$file->store_name}}" type="video/mp4">
-                                            </video>
-                                        </div>
+                                                        align-items: center;" class="video_post">
+                                                            <video class="video_post_element my-video"
+                                                                   {{--id="forAutoPlay{{$post->id}}"--}} controls
+                                                                   {{--autoplay--}} muted oncanplay="this.muted=true"
+                                                                   src="{{$file->store_name}}"
+                                                                   {{--data-src=""--}} type="video/mp4"
+                                                                   style="width: 100%;height: auto;">
+                                                            </video>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                    @endforeach
+                                            @endforeach
                                         </div>
-                                        <svg class="btn-next-without olymp-popup-right-arrow">
+                                        <svg class="btn-next-without olymp-popup-right-arrow video_choser">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
                                         </svg>
 
-                                        <svg class="btn-prev-without olymp-popup-left-arrow">
+                                        <svg class="btn-prev-without olymp-popup-left-arrow video_choser">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
                                         </svg>
                                     </div>
@@ -396,7 +450,7 @@
 
 
                                     <ul id="reactioners_photos{{$post->id}}" class="friends-harmonic">
-                                        @php($liked=false)
+                                      @php($liked=false)
                             @foreach($post->reactions as $reaction)
                                 <?php
                                 $liked = $reaction->user->id == Auth::id() || $liked
@@ -453,16 +507,16 @@
 
                                 </div>-->
                                 <!-- new reactions -->
-                                <div class="post-additional-info form-inline post-control-button">
-                                    <a id="btn_react{{$post->id}}" class="btn btn-control "
-                                       style="background-color: {{$liked?'red':''}}">
+                                <div class="post-additional-info form-inline post-control-button flex-container reaction">
+                                    <a id="btn_react{{$post->id}}" class="btn btn-control btn_react_first "
+                                       style="background-color: {{$liked?'red':''}};">
                                         <svg class="olymp-like-post-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
                                         </svg>
 
                                     </a>
 
-                                    <a id="comment_post{{$post->id}}" class="btn btn-control ">
+                                    <a id="comment_post{{$post->id}}" class="btn btn-control  ">
                                         <svg class="olymp-comments-post-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>
                                         </svg>
@@ -475,6 +529,7 @@
                                         </svg>
 
                                     </a>
+
                                     <ul id="reactioners_photos{{$post->id}}"
                                         style=" position: absolute; right: 27%;"
                                         class="friends-harmonic inline-items float-right">
@@ -494,20 +549,40 @@
                                             @endif
                                         @endforeach
                                     </ul>
-                                    <a href="#" class="post-add-icon inline-items"
-                                    style="position: absolute;right: 20%;">
 
-                                        <?php
-                                        $engagement = $post->reactions->count();
-                                        $engagement += $post->supportFriends->count();
-                                        $engagement += $post->comments_count;
-                                        foreach ($post->comments as $comment) {
-                                            $engagement += $comment->replies->count();
+                                    <div class="post_reacts_users" id="{{$post->id}}"
+                                         style="position: absolute;right: 5%;">
+                                        <a class="post-add-icon inline-items">
+                                            <?php
+                                            $engagement = $post->reactions->count();
+                                            $engagement += $post->supportFriends->count();
+                                            $engagement += $post->comments_count;
+                                            foreach ($post->comments as $comment) {
+                                                $engagement += $comment->replies->count();
+                                            }
+                                            ?>
+                                            <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
+                                        </a>
+                                        <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>
+                                    </div>
+
+                                    <style>
+                                        @media only screen and (max-width: 481px) {
+                                            .reaction {
+                                                display: flex;
+                                                flex-direction: row;
+                                                width: 100%;
+
+                                            }
+                                            .btn_react_first{
+                                                margin-top: 10px;
+                                            }
+
+                                            /*  .post-control-button .btn-control {
+                                                  margin-top: 10px;
+                                              }*/
                                         }
-                                        ?>
-                                        <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
-                                    </a>
-                                    <span style="position: absolute;right: 5%;">Engagements</span>
+                                    </style>
                                 </div>
                                 <!-- old reactions -->
                             <!-- <div style="position: absolute; top: 18px;right:20px;">
@@ -543,6 +618,7 @@
 
                                 </div>-->
                             </article>
+
 
                             <!-- Comments -->
                             <ul class="comments-list comments-list--{{$post->id}}">

@@ -616,15 +616,18 @@ $(document).ready(function () {
 	});
 
 	//swiper arrows
-	$('.btn-prev-without').on('click', function () {
+	/*$('.btn-prev-without').on('click', function () {
+        console.log('123');
 		var sliderID = $(this).closest('.swiper-container').attr('id');
 		swipers['swiper-' + sliderID].slidePrev();
 	});
 
 	$('.btn-next-without').on('click', function () {
-		var sliderID = $(this).closest('.swiper-container').attr('id');
+        console.log('123');
+        var sliderID = $(this).closest('.swiper-container').attr('id');
 		swipers['swiper-' + sliderID].slideNext();
-	});
+	});*/
+
 
 
 	// Click on thumbs

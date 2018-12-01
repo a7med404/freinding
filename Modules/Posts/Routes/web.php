@@ -19,5 +19,7 @@ Route::prefix('posts')->group(function() {
     Route::post('/delete-post', 'PostsController@deletePost')->name('delete-post');
 	Route::post('/comment-delete', 'PostsController@commentDelete')->name('comment-delete');
 	Route::post('/new-post', 'PostsController@newPost')->name('new-post');
+	Route::post('/post-photo-temp', 'PostsController@storePostsPhotosInTemp')->name('storePostsPhotosInTemp');
+
 
 });

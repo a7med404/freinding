@@ -47,3 +47,4 @@ php artisan module:make-seed modelName ModuleName
 
 
 عدد الاصدقاء المشتركين في dialog الاصدقاء المتفاعلين
+اعادة توجيه عتسجيل الدخول لما ينطلب البوستات من ال url
