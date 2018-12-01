@@ -32,7 +32,7 @@ class CreateUserMetaTable extends Migration
             $table->string('nationality',50)->nullable()->after('country');
             $table->string('gender',50)->nullable()->after('nationality');
             $table->string('social_status',50)->nullable()->after('gender');
-            $table->string('birthdate',100)->nullable()->after('social_status');
+            $table->date('birthdate')->nullable()->after('social_status');
             $table->string('address_jop',100)->nullable()->after('birthdate');
             $table->string('occupation',200)->nullable()->after('address_jop');
             $table->text('about_me')->nullable()->after('occupation');

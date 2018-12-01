@@ -164,38 +164,37 @@ class User extends Authenticatable {
         $date_current = Carbon::now()->addDay()->toDateString(); //date('Y')
         $date = new \DateTime($date_current);
         $date->sub(new \DateInterval('P4Y'));
-        $first_birthdate = $date->format('d/m/Y');
+        $first_birthdate = $date->format('Y-m-d');
 
         $date_end = new \DateTime($date_current);
         $date_end->sub(new \DateInterval('P100Y'));
-        $end_birthdate = $date_end->format('d/m/Y');
+        $end_birthdate = $date_end->format('Y-m-d');
         $total = User::countBirthdate($first_birthdate, $end_birthdate);
 
         return $total;
     }
 
     public static function RangeAge($array_age) {
-        $date_current = Carbon::now()->addDay()->toDateString(); //date('Y')
+        $date_current = Carbon::now()->subDay()->toDateString();
         //********less than 18-
         $data_val['age'] = '18-';
-        $date = new \DateTime($date_current);
+        $date = new \DateTime();
         $date->sub(new \DateInterval('P17Y'));
-        $end_birthdate = $date->format('d/m/Y');
+        $end_birthdate = $date->format('Y-m-d');
         $data_val['from'] = 'Less Than : ' . $end_birthdate;
         $data_val['to'] = $end_birthdate;
-        $data_val['count'] = User::countAge('birthdate', '>', $end_birthdate);
+        $data_val['count'] = User::countBirthdate($date_current, $end_birthdate);
+        //$data_val['count'] = User::countAge('birthdate', '>', $end_birthdate);
         $data_age[] = $data_val;
         //*********
         $data_val = [];
         foreach ($array_age as $key_age => $val_vale) {
             $date = new \DateTime($date_current);
             $date->sub(new \DateInterval('P' . $key_age . 'Y'));
-            $first_birthdate = $date->format('d/m/Y');
-
+            $first_birthdate = $date->format('Y-m-d');
             $date_end = new \DateTime($date_current);
             $date_end->sub(new \DateInterval('P' . $val_vale . 'Y'));
-            $end_birthdate = $date_end->format('d/m/Y');
-
+            $end_birthdate = $date_end->format('Y-m-d');
 
             $data_val['age'] = $key_age . ' - ' . $val_vale;
             $data_val['from'] = $first_birthdate;
@@ -209,11 +208,13 @@ class User extends Authenticatable {
         $data_val['age'] = '60+';
         $date = new \DateTime($date_current);
         $date->sub(new \DateInterval('P61Y'));
-        $first_birthdate = $date->format('d/m/Y');
+        $first_birthdate = $date->format('Y-m-d');
 
         $data_val['from'] = $first_birthdate;
         $data_val['to'] = 'More Than : ' . $first_birthdate;
-        $data_val['count'] = User::countAge('birthdate', '<', $first_birthdate);
+        $end_birthdate='1910-11-30';
+        $data_val['count'] = User::countBirthdate($first_birthdate, $end_birthdate);
+        //$data_val['count'] = User::countAge('birthdate', '<', $first_birthdate);
         $data_age[] = $data_val;
         return $data_age;
     }

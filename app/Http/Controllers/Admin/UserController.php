@@ -130,6 +130,12 @@ class UserController extends AdminController {
         if (count($array_image) >= 2) {
             $input['image'] = PathuploadImage($array_image[1]);
         }
+        $newDate = explode('/', $input['birthdate']);
+        if (count($newDate) == 3) {
+            $input['birthdate'] = trim($newDate[2]) . '-' . trim($newDate[0]) . '-' . trim($newDate[1]);
+        } else {
+            $input['birthdate'] = null;
+        }
         $user = User::create($input);
         if ($this->user->can(['access-all', 'user-all'])) {
             if (!empty($request->input('roles'))) {
@@ -223,15 +229,20 @@ class UserController extends AdminController {
             $userRole = $user->roles->pluck('id', 'id')->toArray();
             $image = $user->image;
             $confirm_password = $user->password;
+            $newDate = explode('-', $user->birthdate);
+            $birthdate = NULL;
+            if (count($newDate) == 3) {
+                $user->birthdate = trim($newDate[1]) . '/' . trim($newDate[2]) . '/' . trim($newDate[0]);
+            }
             $new = 0;
-            $image_card =$id_verificat=$joined_date=$lifetime_value=$inter_hobbies=$session_num=$session_time=$wifi_netLog=$gps_log=$most_session_time= NULL;
-            $social_net=$social_netCounts=[];
+            $image_card = $id_verificat = $joined_date = $lifetime_value = $inter_hobbies = $session_num = $session_time = $wifi_netLog = $gps_log = $most_session_time = NULL;
+            $social_net = $social_netCounts = [];
             $userMeta = UserMeta::getUserMeta($id);
             foreach ($userMeta as $keymeta => $valmeta) {
                 $$keymeta = $valmeta;
             }
             $link_return = route('admin.users.index');
-            return view('admin.users.edit', compact('inter_hobbies','wifi_netLog','gps_log','most_session_time','session_time','session_num','lifetime_value','joined_date','social_net','social_netCounts','id_verificat','image_card', 'confirm_password', 'new', 'link_return', 'user', 'roles', 'userRole', 'image'));
+            return view('admin.users.edit', compact('birthdate', 'inter_hobbies', 'wifi_netLog', 'gps_log', 'most_session_time', 'session_time', 'session_num', 'lifetime_value', 'joined_date', 'social_net', 'social_netCounts', 'id_verificat', 'image_card', 'confirm_password', 'new', 'link_return', 'user', 'roles', 'userRole', 'image'));
         } else {
             return $this->pageError();
         }
@@ -309,6 +320,13 @@ class UserController extends AdminController {
             $array_image = explode(';base64,', $input['image']);
             if (count($array_image) >= 2) {
                 $input['image'] = PathuploadImage($array_image[1]);
+            }
+
+            $newDate = explode('/', $input['birthdate']);
+            if (count($newDate) == 3) {
+                $input['birthdate'] = trim($newDate[2]) . '-' . trim($newDate[0]) . '-' . trim($newDate[1]);
+            } else {
+                $input['birthdate'] = null;
             }
             $user->update($input);
 
@@ -442,7 +460,7 @@ class UserController extends AdminController {
             return $this->pageError();
         }
     }
-    
+
     public function updateHidden(Request $request, $id) {
         $user = User::find($id);
         if (!empty($user)) {

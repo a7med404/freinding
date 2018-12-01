@@ -21,7 +21,7 @@ class UserSiteController extends SiteController {
     public function index() {
         if ($this->site_open == 1 || $this->site_open == "1") {
             $lang = 'en';
-            $prof=1;
+            $prof = 1;
             $user = Auth::user();
             $user_key = $user->name;
             $admin_panel = 0;
@@ -31,7 +31,7 @@ class UserSiteController extends SiteController {
             $title = 'Home' . " &#8211; " . $this->site_title;
             View::share('title', $title);
             $form_type = 'personal';
-            return view('usersite::index', compact('prof','form_type', 'user', 'admin_panel', 'user_key'));
+            return view('usersite::index', compact('prof', 'form_type', 'user', 'admin_panel', 'user_key'));
         } else {
             return redirect()->route('close');
         }
@@ -41,7 +41,7 @@ class UserSiteController extends SiteController {
         if ($this->site_open == 1 || $this->site_open == "1") {
             $wrong_form = $correct_form = null;
             $lang = 'en';
-            $prof=1;
+            $prof = 1;
             $user = Auth::user();
             $user_key = $user->name;
             $admin_panel = 0;
@@ -54,7 +54,7 @@ class UserSiteController extends SiteController {
             $dataForm = SesstionFlash();
             $correct_form = $dataForm['correct_form'];
             $wrong_form = $dataForm['wrong_form'];
-            return view('usersite::setting', compact('prof','form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form'));
+            return view('usersite::setting', compact('prof', 'form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form'));
         } else {
             return redirect()->route('close');
         }
@@ -64,7 +64,7 @@ class UserSiteController extends SiteController {
         if ($this->site_open == 1 || $this->site_open == "1") {
             $wrong_form = $correct_form = null;
             $lang = 'en';
-            $prof=1;
+            $prof = 1;
             $user = Auth::user();
             $user_key = $user->name;
             $admin_panel = 0;
@@ -77,7 +77,7 @@ class UserSiteController extends SiteController {
             $dataForm = SesstionFlash();
             $correct_form = $dataForm['correct_form'];
             $wrong_form = $dataForm['wrong_form'];
-            return view('usersite::setting', compact('prof','form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form'));
+            return view('usersite::setting', compact('prof', 'form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form'));
         } else {
             return redirect()->route('close');
         }
@@ -106,7 +106,12 @@ class UserSiteController extends SiteController {
 //            $input['password'] = $user->password;
 //            $input['name'] = $user->name;
 //            $input['display_name'] = $input['name'];
-            $input['birthdate'] = $input['datetimepicker'];
+            $newDate = explode('/', $input['datetimepicker']);
+            if (count($newDate) == 3) {
+                $input['birthdate'] = trim($newDate[2]) . '-' . trim($newDate[1]) . '-' . trim($newDate[0]);
+            } else {
+                $input['birthdate'] = $user->birthdate;
+            }
             $user->update($input);
             session()->put('correct_form', 'Successfully Saved');
             return redirect()->route('profile.setting'); //->with('success', 'Successfully Saved');
@@ -134,7 +139,7 @@ class UserSiteController extends SiteController {
         if ($this->site_open == 1 || $this->site_open == "1") {
             $wrong_form = $correct_form = null;
             $lang = 'en';
-            $prof=1;
+            $prof = 1;
             $user = Auth::user();
             $user_key = $user->name;
             $admin_panel = 0;
@@ -147,7 +152,7 @@ class UserSiteController extends SiteController {
             $dataForm = SesstionFlash();
             $correct_form = $dataForm['correct_form'];
             $wrong_form = $dataForm['wrong_form'];
-            return view('usersite::setting', compact('prof','form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form'));
+            return view('usersite::setting', compact('prof', 'form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form'));
         } else {
             return redirect()->route('close');
         }
