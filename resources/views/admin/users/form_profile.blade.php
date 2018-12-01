@@ -175,13 +175,13 @@
                     </td>
                 </tr>-->
                 <tr>
-                    <td>Address</td>
+                    <td>Your City</td>
                     <td>
                         @if(isset($user->address))
-                        <a data-pk="1" class="editable  data_form" data-id="address" data-title="Edit Address">{{$user->address}}</a>
-                        {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => ' hidden form-control')) !!}
+                        <a data-pk="1" class="editable  data_form" data-id="address" data-title="Edit City">{{$user->address}}</a>
+                        {!! Form::text('address', null, array('placeholder' => 'Your City','id'=>'address','class' => ' hidden form-control')) !!}
                         @else
-                        {!! Form::text('address', null, array('placeholder' => 'Address','id'=>'address','class' => '  form-control')) !!}
+                        {!! Form::text('address', null, array('placeholder' => 'Your City','id'=>'address','class' => '  form-control')) !!}
                         @endif
                     </td>
                 </tr>

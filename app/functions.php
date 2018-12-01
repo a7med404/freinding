@@ -208,7 +208,6 @@ function SesstionFlash() {
     session()->forget('wrong');
     return $array_data;
 }
-
 // function to sum
 function sum($f, $s) {
     $sum = doubleval($f) + doubleval($s);
