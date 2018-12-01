@@ -39,16 +39,17 @@
 <script src="{{ asset('olympus/Bootstrap/dist/js/bootstrap.bundle.js') }}"></script>
 
 <script src="{{ asset('js/site/ajax.js') }}"></script>
-<<<<<<< HEAD
+
 <script src="{{ asset('js/vissense.js') }}"></script>
 
 
 <script src="{{ asset('js/cropper.js') }}"></script>
 <script src="{{ asset('js/jquery-cropper.js') }}"></script>
 
-=======
+
 <script src="{{ asset('js/progressbar.js') }}"></script>
->>>>>>> dd6657cefd729a6a893135fa1b8c74e4e0c97ee0
+<script src="{{ asset('js/sweetalert.min.js') }}"></script>
+
 
 
 

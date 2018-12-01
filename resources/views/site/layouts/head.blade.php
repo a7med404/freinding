@@ -58,4 +58,5 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/custom.css') }}">
 
 <link rel="stylesheet" type="text/css" href="{{ asset('css/cropper.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
 

@@ -223,7 +223,7 @@
             <!-- ... end News Feed Form  -->
 
             <!--loader-->
-            <div id="containerloader" style=" margin: 20px;  width: 588px;  height: 8px;  ">
+            <div id="containerloader" style=" margin: 20px;  /*width: 588px;*/  height: 8px;  ">
                 <style>
                     @media only screen and (max-width: 680px) {
                         #containerloader {
@@ -320,7 +320,7 @@
                                 </div>
                                 <p style="word-wrap: break-word;">{{$post->text}}</p>
                                 @if($post->type == 'picture')
-                                    <div class="modal fade" id="open-photo-popup-v1{{$post->id}}" tabindex="-1"
+                                    <!--<div class="modal fade" id="open-photo-popup-v1{{$post->id}}" tabindex="-1"
                                          role="dialog" aria-labelledby="open-photo-popup-v1" aria-hidden="true">
                                         <div class="modal-dialog window-popup open-photo-popup open-photo-popup-v1"
                                              role="document">
@@ -347,8 +347,6 @@
                                                                 @endforeach
                                                             </div>
 
-                                                            <!--Prev Next Arrows-->
-
                                                             <svg class="btn-next-without olymp-popup-right-arrow">
                                                                 <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
                                                             </svg>
@@ -361,7 +359,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="swiper-container" data-slide="fade">
                                         <div class="swiper-wrapper">
                                             @foreach($post->files as $file)
@@ -383,8 +381,8 @@
                                                     </div>
                                                 </div>
                                             @endforeach
-                                            <a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"
-                                               href="#" class="full-block"></a>
+                                          <!--  <a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"
+                                               href="#" class="full-block"></a>-->
                                         </div>
                                         <svg class="btn-next-without olymp-popup-right-arrow">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>

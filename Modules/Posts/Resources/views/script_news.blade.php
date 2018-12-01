@@ -307,6 +307,7 @@
             var btn = $(this);
             VisSense.VisMon.Builder(VisSense(btn[0]))
                 .on('fullyvisible', function () {
+                    if(processing)
                     $('#wait').show();
                 })
                 .on('hidden', function () {
@@ -316,56 +317,49 @@
                 .start();
         });
 
-        // $(document).scroll(function (e) {
-        //     if (processing)
-        //         return false;
-        //     if ($(window).scrollTop() >= ($(document).height() - $(window).height()) * 0.7) {
-        //         processing = true;
-        //         users_who_react();
-        //     }
-        // });
-        //
-        // function users_who_react() {
-        //     console.log('goood');
-        //     processing = false;
-        // }
-
-
-        // function isScrolledIntoView(elem){
-        //     var $elem = $(elem);
-        //     var $window = $(window);
-        //
-        //     var docViewTop = $window.scrollTop();
-        //     var docViewBottom = docViewTop + $window.height();
-        //
-        //     var elemTop = $elem.offset().top;
-        //     var elemBottom = elemTop + $elem.height();
-        //         console.log(docViewTop,docViewBottom,elemTop,elemBottom);
-        //     return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));}
-
-
         $('body').on('click', '.post-delete', function () {
             var post = $(this);//not post but delete button
-            var id = post.attr('id');
-            var _token = $("input[name='_token']").val();
-            console.log(id);
-
-            $.ajax({
-                type: 'post',
-                url: '{{route('delete-post')}}',//route function take route name == url("/posts/delete-post")
-                data: {_token: _token, id: id},
-                success: function (data) {
-                    console.log(data);
-                    $('#AllPostDiv' + id).html("");
-                    notify_delete_post();
+            swal({
+                    title: "Are you sure?",
+                    text: "Your will not be able to recover this post!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false,
+                    showLoaderOnConfirm: true
                 },
-                error: function (err) {
-                    console.log('Error!', err);
-                },
-            });
+                function(isConfirm){
+                if (isConfirm){
+                    var id = post.attr('id');
+                    var _token = $("input[name='_token']").val();
+                    $.ajax({
+                        type: 'post',
+                        url: '{{route('delete-post')}}',//route function take route name == url("/posts/delete-post")
+                        data: {_token: _token, id: id},
+                        success: function (data) {
+                            if(data.success){
+                                swal("Deleted!", "Your post has been deleted.", "success");
+                                // $('#AllPostDiv' + id).html("");
+                                $('#AllPostDiv' + id).remove();
+                                notify_delete_post();
+                            }else{
+                                swal("Not Deleted!", "You are not the publisher of the post", "error");
+                            }
+                        },
+                        error: function (err) {
+                            console.log('Error!', err);
+                            swal("Not Deleted!", "Your post has not been deleted try again later.", "error");
+                        },
+                    });
+                } else{
+                    swal("Cancelled", "Your post is safe :)", "error");
+                }
+                });
         });
 
-        $('body').on('click', '.comment-delete', function () {
+        /*$('body').on('click', '.comment-delete', function () {
             console.log('good');
             var btn_comment = $(this);//not post but delete button
             var id = btn_comment.attr('id');
@@ -433,28 +427,80 @@
                     console.log('Error!', err);
                 },
             });
+        });*/
+		
+		$('body').on('click', '.comment-delete', function () {
+            console.log('good');
+            var btn_comment = $(this);
+            var id = btn_comment.attr('id');
+            var _token = $("input[name='_token']").val();
+
+            $.ajax({
+                type: 'post',
+                url: '{{route('comment-delete')}}',//route function take route name == url("/posts/delete-post")
+                data: {_token: _token, id: id},
+                success: function (data) {
+                    console.log(data);
+
+
+                    $('.Allcommentul' + id).html("");
+                    $('#comment_post_form' + data.post.id).val('');
+                    $('#engagement_count' + data.post.id).text(data.engagement);
+                    $('#reactioners_name' + data.post.id).html(data.reactioners);
+                    $('#reactioners_photos' + data.post.id).html(data.reactioners_photos);
+                    $('#reactions_count' + data.post.id).text(data.react_count);
+                    if (data.comments_count>0)
+                     {
+                         $('.comments-list--' + data.post.id).html(
+                     '<li  id="newestComment' + data.post_id + '" class="comment-item Allcommentul' + data.newestcomment['id']+ '">' +
+                     '<div class="post__author author vcard inline-items">\n' +
+                     '           <img src="' + data.newestcomment.user.image + '" alt="author">\n' +
+                     '\n' +
+                     '           <div class="author-date">\n' +
+                     '               <a class="h6 post__author-name fn" href="#">' + data.newestcomment.user.display_name + '</a>\n' +
+                     '               <div class="post__date">\n' +
+                     '                   <time class="published" datetime="2004-07-24T18:18">\n' +
+                     '                     ' + data.newestcomment['humansDate'] + '\n' +
+                     '                   </time>\n' +
+                     '               </div>\n' +
+                     '           </div>\n' +
+                     '\n' +
+                     '<div class="more">' +
+                     '<svg class="olymp-three-dots-icon">' +
+                     '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
+                     '</svg>' +
+                    '<ul class="more-dropdown">' +
+                     '<li>' +
+                     '<a href="#">Edit comment</a>' +
+                     '</li>' +
+                     '<li>' +
+                     '<a href="javascript:void(0)" class="comment-delete" id="' + data.newestcomment.id + '">Delete comment</a>' +
+                     '</li>' +
+                     '</ul>' +
+                     '</div>' +
+                     '\n' +
+                     '       </div>\n' +
+                    '\n' +
+                    '       <p>' + data.newestcomment.text + '\n' +
+                     '       </p>\n' +
+                    '\n' +
+                     '       <a href="#" class="post-add-icon inline-items">\n' +
+                     '           <svg class="olymp-heart-icon">\n' +
+                     '           <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>\n' +
+                     '           </svg>\n' +
+                     '           <span>' + data.newestcomment.commentReactions + '</span>\n' +
+                   '       </a>\n' +
+                    '       <a href="#" class="reply">Reply</a>' +
+                    '</li>'
+                );}
+                else {$('.comments-list--' + data.post.id).html('');}
+
+                },
+                error: function (err) {
+                    console.log('Error!', err);
+                },
+            });
         });
-
-        {{--$('.comment-delete').click(function (){--}}
-
-                {{--console.log('good');--}}
-                {{--var btn_comment=$(this);}}
-                    {{--var id = btn_comment.attr('id');--}}
-                {{--var _token = $("input[name='_token']").val();--}}
-                {{--console.log(id);--}}
-                {{--$.ajax({--}}
-                {{--type: 'post',--}}
-                {{--url: '{{route('comment-delete')}}',}}
-                {{--data: {_token: _token, id: id},--}}
-                {{--success: function (data) {--}}
-                {{--console.log(data);--}}
-                {{--$('.Allcommentul'+id).html("");--}}
-                {{--},--}}
-                {{--error : function(err) {--}}
-                {{--console.log('Error!', err);--}}
-                {{--},--}}
-                {{--});--}}
-                {{--});--}}
 
             flexFont = function () {
             var divs = document.getElementsByClassName("flexFont");
@@ -472,120 +518,101 @@
             flexFont();
         };
 
-        {{--console.log('good');--}}
-        {{--var btn_comment=$(this);}}
-            {{--var id = btn_comment.attr('id');--}}
-        {{--var _token = $("input[name='_token']").val();--}}
-        {{--console.log(id);--}}
-        {{--$.ajax({--}}
-        {{--type: 'post',--}}
-        {{--url: '{{route('comment-delete')}}',}}
-        {{--data: {_token: _token, id: id},--}}
-        {{--success: function (data) {--}}
-        {{--console.log(data);--}}
-        {{--$('.Allcommentul'+id).html("");--}}
-        {{--},--}}
-        {{--error : function(err) {--}}
-        {{--console.log('Error!', err);--}}
-        {{--},--}}
-        {{--});--}}
-        {{--});--}}
-
-
         $('#myNewPost').submit(function (e) {
-
-            $this = $(this)
-            var data = $('#myNewPost').serialize();
-            //start loader
-            var bar = new ProgressBar.Line(containerloader, {
-                strokeWidth: 4,
-                easing: 'easeInOut',
-                duration: 1400,
-                color: '#FFEA82',
-                trailColor: '#eee',
-                trailWidth: 1,
-                svgStyle: {width: '100%', height: '100%'},
-                from: {color: '#FFEA82'},
-                to: {color: '#ED6A5A'},
-                step: (state, bar) => {
-                    bar.path.setAttribute('stroke', state.color);
-                }
-            });
-
-            bar.animate(1.0);  // Number from 0.0 to 1.0
-            //end loader
-            var post_has_files = 0;
-            $names = [];
-           if($('#choosephoto').children().length){
-               post_has_files=1;
-               $i=0;
-               $('#choosephoto').children().each(function () {
-                   $names[$i]=$(this).find('img').data('name');
-                   $i++;
-               });
-               console.log($names);
-           }
-            var text = $('#textpost').val();
-            var _token = $("input[name='_token']").val();
             e.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: '{{route('new-post')}}',
-                data: {
-                    post_has_files,
-                    text,
-                    files:$names,
-                    _token:_token
-                },
-                cache: false,
+            if($('#choosephoto').children().length||$.trim($('#textpost').val())){
+                $this = $(this)
+                //start loader
+                var bar = new ProgressBar.Line(containerloader, {
+                    strokeWidth: 4,
+                    easing: 'easeInOut',
+                    duration: 1400,
+                    color: '#FFEA82',
+                    trailColor: '#eee',
+                    trailWidth: 1,
+                    svgStyle: {width: '100%', height: '100%'},
+                    from: {color: '#FFEA82'},
+                    to: {color: '#ED6A5A'},
+                    step: (state, bar) => {
+                        bar.path.setAttribute('stroke', state.color);
+                    }
+                });
 
-                success: function (data) {
-                    console.log(data.newpost.humansDate);
-                    if (data['success']) {
-                        var $photos = "";
+                bar.animate(1.0);  // Number from 0.0 to 1.0
+                //end loader
+                var post_has_files = 0;
+                $names = [];
+                if($('#choosephoto').children().length){
+                    post_has_files=1;
+                    $i=0;
+                    $('#choosephoto').children().each(function () {
+                        $names[$i]=$(this).find('img').data('name');
+                        $i++;
+                    });
+                    console.log($names);
+                }
+                var text = $('#textpost').val();
+                var _token = $("input[name='_token']").val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{route('new-post')}}',
+                    data: {
+                        post_has_files,
+                        text,
+                        files:$names,
+                        _token:_token
+                    },
+                    cache: false,
 
-                        if(data.with_files){
-                           $photos= data.html_for_pictures_popup+data.html_for_pictures;
-                        }
-                        $('#AreaForPost').prepend(
-                            '<div id="AllPostDiv' + data.newpost.id + '" class="ui-block">' +
+                    success: function (data) {
+                        swal("Success", "You have successfuly share new post", "success");
+                        console.log(data.newpost.humansDate);
+                        if (data['success']) {
+                            var $photos = "";
+
+                            if(data.with_files){
+                                $photos= data.html_for_pictures_popup+data.html_for_pictures;
+                            }
+                            textOfPost = data.newpost.text?data.newpost.text:"";
+                            $('#AreaForPost').prepend(
+                                '<div id="AllPostDiv' + data.newpost.id + '" class="ui-block">' +
                                 '<article class="hentry post video">' +
-                                    '<div class="post__author author vcard inline-items">' +
-                                        '<img src="' + data.user_image + '" alt="author">' +
-                                            '<div class="author-date">' +
-                                                '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
-                                                '  <div class="post__date">' +
-                                                    '  <time class="published" datetime="2004-07-24T18:18">' +
-                                                         ' ' + data.newpost.humansDate + ' ' +
-                                                    ' </time>' +
-                                                ' </div>' +
-                                            '</div>' +
-                                        '<div class="more">' +
-                                            '  <svg class="olymp-three-dots-icon">' +
-                                                 '  <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
-                                            ' </svg>' +
-                                            '<ul class="more-dropdown">' +
-                                                ' <li>' +
-                                                    ' <a href="#">Edit Post</a>' +
-                                                ' </li>' +
-                                                ' <li>' +
-                                                     ' <a href="javascript:void(0)" class="post-delete" id="' + data.newpost.id + '">Delete Post</a>' +
-                                                ' </li>' +
-                                                '<li>' +
-                                                     ' <a href="#">Turn Off Notifications</a>' +
-                                                ' </li>' +
-                                                ' <li>' +
-                                                     ' <a href="#">Select as Featured</a>' +
-                                                ' </li>' +
-                                            '</ul>' +
-                                        '</div>' +
-                                    '</div>' +
-                                     '<p style="word-wrap: break-word;">' + data.newpost.text + '</p>' +
-                              $photos+
-                                    '<div style="display: inline-block;">' +
-                                        '<ul>' +
-                                        '</ul>' +
-                                    '</div>' +
+                                '<div class="post__author author vcard inline-items">' +
+                                '<img src="' + data.user_image + '" alt="author">' +
+                                '<div class="author-date">' +
+                                '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
+                                '  <div class="post__date">' +
+                                '  <time class="published" datetime="2004-07-24T18:18">' +
+                                ' ' + data.newpost.humansDate + ' ' +
+                                ' </time>' +
+                                ' </div>' +
+                                '</div>' +
+                                '<div class="more">' +
+                                '  <svg class="olymp-three-dots-icon">' +
+                                '  <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
+                                ' </svg>' +
+                                '<ul class="more-dropdown">' +
+                                ' <li>' +
+                                ' <a href="#">Edit Post</a>' +
+                                ' </li>' +
+                                ' <li>' +
+                                ' <a href="javascript:void(0)" class="post-delete" id="' + data.newpost.id + '">Delete Post</a>' +
+                                ' </li>' +
+                                '<li>' +
+                                ' <a href="#">Turn Off Notifications</a>' +
+                                ' </li>' +
+                                ' <li>' +
+                                ' <a href="#">Select as Featured</a>' +
+                                ' </li>' +
+                                '</ul>' +
+                                '</div>' +
+                                '</div>' +
+                                '<p style="word-wrap: break-word;">' + textOfPost + '</p>' +
+                                $photos+
+                                '<div style="display: inline-block;">' +
+                                '<ul>' +
+                                '</ul>' +
+                                '</div>' +
                                 '<div class="post-additional-info form-inline post-control-button">' +
                                 '<a id="btn_react' + data.newpost.id + '" class="btn btn-control " style="background-color: ">' +
                                 '<svg class="olymp-like-post-icon">' +
@@ -607,57 +634,64 @@
                                 '                                        class="friends-harmonic inline-items float-right">'+
                                 '</ul>'+
                                 '<div class="post_reacts_users" id="'+data.newpost.id +'" style="position: absolute;right: 5%;">'+
-                                     ' <a  class="post-add-icon inline-items"  >'+
-                                           ' <span id="engagement_count'+data.newpost.id +'">0</span>'+
-                                       '</a>'+
-                                     ' <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>'+
-                                    '</div>'+
+                                ' <a  class="post-add-icon inline-items"  >'+
+                                ' <span id="engagement_count'+data.newpost.id +'">0</span>'+
+                                '</a>'+
+                                ' <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>'+
+                                '</div>'+
                                 '</div>' +
                                 '</article>' +
-                            '<ul class="comments-list comments-list--'+data.newpost.id +'">'+
+                                '<ul class="comments-list comments-list--'+data.newpost.id +'">'+
                                 '</ul>'+
 
-                            '<form class="comment-form inline-items">' +
-                            '        <div class="post__author author vcard inline-items">' +
-                            '        <img src="olympus/img/author-page.jpg" alt="author">' +
-                            '             <div class="form-group with-icon-right is-empty">' +
-                            '                <textarea id="comment_post_form' + data.newpost.id + '" class="form-control" placeholder="Your Comment Here" required=""></textarea>' +
-                            '                     <div class="add-options-message">' +
-                            '                         <a href="#" class="options-message" data-toggle="modal" data-target="#update-header-photo">' +
-                            '                             <svg class="olymp-camera-icon">' +
-                            '                                 <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-camera-icon"></use>' +
-                            '                             </svg>' +
-                            '                         </a>' +
-                            '                     </div>' +
-                            '                <span class="material-input"></span>' +
-                            '</div>' +
-                            '</div>' +
-                            '       <button id="btn_comment_' + data.newpost.id + '" class="btn btn-md-2 btn-primary">Post Comment' +
-                            '       </button>' +
-                            '       <button class="btn btn-md-2 btn-border-think c-grey btn-transparent custom-color">Cancel' +
-                            '       </button>' +
-                            '   </form>' +
-                            '</div>'
-                        );
-                        // data['htmlnewpost']
-                        $('#textpost').val('');
-                        notifyaddpost();
-
-
-
-                    } else {
-                        console.log(data);
+                                '<form class="comment-form inline-items">' +
+                                '        <div class="post__author author vcard inline-items">' +
+                                '        <img src="olympus/img/author-page.jpg" alt="author">' +
+                                '             <div class="form-group with-icon-right is-empty">' +
+                                '                <textarea id="comment_post_form' + data.newpost.id + '" class="form-control" placeholder="Your Comment Here" required=""></textarea>' +
+                                '                     <div class="add-options-message">' +
+                                '                         <a href="#" class="options-message" data-toggle="modal" data-target="#update-header-photo">' +
+                                '                             <svg class="olymp-camera-icon">' +
+                                '                                 <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-camera-icon"></use>' +
+                                '                             </svg>' +
+                                '                         </a>' +
+                                '                     </div>' +
+                                '                <span class="material-input"></span>' +
+                                '</div>' +
+                                '</div>' +
+                                '       <button id="btn_comment_' + data.newpost.id + '" class="btn btn-md-2 btn-primary">Post Comment' +
+                                '       </button>' +
+                                '       <button class="btn btn-md-2 btn-border-think c-grey btn-transparent custom-color">Cancel' +
+                                '       </button>' +
+                                '</form>' +
+                                '</div>'
+                            );
+                            // data['htmlnewpost']
+                            $('#textpost').val('');
+                            $('#choosephoto').html('');
+                            //forSupportAjax();
+                            notifyaddpost();
+                        } else {
+                            swal("Error",
+                                "Server error try again later",
+                                "error");
+                        }
+                    },
+                    error: function (data) {
+                        swal("Error",
+                            "Server error try again later",
+                            "error");
+                    },
+                    complete: function () {
+                        //hide loader
+                        $('#containerloader').html('');
                     }
-
-                },
-                error: function (data) {
-                    console.log(data);
-                },
-                complete: function () {
-                    //hide loader
-                    $('#containerloader').html('');
-                }
-            });
+                });
+            }else{
+                swal("Error",
+                    "There is nothing to share it",
+                    "error");
+            }
         });
 
         $('#uploadPhotoClick').click(function () {
@@ -756,6 +790,18 @@
                 }
             }
         }
+
+        $('body').on('click','.btn-prev-without',function () {
+            console.log('my');
+            var sliderID = $(this).closest('.swiper-container').attr('id');
+            swipers['swiper-' + sliderID].slidePrev();
+        });
+
+        $('body').on('click','.btn-next-without',function () {
+            console.log('my');
+            var sliderID = $(this).closest('.swiper-container').attr('id');
+            swipers['swiper-' + sliderID].slideNext();
+        });
     });
 
 </script>
@@ -817,8 +863,8 @@
             $modal.modal('hide');
             if (cropper) {
                 canvas = cropper.getCroppedCanvas({
-                    width: 160,
-                    height: 160,
+                    width: 1080,
+                    height: 1080,
                 });
                 var src = canvas.toDataURL();
                 nameOfphoto = guid()+'.png';
@@ -871,4 +917,76 @@
             }
         });
     });
+</script>
+<script>
+    var forSupportAjax =function () {
+        var swipers = {};
+            var initIterator = 0;
+            var $breakPoints = false;
+            $('.swiper-container').each(function () {
+
+                var $t = $(this);
+                var index = 'swiper-unique-id-' + initIterator;
+
+                $t.addClass('swiper-' + index + ' initialized').attr('id', index);
+                $t.find('.swiper-pagination').addClass('pagination-' + index);
+
+                var $effect = ($t.data('effect')) ? $t.data('effect') : 'slide',
+                    $crossfade = ($t.data('crossfade')) ? $t.data('crossfade') : true,
+                    $loop = ($t.data('loop') == false) ? $t.data('loop') : true,
+                    $showItems = ($t.data('show-items')) ? $t.data('show-items') : 1,
+                    $scrollItems = ($t.data('scroll-items')) ? $t.data('scroll-items') : 1,
+                    $scrollDirection = ($t.data('direction')) ? $t.data('direction') : 'horizontal',
+                    $mouseScroll = ($t.data('mouse-scroll')) ? $t.data('mouse-scroll') : false,
+                    $autoplay = ($t.data('autoplay')) ? parseInt($t.data('autoplay'), 10) : 0,
+                    $autoheight = ($t.hasClass('auto-height')) ? true: false,
+                    $slidesSpace = ($showItems > 1) ? 20 : 0;
+
+                if ($showItems > 1) {
+                    $breakPoints = {
+                        480: {
+                            slidesPerView: 1,
+                            slidesPerGroup: 1
+                        },
+                        768: {
+                            slidesPerView: 2,
+                            slidesPerGroup: 2
+                        }
+                    }
+                }
+
+                swipers['swiper-' + index] = new Swiper('.swiper-' + index, {
+                    pagination: '.pagination-' + index,
+                    paginationClickable: true,
+                    direction: $scrollDirection,
+                    mousewheelControl: $mouseScroll,
+                    mousewheelReleaseOnEdges: $mouseScroll,
+                    slidesPerView: $showItems,
+                    slidesPerGroup: $scrollItems,
+                    spaceBetween: $slidesSpace,
+                    keyboardControl: true,
+                    setWrapperSize: true,
+                    preloadImages: true,
+                    updateOnImagesReady: true,
+                    autoplay: $autoplay,
+                    autoHeight: $autoheight,
+                    loop: $loop,
+                    breakpoints: $breakPoints,
+                    effect: $effect,
+                    fade: {
+                        crossFade: $crossfade
+                    },
+                    parallax: true,
+                    onSlideChangeStart: function (swiper) {
+                        var sliderThumbs = $t.siblings('.slider-slides');
+                        if (sliderThumbs.length) {
+                            sliderThumbs.find('.slide-active').removeClass('slide-active');
+                            var realIndex = swiper.slides.eq(swiper.activeIndex).attr('data-swiper-slide-index');
+                            sliderThumbs.find('.slides-item').eq(realIndex).addClass('slide-active');
+                        }
+                    }
+                });
+                initIterator++;
+            });
+    };
 </script>

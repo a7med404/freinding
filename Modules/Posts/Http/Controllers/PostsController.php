@@ -232,7 +232,6 @@ class PostsController extends SiteController
 
     public function deletePost(Request $request)
     {
-
         $post = Post::where('user_id', Auth::id())->where('id', $request->id)->first();
 
         if ($post) {
@@ -245,11 +244,11 @@ class PostsController extends SiteController
             $success = $post->Delete();
             return Response::json(['success' => true, 'message' => 'Post deleted'], 200);
         } else {
-            return Response::json(['success' => false, 'message' => 'The Post has not been deleted'], 404);
+            return Response::json(['success' => false, 'message' => 'The Post has not been deleted'], 200);
         }
     }
 
-    public function commentDelete(Request $request)
+   /* public function commentDelete(Request $request)
     {
         $canDelete = false;
         $comment = Comment::where('id', $request->id)->with(['post'])->first();
@@ -305,6 +304,73 @@ class PostsController extends SiteController
         } else {
 
 
+            return ['success' => false, 'message' => 'The comment has not been deleted', 404];
+        }
+    }*/
+	
+	public function commentDelete(Request $request)
+    {
+
+        $canDelete = false;
+        $comment = Comment::where('id', $request->id)->with(['post'])->first();
+        $post = Post::where('id', $comment->post_id)->first();
+
+
+        if ($comment->user_id == Auth::id() || $comment->post->user_id == Auth::id()) {
+            $success = $comment->Delete();
+            $post->comments_count =$post->comments_count-1;
+            $engagement = $post->reactions->count();
+            $engagement += $post->supportFriends->count();
+            $engagement += $post->comments->count();
+
+            foreach ($post->comments as $comment) {
+                $engagement += $comment->replies->count();
+            }
+            $reactioners = "";
+            if ($post->reactions->count() > 2) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name .
+                    '</a>, <a href="#">' . $post->reactions[1]->user->display_name . '</a> and <br>' .
+                    ($post->reactions->count() - 2) . ' more react this';
+            }
+            elseif ($post->reactions->count() == 2) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name . '</a>, <a
+                                    href="#">' . $post->reactions[1]->user->display_name . '</a>';
+            }
+            elseif ($post->reactions->count() == 1) {
+                $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name . '</a>';
+            }
+            $reactioners_photos = '';
+            $loop = 0;
+            foreach ($post->reactions as $reaction) {
+                if ($loop < 5) {
+                    $reactioners_photos = $reactioners_photos . '<li>
+                                    <a href="#">
+                                        <img src="' . $reaction->user->image . '" alt="friend">
+                                    </a>
+                                </li>';
+                    $loop++;
+                } else {
+                    break;
+                }
+            }
+            $react_count = $post->reactions->count();
+
+
+            if ($post->comments_count > 0) {
+                $newestcomment = Comment::where('deleted_at', null)->where('post_id', $post->id)->get()->last();
+                $newestcomment['humansDate'] = $newestcomment->created_at->diffForHumans();
+                $newestcomment['id'] = $newestcomment->id;
+
+
+
+                return Response::json(['success' => true, 'message' => ' comment deleted', 200,
+                    'newestcomment' => $newestcomment, 'engagement' => $engagement,
+                    'reactioners' => $reactioners, 'reactioners_photos' => $reactioners_photos,
+                    'react_count' => $react_count, 'post' => $post, 'comments_count'=>$post->comments_count ]);
+
+            } else return Response::json(['success' => true, 'message' => ' comment deleted', 200, 'engagement' => $engagement,
+                'reactioners' => $reactioners, 'reactioners_photos' => $reactioners_photos, 'react_count' => $react_count, 'post' => $post]);
+        } else {
             return ['success' => false, 'message' => 'The comment has not been deleted', 404];
         }
     }
