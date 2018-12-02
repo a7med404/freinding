@@ -38,6 +38,18 @@
 
 <script src="<?php echo e(asset('olympus/Bootstrap/dist/js/bootstrap.bundle.js')); ?>"></script>
 
+<script src="<?php echo e(asset('js/site/ajax.js')); ?>"></script>
+
+<script src="<?php echo e(asset('js/vissense.js')); ?>"></script>
+
+
+<script src="<?php echo e(asset('js/cropper.js')); ?>"></script>
+<script src="<?php echo e(asset('js/jquery-cropper.js')); ?>"></script>
+
+
+<script src="<?php echo e(asset('js/progressbar.js')); ?>"></script>
+<script src="<?php echo e(asset('js/sweetalert.min.js')); ?>"></script>
+
 
 
 
