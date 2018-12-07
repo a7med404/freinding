@@ -28,22 +28,56 @@ class StatisticsReportController extends AdminController {
         if (!$this->user->can('access-all')) {
             return $this->pageUnauthorized();
         }
-        $title = 'Public Users Statistics';
+        $title = 'Public Statistics';
         $month = Carbon::now()->subMonth()->toDateString();
         $week = Carbon::now()->subWeek()->toDateString();
         $day = Carbon::now()->subDay()->toDateString();
         $date = Carbon::now()->addDay()->toDateString();
-
+        $start_year = date('Y') . '-01-01';
+        $end_year = date('Y') . '-12-31';
+        //user
         $user_count = User::count();
-
         $user_count_month = User::lastMonth($month, $date);
-
         $user_count_week = User::lastMonth($week, $date);
-
         $user_count_day = User::lastDay($day, $date);
-
+        $user_year = User::lastDay($start_year, $end_year);
+        $male_count = User::countColum('gender', 'male');
+        $femal_count = User::countColum('gender', 'female');
+        $user_male = round(($male_count/$user_count)*100,2);
+        $user_female = round(($femal_count/$user_count)*100,2);
+        //hour
+        $morning_count = SessionTime::lastHour('06:00:00', '12:00:00');
+        $afternoon_count = SessionTime::lastHour('12:00:01', '18:00:00');
+        $night_count = SessionTime::lastHour('18:00:01', '23:59:59.999999');
+        $midnight_count = SessionTime::lastHour('00:00:01', '05:59:59.999999');
+        //day
+        $saturday_count = SessionTime::countDay('Sat');
+        $Sunday_count = SessionTime::countDay('Sun');
+        $Monday_count = SessionTime::countDay('Mon');
+        $Tuesday_count = SessionTime::countDay('Tue');
+        $Wednesday_count = SessionTime::countDay('Wed');
+        $Thursday_count = SessionTime::countDay('Thu');
+        $Friday_count = SessionTime::countDay('Fri');
+        //month
+        $total_month = SessionTime::ALLDataMonth(1,2);
+        $new_month = SessionTime::ALLDataMonth(1);
+        
+//        print_r($total_month);
+//        print_r($new_month);die;
+        //age
+        $total_sum = User::ALLAgeSum(1);
+        $age_avg = round(($total_sum['total']/$user_count),0);
+        $age_male = round(($total_sum['total_mal']/$male_count),0);
+        $age_female = round(($total_sum['total_femal']/$femal_count),0);
+        $array_age = [18 => 24, 25 => 35, 36 => 60];  //18-,60+
+        $data_age = User::RangeAge($array_age);
+        //lifeTime
+        $data_life = SessionTime::ALLDataLifeTime(1);//91-365day,+365day,0-90day
+        $data_city = User::ALLDataCount('address');
+        $data_nationality = User::ALLDataCount('nationality');
+//         print_r($data_age);die;
         return view('admin.statistics.users', compact(
-                        'title', 'user_count', 'user_count_month', 'user_count_week', 'user_count_day'
+                        'title', 'user_count', 'user_count_month', 'user_count_week', 'user_count_day', 'user_year', 'user_male', 'user_female', 'age_avg', 'age_male', 'age_female', 'morning_count', 'afternoon_count', 'night_count', 'midnight_count', 'saturday_count', 'Sunday_count', 'Monday_count', 'Tuesday_count', 'Wednesday_count', 'Thursday_count', 'Friday_count', 'total_month', 'new_month', 'data_life', 'data_age', 'data_city', 'data_nationality'
         ));
     }
 
@@ -129,7 +163,6 @@ class StatisticsReportController extends AdminController {
 
         $array_age = [18 => 24, 25 => 35, 36 => 45, 36 => 45, 46 => 60];
         $date_current = Carbon::now()->addDay()->toDateString(); //date('Y')
-
         //********less than 18-
         $data_val['age'] = '18-';
         $date = new \DateTime($date_current);
@@ -180,10 +213,11 @@ class StatisticsReportController extends AdminController {
         if (!$this->user->can('access-all')) {
             return $this->pageUnauthorized();
         }
-        $image =$video= '';
+        $image = $video = '';
 
-        return view('admin.test.create', compact('image','video'));
+        return view('admin.test.create', compact('image', 'video'));
     }
+
     public function statisticsPublic() {
         if (!$this->user->can('access-all')) {
             return $this->pageUnauthorized();
