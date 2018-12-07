@@ -7,12 +7,14 @@ use Illuminate\Routing\Controller;
 use Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 use Modules\Posts\Entities\Comment;
 use Modules\Posts\Entities\File;
 use Modules\Posts\Entities\Post;
 use Modules\Posts\Entities\PostReaction;
 use Modules\Posts\Entities\Reaction;
 use App\Http\Controllers\Site\SiteController;
+use App\User;
 
 
 class PostsController extends SiteController
@@ -35,8 +37,11 @@ class PostsController extends SiteController
 //            View::share('title', $title);
             $posts = Post::OrderBy('created_at', 'desc')->get();
 //            return $posts;
+
+            $users = User::where('id', '!=', Auth::id())->get();
+
             $reactions = Reaction::where('is_active', 1)->get();
-            return view('posts::newsfeed', compact('user', 'posts', 'reactions', 'admin_panel', 'user_key'));
+            return view('posts::newsfeed', compact('user', 'posts', 'reactions', 'admin_panel', 'user_key','users'));
         } else {
             return redirect()->route('close');
         }
@@ -46,6 +51,17 @@ class PostsController extends SiteController
     {
         $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
         return $x;
+//        $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
+//        $img = Image::make(asset('storage/temp/'.$request->name));
+//        $img->insert('public/images/waterMark.png','bottom-left', 10, 10);
+//        return $x;
+
+//        $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
+//        $path   = $request->file('avatar')->getRealPath();
+//        $img = Image::make($path);
+//        $img->insert('public/images/waterMark.png','bottom-left', 10, 10);
+//        $img->save();
+//        return $img;
     }
 
     /**
@@ -241,8 +257,16 @@ class PostsController extends SiteController
                 $file->Delete();
             }
 
+            if($post->taggedFriends())
+            {
+                foreach ($post->taggedFriends as $tag)
+                {
+                    $tag->Delete();
+                }
+            }
+
             $success = $post->Delete();
-            return Response::json(['success' => true, 'message' => 'Post deleted'], 200);
+            return Response::json(['success' => $success, 'message' => 'Post deleted'], 200);
         } else {
             return Response::json(['success' => false, 'message' => 'The Post has not been deleted'], 200);
         }
@@ -452,9 +476,16 @@ class PostsController extends SiteController
             '<div class="swiper-wrapper">';
 
         $html_for_pictures = "";
-        $html_for_pictures = $html_for_pictures .
-            '<div class="swiper-container" data-slide="fade">' .
-            '<div class="swiper-wrapper">';
+        if ($request->post_has_files && sizeof($request['files'])>1){
+            $html_for_pictures = $html_for_pictures .
+                '<div class="swiper-container" data-slide="fade">' .
+                '<div class="swiper-wrapper">';
+        }else{
+            $html_for_pictures = $html_for_pictures .
+                '<div class="" data-slide="fade">' .
+                '<div class="swiper-wrapper">';
+        }
+
 
         if ($request->post_has_files) {
             foreach ($request['files'] as $file) {
@@ -512,16 +543,76 @@ class PostsController extends SiteController
             '</div>';
 
         $html_for_pictures = $html_for_pictures .
-            '<a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"  href="#" class="full-block"></a>' .
-            '</div>' .
+//            '<a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"  href="#" class="full-block"></a>' .
+            '</div>';
+        if($newpost->files()->count()>1){
+            $html_for_pictures = $html_for_pictures .
             '<svg class="btn-next-without olymp-popup-right-arrow">' .
             '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>' .
             '</svg>' .
             '<svg class="btn-prev-without olymp-popup-left-arrow">' .
             '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>' .
-            '</svg>' .
-            '</div>';
+            '</svg>';
+        }
+        $html_for_pictures = $html_for_pictures .'</div>';
+        //dima
+        $tagsection='';
+        $arraytag=array();
 
+        if($request->selecttag);
+        {
+
+            foreach ($request->selecttag as $x )
+            {
+                $arraytag[] = [
+                    'user_id'    =>  (int)$x,
+                ];
+            }
+            $newpost->taggedFriends()->createMany($arraytag);
+
+            if($newpost->taggedFriends){
+                if($newpost->taggedFriends->count()==1){
+                    $tagsection='<span>&nbsp;With&nbsp;<a>'.$newpost->taggedFriends[0]->user->display_name.'</a></span>';
+                }
+                elseif($newpost->taggedFriends->count()==2){
+                    $tagsection='<span>&nbsp;With&nbsp;<a>'.$newpost->taggedFriends[0]->user->display_name.'</a></span>'.
+                        '<span>&nbsp;And&nbsp;<a>'.$newpost->taggedFriends[1]->user->display_name.'</a></span>';
+                }
+                elseif($newpost->taggedFriends->count()>2){
+                    $tagsection='<span>&nbsp;With&nbsp;<a>'.$newpost->taggedFriends[0]->user->display_name.'</a></span>'.
+                        '<span>&nbsp;And&nbsp;<a>'.$newpost->taggedFriends[1]->user->display_name.'</a></span>';
+                    $name = "";
+                    for ($i = 2; $i < $newpost->taggedFriends->count(); $i = $i + 1) {
+                        $name = $name . $newpost->taggedFriends[$i]->user->display_name ."\n";
+                    }
+
+                    $tagsection=$tagsection.'<span title="'.$name.'">&nbsp;And '. ($newpost->taggedFriends->count()-2) .' more</span>';
+                }
+            }
+
+
+            /*if ($newpost->taggedFriends->count() > 2) {
+                $tagsection='<a style="background-color: peachpuff">WITH:</a>
+                                                            <a>'.$newpost->taggedFriends[0]->user->display_name.'</a>
+                                                            <span>and</span>
+                                                            <a>'.$newpost->taggedFriends[1]->user->display_name.'</a>
+                                                            <span>and</span>
+                                                            <span>($newpost->taggedFriends->count() - 2)</span>
+                                                            <a>MORE</a>';
+            }
+            elseif ($newpost->taggedFriends->count() == 2) {
+                $tagsection='<a style="background-color: peachpuff">WITH:</a>
+                                                            <a>'.$newpost->taggedFriends[0]->user->display_name.'</a>
+                                                            <span>and</span>
+                                                            <a>'.$newpost->taggedFriends[1]->user->display_name.'</a>    ';
+            }
+            elseif ($newpost->taggedFriends->count() == 1) {
+                $tagsection=' <a style="background-color: peachpuff">WITH:</a>
+                                                            <a>'.$newpost->taggedFriends[0]->user->display_name.'</a>  ';
+            }*/
+
+        }
+        //endtag
 
         if ($request->post_has_files){
             return Response::json(['success' => $success,
@@ -531,7 +622,8 @@ class PostsController extends SiteController
                 'user_name' => Auth::user()->display_name,
                 'html_for_pictures_popup'=>$html_for_pictures_popup,
                 'html_for_pictures'=>$html_for_pictures,
-                'with_files'=>true
+                'with_files'=>true,
+                'tagsection'=>$tagsection
             ]);
         }else{
             return Response::json(['success' => $success,
@@ -539,8 +631,14 @@ class PostsController extends SiteController
                 'newpost' => $newpost,
                 'user_image' => Auth::user()->image,
                 'user_name' => Auth::user()->display_name,
-                'with_files'=>false
+                'with_files'=>false,
+                'tagsection'=>$tagsection
             ]);
         }
+    }
+
+    public function deleteFromTemp(Request $request){
+       $success =  Storage::delete('temp/'.$request->photo_name);
+       return ['success'=>$success];
     }
 }

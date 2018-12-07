@@ -40,6 +40,9 @@
 
 <script src="{{ asset('js/site/ajax.js') }}"></script>
 
+<!--tag-->
+<script src="{{ asset('js/select2.min.js') }}"></script>
+
 <script src="{{ asset('js/vissense.js') }}"></script>
 
 
@@ -49,6 +52,8 @@
 
 <script src="{{ asset('js/progressbar.js') }}"></script>
 <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+
+
 
 
 

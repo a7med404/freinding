@@ -1,5 +1,6 @@
 <script>
     $(document).ready(function () {
+
         $('body').on('click','[id^=comment_post]',function () {
             id = $(this).attr('id');
             console.log(id);
@@ -95,6 +96,7 @@
                 }
             });
         });
+
         $('body').on('click', '[id^=btn_comment_]', function (e) {
             console.log('something');
             var _token = $("input[name='_token']").val();
@@ -552,6 +554,7 @@
                     console.log($names);
                 }
                 var text = $('#textpost').val();
+                var selecttag = $('.js-example-basic-multiple').val();
                 var _token = $("input[name='_token']").val();
                 $.ajax({
                     type: 'POST',
@@ -559,17 +562,19 @@
                     data: {
                         post_has_files,
                         text,
+                        selecttag,
                         files:$names,
                         _token:_token
                     },
                     cache: false,
 
                     success: function (data) {
-                        swal("Success", "You have successfuly share new post", "success");
+                        console.log(data);
+                            swal("Success", "You have successfuly share new post", "success");
                         console.log(data.newpost.humansDate);
                         if (data['success']) {
+                         // $('#tagdiv' + data.newpost.id).html(data.tagsection);
                             var $photos = "";
-
                             if(data.with_files){
                                 $photos= data.html_for_pictures_popup+data.html_for_pictures;
                             }
@@ -581,6 +586,7 @@
                                 '<img src="' + data.user_image + '" alt="author">' +
                                 '<div class="author-date">' +
                                 '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
+                                '' +   data.tagsection +''+
                                 '  <div class="post__date">' +
                                 '  <time class="published" datetime="2004-07-24T18:18">' +
                                 ' ' + data.newpost.humansDate + ' ' +
@@ -607,7 +613,7 @@
                                 '</ul>' +
                                 '</div>' +
                                 '</div>' +
-                                '<p style="word-wrap: break-word;">' + textOfPost + '</p>' +
+                                '<p style="word-wrap: break-word;">' + textOfPost + '</p>'+
                                 $photos+
                                 '<div style="display: inline-block;">' +
                                 '<ul>' +
@@ -668,6 +674,12 @@
                             );
                             // data['htmlnewpost']
                             $('#textpost').val('');
+                            $(".js-example-basic-multiple").val('');
+                            $(".js-example-basic-multiple").select2({
+                                templateResult: formatState,
+                                templateSelection: formatState,
+                                width: "100%"
+                            });
                             $('#choosephoto').html('');
                             //forSupportAjax();
                             notifyaddpost();
@@ -802,6 +814,97 @@
             var sliderID = $(this).closest('.swiper-container').attr('id');
             swipers['swiper-' + sliderID].slideNext();
         });
+
+        $('body').on('click','.delete-photo',function () {
+            var name = $(this).data('name');
+            var _token = $("input[name='_token']").val();
+            $.ajax({
+                type: 'POST',
+                url: '{{route('deleteFromTemp')}}',
+                data: {
+                    photo_name:name,
+                    _token:_token
+                },
+                success:function (data) {
+                  console.log(data);
+                }
+            });
+            $(this).parent().remove();
+        });
+        //dima
+        $(".js-example-basic-multiple").select2({
+            templateResult: formatState,
+            templateSelection: formatState,
+            width: "100%"
+        });
+
+        function formatState(state) {
+
+            var optimage = $(state.element).data('image');
+            var opttext = $(state.element).data('text');
+            if (!optimage) {
+                return state.text;
+            } else {
+                var $opt = $(
+                    '<span><img style="width:30px; margin: 3px; border-radius: 50%" src="' + optimage + '" /> <span>' + opttext + '</span></span>'
+                );
+                return $opt;
+            }
+        };
+
+        $('#TAG-YOUR-FRIENDS').click(function (e) {
+            e.preventDefault();
+            $("#tag-post-section").attr('hidden',false);
+        });
+
+        $('#addtag').click(function () {
+            console.log("555");
+            var sel = $('.js-example-basic-multiple').val();
+            console.log(sel)
+            if (sel.length == 1) {
+                $('#tagdiv').html('');
+                var $id = sel[0];
+                var $textselect = $('#tagselected' + $id ).data('text');
+                $('#textpost').after('<div id="tagdiv" style="margin: 5%; font-size:1.5rem">\n' +
+                    '        <a style="background-color: peachpuff">WITH:</a>           ' +
+                    ' <a>' + $textselect + '</a>\n' +
+                    '                          </div>');
+            }
+            else if ($(".js-example-basic-multiple").select2("data").length == 2) {
+                $('#tagdiv').html('');
+                var $id = sel[0];
+                var $textselect = $('#tagselected' + $id ).data('text');
+                $id = sel[1];
+                console.log($id);
+                var $textselect2 = $('#tagselected' + $id).data('text');
+                console.log($textselect2);
+                $('#textpost').after('<div id="tagdiv" style="margin: 5%;font-size:1.5rem">\n' +
+                    ' <a style="background-color: peachpuff" >WITH:</a>           ' +
+                    '                       <a>' + $textselect + '</a>\n' +
+                    '                       <span>and</span>\n' +
+
+                    '                       <a>' + $textselect2 + '</a>\n' +
+                    '                   </div>');
+            }
+            else if ($(".js-example-basic-multiple").select2("data").length > 2) {
+                $('#tagdiv').html('');
+                var $id = sel[0];
+                var $l=$(".js-example-basic-multiple").select2("data").length-2;
+                var $textselect = $('#tagselected' + $id + '').data('text');
+                $id = sel[1];
+                var $textselect2 = $('#tagselected' + $id + '').data('text');
+                $('#textpost').after('<div id="tagdiv" style="margin: 5%;font-size:1.5rem">\n' +
+                    ' <a style="background-color: peachpuff">WITH:</a>           ' +
+                    '                       <a>'+$textselect+'</a>\n' +
+                    '                       <span>and</span>\n' +
+                    '                       <a>'+$textselect2+'</a>\n' +
+                    '                       <span>and</span>\n' +
+                    '<span>'+$l+'</span>'+
+                    '                       <a>MORE</a>\n' +
+                    '                   </div>');
+            }
+            $("#tag-post-section").attr('hidden',true);
+        });
     });
 
 </script>
@@ -871,7 +974,26 @@
                 console.log(nameOfphoto);
                 $('#choosephoto').append(
                     '<li style="width: 100px;height: 100px;display: inline-flex;margin: 5px;">' +
-                    ' <img class="rounded" data-name='+nameOfphoto+' src="'+src+'">' +
+                    '<img class="rounded" data-name='+nameOfphoto+' src="'+src+'">' +
+                    '<button type="button" data-name='+nameOfphoto+' class="close delete-photo" aria-label="Close" style="background: red;' +
+                    'margin-left: -98px;' +
+                    'margin-top: 2px;' +
+                    'border-radius: 50%;' +
+                    'width: 30px;' +
+                    'height: 30px;' +
+                    'opacity: .7;">' +
+                    '<span aria-hidden="true">×</span>' +
+                    '</button>' +
+                    /*'<a style="position: absolute;' +
+                    'text-align: center;' +
+                    'background-color: red;' +
+                    'margin:1%;' +
+                    'border-radius:50%;' +
+                    'width:15px;' +
+                    'height:15px;' +
+                    'color:#FFFFFF">' +
+                    '<span>x</span>' +
+                    '</a>'+*/
                     '</li>'
                 );
                 canvas.toBlob(function (blob) {
@@ -917,76 +1039,4 @@
             }
         });
     });
-</script>
-<script>
-    var forSupportAjax =function () {
-        var swipers = {};
-            var initIterator = 0;
-            var $breakPoints = false;
-            $('.swiper-container').each(function () {
-
-                var $t = $(this);
-                var index = 'swiper-unique-id-' + initIterator;
-
-                $t.addClass('swiper-' + index + ' initialized').attr('id', index);
-                $t.find('.swiper-pagination').addClass('pagination-' + index);
-
-                var $effect = ($t.data('effect')) ? $t.data('effect') : 'slide',
-                    $crossfade = ($t.data('crossfade')) ? $t.data('crossfade') : true,
-                    $loop = ($t.data('loop') == false) ? $t.data('loop') : true,
-                    $showItems = ($t.data('show-items')) ? $t.data('show-items') : 1,
-                    $scrollItems = ($t.data('scroll-items')) ? $t.data('scroll-items') : 1,
-                    $scrollDirection = ($t.data('direction')) ? $t.data('direction') : 'horizontal',
-                    $mouseScroll = ($t.data('mouse-scroll')) ? $t.data('mouse-scroll') : false,
-                    $autoplay = ($t.data('autoplay')) ? parseInt($t.data('autoplay'), 10) : 0,
-                    $autoheight = ($t.hasClass('auto-height')) ? true: false,
-                    $slidesSpace = ($showItems > 1) ? 20 : 0;
-
-                if ($showItems > 1) {
-                    $breakPoints = {
-                        480: {
-                            slidesPerView: 1,
-                            slidesPerGroup: 1
-                        },
-                        768: {
-                            slidesPerView: 2,
-                            slidesPerGroup: 2
-                        }
-                    }
-                }
-
-                swipers['swiper-' + index] = new Swiper('.swiper-' + index, {
-                    pagination: '.pagination-' + index,
-                    paginationClickable: true,
-                    direction: $scrollDirection,
-                    mousewheelControl: $mouseScroll,
-                    mousewheelReleaseOnEdges: $mouseScroll,
-                    slidesPerView: $showItems,
-                    slidesPerGroup: $scrollItems,
-                    spaceBetween: $slidesSpace,
-                    keyboardControl: true,
-                    setWrapperSize: true,
-                    preloadImages: true,
-                    updateOnImagesReady: true,
-                    autoplay: $autoplay,
-                    autoHeight: $autoheight,
-                    loop: $loop,
-                    breakpoints: $breakPoints,
-                    effect: $effect,
-                    fade: {
-                        crossFade: $crossfade
-                    },
-                    parallax: true,
-                    onSlideChangeStart: function (swiper) {
-                        var sliderThumbs = $t.siblings('.slider-slides');
-                        if (sliderThumbs.length) {
-                            sliderThumbs.find('.slide-active').removeClass('slide-active');
-                            var realIndex = swiper.slides.eq(swiper.activeIndex).attr('data-swiper-slide-index');
-                            sliderThumbs.find('.slides-item').eq(realIndex).addClass('slide-active');
-                        }
-                    }
-                });
-                initIterator++;
-            });
-    };
 </script>
