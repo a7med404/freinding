@@ -112,11 +112,12 @@
                                         </svg>
                                         <input type="file" class="sr-only" id="input" name="image" accept="image/*">
                                     </label>
-
-                                    <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
+                                    <!--dima-->
+                                    <a id="TAG-YOUR-FRIENDS" href="javascript:void(0)" class="options-message"
+                                       data-toggle="tooltip" data-placement="top"
                                        data-original-title="TAG YOUR FRIENDS">
                                         <svg class="olymp-computer-icon">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-computer-icon"></use>
+                                            <use xlink:href="svg/at.svg#Capa_1"></use>
                                         </svg>
 
                                     </a>
@@ -138,87 +139,103 @@
                             </form>
                         </div>
 
-                      <!--  <div class="tab-pane" id="profile-1" role="tabpanel" aria-expanded="true">
-                            <form>
-                                <div class="author-thumb">
-                                    <img src="olympus/img/author-page.jpg" alt="author">
-                                </div>
-                                <div class="form-group with-icon label-floating is-empty">
-                                    <label class="control-label">Share what you are thinking here...</label>
-                                    <textarea class="form-control" placeholder=""></textarea>
-                                </div>
-                                <div class="add-options-message">
-                                    <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
-                                       data-original-title="ADD PHOTOS">
-                                        <svg class="olymp-camera-icon" data-toggle="modal"
-                                             data-target="#update-header-photo">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-camera-icon"></use>
-                                        </svg>
-                                    </a>
-                                    <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
-                                       data-original-title="TAG YOUR FRIENDS">
-                                        <svg class="olymp-computer-icon">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-computer-icon"></use>
-                                        </svg>
-                                    </a>
+                        <!--  <div class="tab-pane" id="profile-1" role="tabpanel" aria-expanded="true">
+                              <form>
+                                  <div class="author-thumb">
+                                      <img src="olympus/img/author-page.jpg" alt="author">
+                                  </div>
+                                  <div class="form-group with-icon label-floating is-empty">
+                                      <label class="control-label">Share what you are thinking here...</label>
+                                      <textarea class="form-control" placeholder=""></textarea>
+                                  </div>
+                                  <div class="add-options-message">
+                                      <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
+                                         data-original-title="ADD PHOTOS">
+                                          <svg class="olymp-camera-icon" data-toggle="modal"
+                                               data-target="#update-header-photo">
+                                              <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-camera-icon"></use>
+                                          </svg>
+                                      </a>
+                                      <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
+                                         data-original-title="TAG YOUR FRIENDS">
+                                          <svg class="olymp-computer-icon">
+                                              <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-computer-icon"></use>
+                                          </svg>
+                                      </a>
 
-                                    <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
-                                       data-original-title="ADD LOCATION">
-                                        <svg class="olymp-small-pin-icon">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-small-pin-icon"></use>
-                                        </svg>
-                                    </a>
+                                      <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
+                                         data-original-title="ADD LOCATION">
+                                          <svg class="olymp-small-pin-icon">
+                                              <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-small-pin-icon"></use>
+                                          </svg>
+                                      </a>
 
-                                    <button class="btn btn-primary btn-md-2">Post Status</button>
-                                    <button class="btn btn-md-2 btn-border-think btn-transparent c-grey">Preview
-                                    </button>
+                                      <button class="btn btn-primary btn-md-2">Post Status</button>
+                                      <button class="btn btn-md-2 btn-border-think btn-transparent c-grey">Preview
+                                      </button>
 
-                                </div>
+                                  </div>
 
-                            </form>
-                        </div>
+                              </form>
+                          </div>
 
-                        <div class="tab-pane" id="blog" role="tabpanel" aria-expanded="true">
-                            <form>
-                                <div class="author-thumb">
-                                    <img src="olympus/img/author-page.jpg" alt="author">
-                                </div>
-                                <div class="form-group with-icon label-floating is-empty">
-                                    <label class="control-label">Share what you are thinking here...</label>
-                                    <textarea class="form-control" placeholder=""></textarea>
-                                </div>
-                                <div class="add-options-message">
-                                    <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
-                                       data-original-title="ADD PHOTOS">
-                                        <svg class="olymp-camera-icon" data-toggle="modal"
-                                             data-target="#update-header-photo">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-camera-icon"></use>
-                                        </svg>
-                                    </a>
-                                    <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
-                                       data-original-title="TAG YOUR FRIENDS">
-                                        <svg class="olymp-computer-icon">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-computer-icon"></use>
-                                        </svg>
-                                    </a>
+                          <div class="tab-pane" id="blog" role="tabpanel" aria-expanded="true">
+                              <form>
+                                  <div class="author-thumb">
+                                      <img src="olympus/img/author-page.jpg" alt="author">
+                                  </div>
+                                  <div class="form-group with-icon label-floating is-empty">
+                                      <label class="control-label">Share what you are thinking here...</label>
+                                      <textarea class="form-control" placeholder=""></textarea>
+                                  </div>
+                                  <div class="add-options-message">
+                                      <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
+                                         data-original-title="ADD PHOTOS">
+                                          <svg class="olymp-camera-icon" data-toggle="modal"
+                                               data-target="#update-header-photo">
+                                              <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-camera-icon"></use>
+                                          </svg>
+                                      </a>
+                                      <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
+                                         data-original-title="TAG YOUR FRIENDS">
+                                          <svg class="olymp-computer-icon">
+                                              <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-computer-icon"></use>
+                                          </svg>
+                                      </a>
 
-                                    <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
-                                       data-original-title="ADD LOCATION">
-                                        <svg class="olymp-small-pin-icon">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-small-pin-icon"></use>
-                                        </svg>
-                                    </a>
+                                      <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
+                                         data-original-title="ADD LOCATION">
+                                          <svg class="olymp-small-pin-icon">
+                                              <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-small-pin-icon"></use>
+                                          </svg>
+                                      </a>
 
-                                    <button class="btn btn-primary btn-md-2">Post Status</button>
-                                    <button class="btn btn-md-2 btn-border-think btn-transparent c-grey">Preview
-                                    </button>
+                                      <button class="btn btn-primary btn-md-2">Post Status</button>
+                                      <button class="btn btn-md-2 btn-border-think btn-transparent c-grey">Preview
+                                      </button>
 
-                                </div>
+                                  </div>
 
-                            </form>
-                        </div>-->
+                              </form>
+                          </div>-->
                     </div>
+                    <!--dima->
+                     <!--tag-->
+
+                    <!--end-tag-->
                 </div>
+            </div>
+            <div id="tag-post-section" hidden>
+                <select class="js-example-basic-multiple" name="states[]" multiple="multiple"
+                        data-placeholder="Select a friend">
+                    @foreach($users as $user)
+                        <option id="tagselected{{$user->id}}" value="{{$user->id}}" data-image="{{$user->image}} "
+                                data-text="{{$user->display_name}} " style="margin:5%"></option>
+                    @endforeach
+                </select>
+                <button class="btn btn-primary" style="margin: 20px;" id="addtag">
+                    add
+                </button>
             </div>
             <!-- ... end News Feed Form  -->
 
@@ -289,6 +306,26 @@
 
                                     <div class="author-date">
                                         <a class="h6 post__author-name fn" href="#">{{$post->user->display_name}}</a>
+
+                                        @if($post->taggedFriends)
+                                            @if($post->taggedFriends->count()==1)
+                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                            @elseif($post->taggedFriends->count()==2)
+                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
+                                            @elseif($post->taggedFriends->count()>2)
+                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
+                                                <?php
+                                                $name = "";
+                                                for ($i = 2; $i < $post->taggedFriends->count(); $i = $i + 1) {
+                                                    $name = $name . $post->taggedFriends[$i]->user->display_name ."\n";
+                                                }
+                                                ?>
+                                                <span title="{{$name}}">And {{$post->taggedFriends->count()-2}}
+                                                    more</span>
+                                            @endif
+                                        @endif
                                         <div class="post__date">
                                             <time class="published" datetime="2004-07-24T18:18">
                                                 {{$post->created_at->diffForHumans()}}
@@ -319,8 +356,8 @@
 
                                 </div>
                                 <p style="word-wrap: break-word;">{{$post->text}}</p>
-                                @if($post->type == 'picture')
-                                    <!--<div class="modal fade" id="open-photo-popup-v1{{$post->id}}" tabindex="-1"
+                            @if($post->type == 'picture')
+                                <!--<div class="modal fade" id="open-photo-popup-v1{{$post->id}}" tabindex="-1"
                                          role="dialog" aria-labelledby="open-photo-popup-v1" aria-hidden="true">
                                         <div class="modal-dialog window-popup open-photo-popup open-photo-popup-v1"
                                              role="document">
@@ -337,30 +374,30 @@
                                                             <div class="swiper-wrapper">
 
                                                                 @foreach($post->files as $file)
-                                                                    <div class="swiper-slide">
-                                                                        <div class="photo-item " style="display:block;">
-                                                                            <img src="{{$file->store_name}}"
+                                    <div class="swiper-slide">
+                                        <div class="photo-item " style="display:block;">
+                                            <img src="{{$file->store_name}}"
                                                                                  alt="photo">
                                                                             <div class="overlay"></div>
                                                                         </div>
                                                                     </div>
                                                                 @endforeach
-                                                            </div>
-
-                                                            <svg class="btn-next-without olymp-popup-right-arrow">
-                                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
-                                                            </svg>
-
-                                                            <svg class="btn-prev-without olymp-popup-left-arrow">
-                                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
-                                    </div> -->
-                                    <div class="swiper-container" data-slide="fade">
+
+                                        <svg class="btn-next-without olymp-popup-right-arrow">
+                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                        </svg>
+
+                                        <svg class="btn-prev-without olymp-popup-left-arrow">
+                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                                    <div class="{{$post->files->count()>1?'swiper-container':""}}" data-slide="fade">
                                         <div class="swiper-wrapper">
                                             @foreach($post->files as $file)
                                                 <div class="swiper-slide">
@@ -380,17 +417,19 @@
                                                         <div class="overlay"></div>
                                                     </div>
                                                 </div>
-                                            @endforeach
-                                          <!--  <a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"
+                                        @endforeach
+                                        <!--  <a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"
                                                href="#" class="full-block"></a>-->
                                         </div>
-                                        <svg class="btn-next-without olymp-popup-right-arrow">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
-                                        </svg>
+                                        @if($post->files->count()>1)
+                                            <svg class="btn-next-without olymp-popup-right-arrow">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                            </svg>
 
-                                        <svg class="btn-prev-without olymp-popup-left-arrow">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
-                                        </svg>
+                                            <svg class="btn-prev-without olymp-popup-left-arrow">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                            </svg>
+                                        @endif
                                     </div>
                                 @elseif($post->type == 'video')
                                     <div class="swiper-container" data-slide="fade">
@@ -574,7 +613,8 @@
                                                 width: 100%;
 
                                             }
-                                            .btn_react_first{
+
+                                            .btn_react_first {
                                                 margin-top: 10px;
                                             }
 

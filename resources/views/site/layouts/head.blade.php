@@ -57,6 +57,14 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/fonts.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/custom.css') }}">
 
+<!--tag-style-->
+<link rel="stylesheet" type="text/css" href="{{ asset('css/select2.min.css') }}">
+
+<!--cropp-image-->
 <link rel="stylesheet" type="text/css" href="{{ asset('css/cropper.css') }}">
+
+<!--notifications-->
 <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
+
+
 

@@ -15,6 +15,8 @@
 //    return view('welcome');
 //});
 
+use Illuminate\Filesystem\Filesystem;
+
 $admin_panel = 'admin';
 //$admin_panel = DB::table('options')->where('option_key', 'admin_url')->value('option_value');
 //if ($admin_panel == '' || $admin_panel == NULL) {
@@ -87,4 +89,16 @@ Route::group([
 Route::get('/storage-link', function () {
     $exitCode = \Artisan::call('storage:link');
     return $exitCode;
+});
+
+Route::get('/clear-dir-storage/{dir}',function ($dir){
+    $time = Carbon\Carbon::now()->timestamp;
+    $minut=1*60;
+    $oneago=$time-$minut;
+    $files = Storage::allFiles($dir);
+    foreach ( $files as $file){
+        if(Storage::lastModified($file)<$oneago){
+            Storage::delete($file);
+        }
+    }
 });
