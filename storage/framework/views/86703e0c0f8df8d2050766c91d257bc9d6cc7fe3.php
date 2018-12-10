@@ -55,8 +55,4 @@
 <!-- Main Styles CSS -->
 <link rel="stylesheet" type="text/css" href="<?php echo e(asset('olympus/css/main.min.css')); ?>">
 <link rel="stylesheet" type="text/css" href="<?php echo e(asset('olympus/css/fonts.min.css')); ?>">
-<link rel="stylesheet" type="text/css" href="<?php echo e(asset('olympus/css/custom.css')); ?>">
-
-<link rel="stylesheet" type="text/css" href="<?php echo e(asset('css/cropper.css')); ?>">
-<link rel="stylesheet" type="text/css" href="<?php echo e(asset('css/sweetalert.css')); ?>">
 

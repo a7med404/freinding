@@ -1,9 +1,9 @@
 
 
-<input id="valu_user_key" type="hidden" class="form-control valu_user_key hidden" name="user_key" value="{{$user_key }}">
+<input type="hidden" class="form-control valu_user_key hidden" name="user_key" value="">
 <div class="form-group label-floating is-empty {{ $errors->has('display_name') ? ' has-error' : '' }}">
     <label for="display_name" class="control-label">Display Name</label>
-    <input id="user_name_buy" type="text" class="form-control user_name_buy" name="display_name" value="{{ old('display_name') }}" required autofocus>
+    <input id="user_display_name_buy" type="text" class="form-control user_display_name_buy" name="display_name" value="{{ old('display_name') }}" required autofocus>
     <span class="hide form-control  error-span user_error_namess" id="user_error_namess"></span>
     @if ($errors->has('display_name'))
     <span class="help-block">
@@ -26,4 +26,4 @@
         <option value="female">Female</option>
     </select>
 </div>
-<button type="submit" style="margin-top:100px" class="btn btn-purple btn-lg full-width add_register_second" id="add_register_second"> Next</button>
+<button type="submit" style="margin-top:30px" class="btn btn-purple btn-lg full-width add_register_second" id="add_register_second"> Next</button>

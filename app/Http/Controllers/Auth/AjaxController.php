@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Auth;
 
 use App\User;
@@ -24,11 +23,19 @@ class AjaxController extends SiteController {
             $response = $status = 0;
             $wrong_form = $correct_form = NULL;
             $user_data = User::userDataCol('name', $input['name']);
+            $newDate = explode('/', $input['birthdate']);
+            if (count($newDate) == 3) {
+                $input['birthdate'] = trim($newDate[2]) . '-' . trim($newDate[1]) . '-' . trim($newDate[0]);
+            } else {
+                $input['birthdate'] = $user_data->birthdate;
+            }
             $correct_form = $user_data->update($input);
+            $user_key = '';
             if ($correct_form) {
                 $status = 1;
                 $data_user['user_id'] = $user_data->id;
-                $data_user['user_key'] = $user_data->name;
+                $user_key = $user_data->name;
+                $data_user['user_key'] = $user_key;
                 $data_user['register'] = 3;
                 $response = view('auth.form_register', $data_user)->render();
             } else {
@@ -37,10 +44,10 @@ class AjaxController extends SiteController {
                 $data_course['correct_form'] = $correct_form;
                 $response = view('site.layouts.alert_save', compact('wrong_form', 'correct_form'))->render();
             }
-            return response()->json(['status' => $status, 'response' => $response]);
+            return response()->json(['status' => $status, 'response' => $response, 'user_key' => $user_key]);
         }
     }
-    
+
     public function ajax_add_register_three(Request $request) {
         if ($request->ajax()) {
             $input = $request->input();
@@ -52,10 +59,12 @@ class AjaxController extends SiteController {
             $wrong_form = $correct_form = NULL;
             $user_data = User::userDataCol('name', $input['name']);
             $correct_form = $user_data->update($input);
+            $user_key = '';
             if ($correct_form) {
                 $status = 1;
                 $data_user['user_id'] = $user_data->id;
-                $data_user['user_key'] = $user_data->name;
+                $user_key = $user_data->name;
+                $data_user['user_key'] = $user_key;
                 $data_user['register'] = 4;
                 $response = view('auth.form_register', $data_user)->render();
             } else {
@@ -64,8 +73,7 @@ class AjaxController extends SiteController {
                 $data_course['correct_form'] = $correct_form;
                 $response = view('site.layouts.alert_save', compact('wrong_form', 'correct_form'))->render();
             }
-            return response()->json(['status' => $status, 'response' => $response]);
+            return response()->json(['status' => $status, 'response' => $response, 'user_key' => $user_key]);
         }
     }
-
 }

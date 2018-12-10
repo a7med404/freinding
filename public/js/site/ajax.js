@@ -128,7 +128,7 @@ $(document).ready(function () {
             }});
         return false;
     });
-    // add frist step to buy if not register
+    // add frist step for register
     $('body').on('click', '.add_register_first', function () {
         var obj = $(this);
         var user_name = $(this).parent().parent().parent().find('#user_name_buy').val();
@@ -226,11 +226,16 @@ $(document).ready(function () {
                 if (data != "") {
                     var response = data.response;
                     if (data.status == 1) {
-                        $(".draw_form_register").text('');
-                        $(".draw_form_register").html(response);
-                        $(".selectpicker").select2({
-                            dir: "rtl"
-                        });
+                        $('body').find('.form_register_first').addClass('hide');
+                        $('body').find('.form_register_second').removeClass('hide');
+                        $('body').find('.form_register_three').addClass('hide');
+                        $('body').find('.form_register_four').addClass('hide');
+                        $('body').find('.valu_user_key').val(data.user_key);
+//                        $(".draw_form_register").text('');
+//                        $(".draw_form_register").html(response);
+//                        $(".selectpicker").select2({
+//                            dir: "rtl"
+//                        });
                     } else {
 //                        $(".draw_registers").text('');
                         $(".draw_registers").html(response);
@@ -242,11 +247,11 @@ $(document).ready(function () {
             }});
         return false;
     });
-    // add second step to buy if not register
+    // add second step for register
     $('body').on('click', '.add_register_second', function () {
         var obj = $(this);
-        var user_key = $(this).parent().parent().parent().find('#valu_user_key').val();
-        var display_name = $(this).parent().parent().parent().find('#user_name_buy').val();
+        var user_key = $(this).parent().parent().parent().find('.valu_user_key').val();
+        var display_name = $(this).parent().parent().parent().find('#user_display_name_buy').val();
         var birthday = $(this).parent().parent().parent().find('.val_datetimepicker').val();
         var user_gender = $("#val_gender_data option:selected").val();
 //        var user_country = $("#country option:selected").val();
@@ -255,8 +260,8 @@ $(document).ready(function () {
 
         if (typeof display_name == 'undefined' || display_name == '' || display_name == "") {
             comment_error_name.removeClass('hide');
-            comment_error_name.html('please enter name');
-            $('.user_name_buy').focus();
+            comment_error_name.html('Please Enter Dispaly Nme');
+            $('.user_display_name_buy').focus();
             return false;
         }
         $.ajax({
@@ -275,8 +280,13 @@ $(document).ready(function () {
                 if (data != "") {
                     var response = data.response;
                     if (data.status == 1) {
-                        $(".draw_form_register").text('');
-                        $(".draw_form_register").html(response);
+                        $('body').find('.form_register_first').addClass('hide');
+                        $('body').find('.form_register_second').addClass('hide');
+                        $('body').find('.form_register_three').removeClass('hide');
+                        $('body').find('.form_register_four').addClass('hide');
+                        $('body').find('.valu_user_key').val(data.user_key);
+//                        $(".draw_form_register").text('');
+//                        $(".draw_form_register").html(response);
                     } else {
 //                        $(".draw_registers").text('');
                         $(".draw_registers").html(response);
@@ -288,10 +298,10 @@ $(document).ready(function () {
             }});
         return false;
     });
-    // add three step to buy if not register
+    // add three step for register
     $('body').on('click', '.add_register_three', function () {
         var obj = $(this);
-        var user_key = $(this).parent().parent().parent().find('#valu_user_key').val();
+        var user_key = $(this).parent().parent().parent().find('.valu_user_key').val();
         var social_status = $(this).parent().parent().parent().find('#social_status').val();
         var address = $(this).parent().parent().parent().find('#address').val();
         var nationality = $("#nationality option:selected").val();
@@ -305,6 +315,38 @@ $(document).ready(function () {
                 nationality: nationality,
                 address: address,
                 social_status: social_status
+            },
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                if (data != "") {
+                    var response = data.response;
+                    if (data.status == 1) {
+                          location.reload(true);
+//                        $(".draw_form_register").text('');
+//                        $(".draw_form_register").html(response);
+                    } else {
+//                        $(".draw_registers").text('');
+                        $(".draw_registers").html(response);
+                    }
+                }
+            },
+            complete: function (data) {
+                return false;
+            }});
+        return false;
+    });
+    // add four step for addtion information
+    $('body').on('click', '.add_register_four', function () {
+        var obj = $(this);
+        var user_key = $(this).parent().parent().parent().find('.valu_user_key').val();
+        
+        $.ajax({
+            type: "post",
+            url: url + '/add_register_four',
+            data: {
+                _token: $('meta[name="_token"]').attr('content'),
+                name: user_key
             },
             cache: false,
             dataType: 'json',
