@@ -169,6 +169,7 @@ use RegistersUsers;
             $response = $status  = 0;
             $wrong_form = $correct_form = NULL;
             $wrong_form = $this->MakeConfirmValidat($input);
+            $user_key='';
             if (empty($wrong_form)) {
                 $status = 1;
                 $user = $this->addCreate($request, $input);
@@ -178,7 +179,8 @@ use RegistersUsers;
                 $sen_email = User::SendEmailTOUser($user['id'], 'register');
                 $this->registered($request, $user); //?: redirect($this->redirectPath());
                 $data_user['user_id']=$user['id'];
-                $data_user['user_key']=$user['name'];
+                $user_key=$user['name'];
+                $data_user['user_key']=$user_key;
                 $data_user['register']=2;
                 $response = view('auth.form_register', $data_user)->render();
             } else {
@@ -187,7 +189,7 @@ use RegistersUsers;
                 $data_course['correct_form'] = $correct_form;
                 $response = view('site.layouts.alert_save', compact('wrong_form', 'correct_form'))->render();
             }
-            return response()->json(['status' => $status, 'response' => $response]);
+            return response()->json(['status' => $status, 'response' => $response,'user_key'=>$user_key]);
         }
     }
 

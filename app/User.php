@@ -112,7 +112,7 @@ class User extends Authenticatable {
         return $count[0]->count;
     }
 
-    public static function ALLDataCount($colum='country',$state = 0) {
+    public static function ALLDataCount($colum = 'country', $state = 0) {
         $data = static::select($colum, DB::raw('count(*) as total'))
                 ->groupBy($colum)
                 ->get();
@@ -138,17 +138,13 @@ class User extends Authenticatable {
         $total = $total_femal = $total_mal = 0;
         foreach ($alluser as $key => $val_user) {
             if (!empty($val_user->birthdate) && $val_user->birthdate != 'Invalid date') {
-                $newDate = explode('/', $val_user->birthdate);
-                if (count($newDate) == 3) {
-                    $myDate = trim($newDate[2]) . '-' . trim($newDate[1]) . '-' . trim($newDate[0]);
-                    $age = Carbon::parse($myDate)->age;
-                    if ($val_user->gender == 'female') {
-                        $total_femal += $age;
-                    } else {
-                        $total_mal += $age;
-                    }
-                    $years [] = $age;
+                $age = Carbon::parse($val_user->birthdate)->age;
+                if ($val_user->gender == 'female') {
+                    $total_femal += $age;
+                } else {
+                    $total_mal += $age;
                 }
+                $years [] = $age;
             }
         }
         if ($sum == 1) {
@@ -212,7 +208,7 @@ class User extends Authenticatable {
 
         $data_val['from'] = $first_birthdate;
         $data_val['to'] = 'More Than : ' . $first_birthdate;
-        $end_birthdate='1910-11-30';
+        $end_birthdate = '1910-11-30';
         $data_val['count'] = User::countBirthdate($first_birthdate, $end_birthdate);
         //$data_val['count'] = User::countAge('birthdate', '<', $first_birthdate);
         $data_age[] = $data_val;
