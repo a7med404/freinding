@@ -61,7 +61,7 @@ class StatisticsReportController extends AdminController {
         //month
         $total_month = SessionTime::ALLDataMonth(1,2);
         $new_month = SessionTime::ALLDataMonth(1);
-        
+
 //        print_r($total_month);
 //        print_r($new_month);die;
         //age

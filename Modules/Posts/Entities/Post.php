@@ -10,7 +10,7 @@ class Post extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['user_id', 'text', 'type', 'dir', 'view_count', 'is_pined', 'privacy', 'time', 'is_boost', 'check_in'];
+    protected $fillable = ['user_id', 'text', 'type', 'dir', 'view_count', 'is_pined', 'privacy', 'time', 'is_boost', 'check_in','post_id','social_network_id'];
     protected $appends=['newest_comment'];
     protected $with=['user'/*,'comments'*/,'reactions','files','taggedFriends','supportFriends','topics'];
     protected $withCount=['comments'];
@@ -47,5 +47,17 @@ class Post extends Model
 
     public function topics(){
         return $this->belongsToMany(Topic::class);
+    }
+    public function Posts()
+    {
+        return $this->hasMany(post::class);
+    }
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
+    public function social_network()
+    {
+        return $this->belongsTo(social_network::class);
     }
 }

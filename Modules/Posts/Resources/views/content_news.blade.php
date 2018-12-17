@@ -114,6 +114,7 @@
                                     </label>
                                     <!--dima-->
                                     <a id="TAG-YOUR-FRIENDS" href="javascript:void(0)" class="options-message"
+                                       data-toggle="modal" data-target="#tag-Modal"
                                        data-toggle="tooltip" data-placement="top"
                                        data-original-title="TAG YOUR FRIENDS">
                                         <svg class="olymp-computer-icon">
@@ -225,18 +226,39 @@
                     <!--end-tag-->
                 </div>
             </div>
-            <div id="tag-post-section" hidden>
-                <select class="js-example-basic-multiple" name="states[]" multiple="multiple"
-                        data-placeholder="Select a friend">
-                    @foreach($users as $user)
-                        <option id="tagselected{{$user->id}}" value="{{$user->id}}" data-image="{{$user->image}} "
-                                data-text="{{$user->display_name}} " style="margin:5%"></option>
-                    @endforeach
-                </select>
-                <button class="btn btn-primary" style="margin: 20px;" id="addtag">
-                    add
-                </button>
+            <!--modeltag-->
+            <div class="modal fade" id="tag-Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">TAG YOUR FRIENDS</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!--tag-->
+                            <div id="tag-post-section">
+                                <select select class="js-example-basic-multiple" name="states[]" multiple="multiple"
+                                        data-placeholder="Select a friend">
+                                    @foreach($users as $user)
+                                        <option id="tagselected{{$user->id}}" value="{{$user->id}}"
+                                                data-image="{{$user->image}} " data-text="{{$user->display_name}} "
+                                                style="margin:5%"></option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <!--end-tag-->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button id="addtag" type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <!--endmodel-->
             <!-- ... end News Feed Form  -->
 
             <!--loader-->
@@ -298,66 +320,67 @@
                     @foreach($posts as $post)
 
                         <div id="AllPostDiv{{$post->id}}" class="ui-block">
+                            @if($post->post_id == 0 &&$post->social_network_id==0)
+                                <article class="hentry post video">
+                                    <div class="post__author author vcard inline-items">
+                                        <img src="{{$post->user->image}}"
+                                             alt="author">
 
-                            <article class="hentry post video">
-                                <div class="post__author author vcard inline-items">
-                                    <img src="{{$post->user->image}}"
-                                         alt="author">
+                                        <div class="author-date">
+                                            <a class="h6 post__author-name fn"
+                                               href="#">{{$post->user->display_name}}</a>
 
-                                    <div class="author-date">
-                                        <a class="h6 post__author-name fn" href="#">{{$post->user->display_name}}</a>
-
-                                        @if($post->taggedFriends)
-                                            @if($post->taggedFriends->count()==1)
-                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
-                                            @elseif($post->taggedFriends->count()==2)
-                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
-                                                <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
-                                            @elseif($post->taggedFriends->count()>2)
-                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
-                                                <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
-                                                <?php
-                                                $name = "";
-                                                for ($i = 2; $i < $post->taggedFriends->count(); $i = $i + 1) {
-                                                    $name = $name . $post->taggedFriends[$i]->user->display_name ."\n";
-                                                }
-                                                ?>
-                                                <span title="{{$name}}">And {{$post->taggedFriends->count()-2}}
-                                                    more</span>
+                                            @if($post->taggedFriends)
+                                                @if($post->taggedFriends->count()==1)
+                                                    <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                @elseif($post->taggedFriends->count()==2)
+                                                    <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                    <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
+                                                @elseif($post->taggedFriends->count()>2)
+                                                    <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                    <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
+                                                    <?php
+                                                    $name = "";
+                                                    for ($i = 2; $i < $post->taggedFriends->count(); $i = $i + 1) {
+                                                        $name = $name . $post->taggedFriends[$i]->user->display_name . "\n";
+                                                    }
+                                                    ?>
+                                                    <span title="{{$name}}">And {{$post->taggedFriends->count()-2}}
+                                                        more</span>
+                                                @endif
                                             @endif
-                                        @endif
-                                        <div class="post__date">
-                                            <time class="published" datetime="2004-07-24T18:18">
-                                                {{$post->created_at->diffForHumans()}}
-                                            </time>
+                                            <div class="post__date">
+                                                <time class="published" datetime="2004-07-24T18:18">
+                                                    {{$post->created_at->diffForHumans()}}
+                                                </time>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="more">
-                                        <svg class="olymp-three-dots-icon">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
-                                        </svg>
-                                        <ul class="more-dropdown">
-                                            <li>
-                                                <a href="#">Edit Post</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)" class="post-delete" id="{{$post->id}}">Delete
-                                                    Post</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Turn Off Notifications</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Select as Featured</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                        <div class="more">
+                                            <svg class="olymp-three-dots-icon">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                            </svg>
+                                            <ul class="more-dropdown">
+                                                <li>
+                                                    <a href="#">Edit Post</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0)" class="post-delete" id="{{$post->id}}">Delete
+                                                        Post</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Turn Off Notifications</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Select as Featured</a>
+                                                </li>
+                                            </ul>
+                                        </div>
 
-                                </div>
-                                <p style="word-wrap: break-word;">{{$post->text}}</p>
-                            @if($post->type == 'picture')
-                                <!--<div class="modal fade" id="open-photo-popup-v1{{$post->id}}" tabindex="-1"
+                                    </div>
+                                    <p style="word-wrap: break-word;">{{$post->text}}</p>
+                                @if($post->type == 'picture')
+                                    <!--<div class="modal fade" id="open-photo-popup-v1{{$post->id}}" tabindex="-1"
                                          role="dialog" aria-labelledby="open-photo-popup-v1" aria-hidden="true">
                                         <div class="modal-dialog window-popup open-photo-popup open-photo-popup-v1"
                                              role="document">
@@ -374,54 +397,16 @@
                                                             <div class="swiper-wrapper">
 
                                                                 @foreach($post->files as $file)
-                                    <div class="swiper-slide">
-                                        <div class="photo-item " style="display:block;">
-                                            <img src="{{$file->store_name}}"
+                                        <div class="swiper-slide">
+                                            <div class="photo-item " style="display:block;">
+                                                <img src="{{$file->store_name}}"
                                                                                  alt="photo">
                                                                             <div class="overlay"></div>
                                                                         </div>
                                                                     </div>
                                                                 @endforeach
-                                        </div>
+                                            </div>
 
-                                        <svg class="btn-next-without olymp-popup-right-arrow">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
-                                        </svg>
-
-                                        <svg class="btn-prev-without olymp-popup-left-arrow">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                                    <div class="{{$post->files->count()>1?'swiper-container':""}}" data-slide="fade">
-                                        <div class="swiper-wrapper">
-                                            @foreach($post->files as $file)
-                                                <div class="swiper-slide">
-                                                    <div class="photo-item" style="display:block;">
-                                                        <img src="{{$file->store_name}}"
-                                                             alt="photo">
-                                                        <div class="flexFont" style="position: absolute;
-                                                        bottom: 1%;
-                                                        border-radius: 5px;
-                                                        -ms-transform: rotate(45deg); /* IE 9 */
-                                                        -webkit-transform: rotate(45deg); /* Safari 3-8 */
-                                                        transform: rotate(45deg);">
-                                                            <p style="padding: 10px;
-                                                            color: #f2f3f7;
-                                                            background-color: #9a9fbf85;
-                                                            border-radius: 50px;">Friending</p></div>
-                                                        <div class="overlay"></div>
-                                                    </div>
-                                                </div>
-                                        @endforeach
-                                        <!--  <a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"
-                                               href="#" class="full-block"></a>-->
-                                        </div>
-                                        @if($post->files->count()>1)
                                             <svg class="btn-next-without olymp-popup-right-arrow">
                                                 <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
                                             </svg>
@@ -429,42 +414,84 @@
                                             <svg class="btn-prev-without olymp-popup-left-arrow">
                                                 <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
                                             </svg>
-                                        @endif
+                                        </div>
                                     </div>
-                                @elseif($post->type == 'video')
-                                    <div class="swiper-container" data-slide="fade">
-                                        <div class="swiper-wrapper">
-                                            @foreach($post->files as $file)
-                                                <div class="swiper-slide my-video">
-                                                    <div class="photo-item" style="display:block;">
-                                                        <div style="background-color: black;display: flex;justify-content: center;
-                                                        align-items: center;" class="video_post">
-                                                            <video class="video_post_element my-video"
-                                                                   {{--id="forAutoPlay{{$post->id}}"--}} controls
-                                                                   {{--autoplay--}} muted oncanplay="this.muted=true"
-                                                                   src="{{$file->store_name}}"
-                                                                   {{--data-src=""--}} type="video/mp4"
-                                                                   style="width: 100%;height: auto;">
-                                                            </video>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                                        <div class="{{$post->files->count()>1?'swiper-container':""}}"
+                                             data-slide="fade">
+                                            <div class="swiper-wrapper">
+                                                @foreach($post->files as $file)
+                                                    <div class="swiper-slide">
+                                                        <div class="photo-item" style="display:block;">
+                                                            <img src="{{$file->store_name}}"
+                                                                 alt="photo">
+                                                            <!-- <div class="flexFont" style="position: absolute;
+                                                             bottom: 1%;
+                                                             border-radius: 5px;
+                                                             -ms-transform: rotate(45deg); /* IE 9 */
+                                                             -webkit-transform: rotate(45deg); /* Safari 3-8 */
+                                                             transform: rotate(45deg);">
+                                                                 <p style="padding: 10px;
+                                                                 color: #f2f3f7;
+                                                                 background-color: #9a9fbf85;
+                                                                 border-radius: 50px;">Friending</p></div>-->
+                                                            <div class="overlay"></div>
                                                         </div>
                                                     </div>
-                                                </div>
                                             @endforeach
-                                        </div>
-                                        <svg class="btn-next-without olymp-popup-right-arrow video_choser">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
-                                        </svg>
+                                            <!--  <a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"
+                                               href="#" class="full-block"></a>-->
+                                            </div>
+                                            @if($post->files->count()>1)
+                                                <svg class="btn-next-without olymp-popup-right-arrow">
+                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                                </svg>
 
-                                        <svg class="btn-prev-without olymp-popup-left-arrow video_choser">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
-                                        </svg>
-                                    </div>
-                                @endif
-                                <div style="display: inline-block;">
-                                    <ul>
-                                        @foreach($post->topics as $topic)
-                                            <li style="margin:5px; float: left">
-                                                <a style="border-radius: 25px;
+                                                <svg class="btn-prev-without olymp-popup-left-arrow">
+                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                                </svg>
+                                            @endif
+                                        </div>
+
+
+                                    @elseif($post->type == 'video')
+                                        <div class="swiper-container" data-slide="fade">
+                                            <div class="swiper-wrapper">
+                                                @foreach($post->files as $file)
+                                                    <div class="swiper-slide my-video">
+                                                        <div class="photo-item" style="display:block;">
+                                                            <div style="background-color: black;display: flex;justify-content: center;
+                                                        align-items: center;" class="video_post">
+                                                                <video class="video_post_element my-video"
+                                                                       {{--id="forAutoPlay{{$post->id}}"--}} controls
+                                                                       {{--autoplay--}} muted
+                                                                       oncanplay="this.muted=true"
+                                                                       src="{{$file->store_name}}"
+                                                                       {{--data-src=""--}} type="video/mp4"
+                                                                       style="width: 100%;height: auto;">
+                                                                </video>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <svg class="btn-next-without olymp-popup-right-arrow video_choser">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                            </svg>
+
+                                            <svg class="btn-prev-without olymp-popup-left-arrow video_choser">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                            </svg>
+                                        </div>
+                                    @endif
+                                    <div style="display: inline-block;">
+                                        <ul>
+                                            @foreach($post->topics as $topic)
+                                                <li style="margin:5px; float: left">
+                                                    <a style="border-radius: 25px;
                                        background-color: #9a9fbf;
                                        display: block;
                                        text-align: center;
@@ -472,13 +499,13 @@
                                        padding: 3px;
                                        padding-left: 8px;
                                        padding-right: 8px;">
-                                                    {{$topic->name}}
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            <!--<div class="post-additional-info inline-items">
+                                                        {{$topic->name}}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                <!--<div class="post-additional-info inline-items">
 
                                     <a id="{{$post->id}}" class="post-add-icon inline-items post_reacts_users">
                                         <svg class="olymp-heart-icon">
@@ -490,42 +517,42 @@
 
                                     <ul id="reactioners_photos{{$post->id}}" class="friends-harmonic">
                                       @php($liked=false)
-                            @foreach($post->reactions as $reaction)
-                                <?php
-                                $liked = $reaction->user->id == Auth::id() || $liked
-                                ?>
-                                @if($loop->index<5)
-                                    <li>
-                                         <a href="#">
-                                            <img src="{{$reaction->user->image}}" alt="friend">
+                                @foreach($post->reactions as $reaction)
+                                    <?php
+                                    $liked = $reaction->user->id == Auth::id() || $liked
+                                    ?>
+                                    @if($loop->index<5)
+                                        <li>
+                                             <a href="#">
+                                                <img src="{{$reaction->user->image}}" alt="friend">
                                                     </a>
                                                 </li>
                                             @else
-                                    @break
-                                @endif
-                            @endforeach
-                                    </ul>
+                                        @break
+                                    @endif
+                                @endforeach
+                                        </ul>
 
-                                    <div class="names-people-likes" id="reactioners_name{{$post->id}}">
+                                        <div class="names-people-likes" id="reactioners_name{{$post->id}}">
                                         @if($post->reactions->count()>2)
-                                <a href="#">{{$post->reactions[0]->user->display_name}}</a>, <a
+                                    <a href="#">{{$post->reactions[0]->user->display_name}}</a>, <a
                                                     href="#">{{$post->reactions[1]->user->display_name}}</a> and
                                             <br>{{$post->reactions->count()-2}} more react this
                                         @elseif($post->reactions->count()==2)
-                                <a href="#">{{$post->reactions[0]->user->display_name}}</a>, <a
+                                    <a href="#">{{$post->reactions[0]->user->display_name}}</a>, <a
                                                     href="#">{{$post->reactions[1]->user->display_name}}</a>
                                         @elseif($post->reactions->count()==1)
-                                <a href="#">{{$post->reactions[0]->user->display_name}}</a>
+                                    <a href="#">{{$post->reactions[0]->user->display_name}}</a>
                                         @endif
-                                    </div>
+                                        </div>
 
-                                    <div class="comments-shared">
-                                        <a href="#" class="post-add-icon inline-items">
-                                            <svg class="olymp-speech-balloon-icon">
-                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-speech-balloon-icon"></use>
-                                            </svg>
+                                        <div class="comments-shared">
+                                            <a href="#" class="post-add-icon inline-items">
+                                                <svg class="olymp-speech-balloon-icon">
+                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-speech-balloon-icon"></use>
+                                                </svg>
 
-                                            <span id="comment_count{{$post->id}}">{{$post->comments_count}}</span>
+                                                <span id="comment_count{{$post->id}}">{{$post->comments_count}}</span>
                                         </a>
 
                                         <a href="#" class="post-add-icon inline-items">
@@ -533,110 +560,280 @@
                                                 <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>
                                             </svg>
                                            <?php
-                            $engagement = $post->reactions->count();
-                            $engagement += $post->supportFriends->count();
-                            $engagement += $post->comments_count;
-                            foreach ($post->comments as $comment) {
-                                $engagement += $comment->replies->count();
-                            }
-                            ?>
-                                    <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
+                                $engagement = $post->reactions->count();
+                                $engagement += $post->supportFriends->count();
+                                $engagement += $post->comments_count;
+                                foreach ($post->comments as $comment) {
+                                    $engagement += $comment->replies->count();
+                                }
+                                ?>
+                                        <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
                                         </a>
                                     </div>
 
                                 </div>-->
-                                <!-- new reactions -->
-                                <div class="post-additional-info form-inline post-control-button flex-container reaction">
-                                    <a id="btn_react{{$post->id}}" class="btn btn-control btn_react_first "
-                                       style="background-color: {{$liked?'red':''}};">
-                                        <svg class="olymp-like-post-icon">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
-                                        </svg>
+                                    <!-- new reactions -->
+                                    <div class="post-additional-info form-inline post-control-button flex-container reaction">
+                                        <a id="btn_react{{$post->id}}" class="btn btn-control btn_react_first "
+                                           style="background-color: {{$liked?'red':''}};">
+                                            <svg class="olymp-like-post-icon">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
+                                            </svg>
 
-                                    </a>
-
-                                    <a id="comment_post{{$post->id}}" class="btn btn-control  ">
-                                        <svg class="olymp-comments-post-icon">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>
-                                        </svg>
-
-                                    </a>
-
-                                    <a href="#" class="btn btn-control ">
-                                        <svg class="olymp-share-icon">
-                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>
-                                        </svg>
-
-                                    </a>
-
-                                    <ul id="reactioners_photos{{$post->id}}"
-                                        style=" position: absolute; right: 27%;"
-                                        class="friends-harmonic inline-items float-right">
-                                        @php($liked=false)
-                                        @foreach($post->reactions as $reaction)
-                                            <?php
-                                            $liked = $reaction->user->id == Auth::id() || $liked
-                                            ?>
-                                            @if($loop->index<5)
-                                                <li>
-                                                    <a href="#">
-                                                        <img src="{{$reaction->user->image}}" alt="friend">
-                                                    </a>
-                                                </li>
-                                            @else
-                                                @break
-                                            @endif
-                                        @endforeach
-                                    </ul>
-
-                                    <div class="post_reacts_users" id="{{$post->id}}"
-                                         style="position: absolute;right: 5%;">
-                                        <a class="post-add-icon inline-items">
-                                            <?php
-                                            $engagement = $post->reactions->count();
-                                            $engagement += $post->supportFriends->count();
-                                            $engagement += $post->comments_count;
-                                            foreach ($post->comments as $comment) {
-                                                $engagement += $comment->replies->count();
-                                            }
-                                            ?>
-                                            <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
                                         </a>
-                                        <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>
+
+                                        <a id="comment_post{{$post->id}}" class="btn btn-control  ">
+                                            <svg class="olymp-comments-post-icon">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>
+                                            </svg>
+
+                                        </a>
+
+                                        <!--share-section-->
+                                        <div class="more">
+                                            <a href="#" class="btn btn-control ">
+                                                <svg class="olymp-share-icon">
+                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>
+                                                </svg>
+                                            </a>
+                                            <ul class="more-dropdown">
+                                                <li>
+                                                    <a href="#" data-toggle="modal" data-target="#Modal-Share">Share</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Share in group</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">share on friend's diary</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!--model-share-->
+                                        <div class="modal fade" id="Modal-Share" tabindex="-1" role="dialog"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Share Post </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                    <textarea class="form-control" id="taxt-share"
+                                                              placeholder=" Share what you are thinking here.."
+                                                              style="width: 100%; margin-bottom: 5px"></textarea>
+                                                        <div class="ui-block">
+                                                            <article class="hentry post video">
+                                                                <div class="post__author author vcard inline-items">
+                                                                    <img src="{{$post->user->image}}"
+                                                                         alt="author">
+
+                                                                    <div class="author-date">
+                                                                        <a class="h6 post__author-name fn"
+                                                                           href="#">{{$post->user->display_name}}</a>
+
+                                                                        @if($post->taggedFriends)
+                                                                            @if($post->taggedFriends->count()==1)
+                                                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                                            @elseif($post->taggedFriends->count()==2)
+                                                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                                                <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
+                                                                            @elseif($post->taggedFriends->count()>2)
+                                                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                                                <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
+                                                                                <?php
+                                                                                $name = "";
+                                                                                for ($i = 2; $i < $post->taggedFriends->count(); $i = $i + 1) {
+                                                                                    $name = $name . $post->taggedFriends[$i]->user->display_name . "\n";
+                                                                                }
+                                                                                ?>
+                                                                                <span title="{{$name}}">And {{$post->taggedFriends->count()-2}}
+                                                                                    more</span>
+                                                                            @endif
+                                                                        @endif
+                                                                        <div class="post__date">
+                                                                            <time class="published"
+                                                                                  datetime="2004-07-24T18:18">
+                                                                                {{$post->created_at->diffForHumans()}}
+                                                                            </time>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <p style="word-wrap: break-word;">{{$post->text}}</p>
+                                                                @if($post->type == 'picture')
+                                                                    <div class="{{$post->files->count()>1?'swiper-container':""}}"
+                                                                         data-slide="fade">
+                                                                        <div class="swiper-wrapper">
+                                                                            @foreach($post->files as $file)
+                                                                                <div class="swiper-slide">
+                                                                                    <div class="photo-item"
+                                                                                         style="display:block;">
+                                                                                        <img src="{{$file->store_name}}"
+                                                                                             alt="photo">
+                                                                                        <div class="flexFont" style="position: absolute;
+                                                        bottom: 1%;
+                                                        border-radius: 5px;
+                                                        -ms-transform: rotate(45deg); /* IE 9 */
+                                                        -webkit-transform: rotate(45deg); /* Safari 3-8 */
+                                                        transform: rotate(45deg);">
+                                                                                            <p style="padding: 10px;
+                                                            color: #f2f3f7;
+                                                            background-color: #9a9fbf85;
+                                                            border-radius: 50px;">Friending</p></div>
+                                                                                        <div class="overlay"></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endforeach
+
+                                                                        </div>
+                                                                        @if($post->files->count()>1)
+                                                                            <svg class="btn-next-without olymp-popup-right-arrow">
+                                                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                                                            </svg>
+
+                                                                            <svg class="btn-prev-without olymp-popup-left-arrow">
+                                                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                                                            </svg>
+                                                                        @endif
+                                                                    </div>
+                                                                @elseif($post->type == 'video')
+                                                                    <div class="swiper-container" data-slide="fade">
+                                                                        <div class="swiper-wrapper">
+                                                                            @foreach($post->files as $file)
+                                                                                <div class="swiper-slide my-video">
+                                                                                    <div class="photo-item"
+                                                                                         style="display:block;">
+                                                                                        <div style="background-color: black;display: flex;justify-content: center;
+                                                        align-items: center;" class="video_post">
+                                                                                            <video class="video_post_element my-video"
+                                                                                                   {{--id="forAutoPlay{{$post->id}}"--}} controls
+                                                                                                   {{--autoplay--}} muted
+                                                                                                   oncanplay="this.muted=true"
+                                                                                                   src="{{$file->store_name}}"
+                                                                                                   {{--data-src=""--}} type="video/mp4"
+                                                                                                   style="width: 100%;height: auto;">
+                                                                                            </video>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endforeach
+                                                                        </div>
+                                                                        <svg class="btn-next-without olymp-popup-right-arrow video_choser">
+                                                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                                                        </svg>
+
+                                                                        <svg class="btn-prev-without olymp-popup-left-arrow video_choser">
+                                                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                                                        </svg>
+                                                                    </div>
+                                                                @endif
+                                                                <div style="display: inline-block;">
+                                                                    <ul>
+                                                                        @foreach($post->topics as $topic)
+                                                                            <li style="margin:5px; float: left">
+                                                                                <a style="border-radius: 25px;
+                                       background-color: #9a9fbf;
+                                       display: block;
+                                       text-align: center;
+                                       color: aliceblue;
+                                       padding: 3px;
+                                       padding-left: 8px;
+                                       padding-right: 8px;">
+                                                                                    {{$topic->name}}
+                                                                                </a>
+                                                                            </li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div>
+                                                            </article>
+                                                        </div>
+                                                    </div>
+                                                    <!--end-body-model-->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Close
+                                                        </button>
+                                                        <button id="addShare{{$post->id}}" type="button"
+                                                                class="btn btn-primary">Share
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--endmodel-share-->
+                                        <!--end-share-section-->
+
+                                        <ul id="reactioners_photos{{$post->id}}"
+                                            style=" position: absolute; right: 27%;"
+                                            class="friends-harmonic inline-items float-right">
+                                            @php($liked=false)
+                                            @foreach($post->reactions as $reaction)
+                                                <?php
+                                                $liked = $reaction->user->id == Auth::id() || $liked
+                                                ?>
+                                                @if($loop->index<5)
+                                                    <li>
+                                                        <a href="#">
+                                                            <img src="{{$reaction->user->image}}" alt="friend">
+                                                        </a>
+                                                    </li>
+                                                @else
+                                                    @break
+                                                @endif
+                                            @endforeach
+                                        </ul>
+
+                                        <div class="post_reacts_users" id="{{$post->id}}"
+                                             style="position: absolute;right: 5%;">
+                                            <a class="post-add-icon inline-items">
+                                                <?php
+                                                $engagement = $post->reactions->count();
+                                                $engagement += $post->supportFriends->count();
+                                                $engagement += $post->comments_count;
+                                                foreach ($post->comments as $comment) {
+                                                    $engagement += $comment->replies->count();
+                                                }
+                                                ?>
+                                                <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
+                                            </a>
+                                            <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>
+                                        </div>
+
+                                        <style>
+                                            @media only screen and (max-width: 481px) {
+                                                .reaction {
+                                                    display: flex;
+                                                    flex-direction: row;
+                                                    width: 100%;
+
+                                                }
+
+                                                .btn_react_first {
+                                                    margin-top: 10px;
+                                                }
+
+                                                /*  .post-control-button .btn-control {
+                                                      margin-top: 10px;
+                                                  }*/
+                                            }
+                                        </style>
                                     </div>
-
-                                    <style>
-                                        @media only screen and (max-width: 481px) {
-                                            .reaction {
-                                                display: flex;
-                                                flex-direction: row;
-                                                width: 100%;
-
-                                            }
-
-                                            .btn_react_first {
-                                                margin-top: 10px;
-                                            }
-
-                                            /*  .post-control-button .btn-control {
-                                                  margin-top: 10px;
-                                              }*/
-                                        }
-                                    </style>
-                                </div>
-                                <!-- old reactions -->
-                            <!-- <div style="position: absolute; top: 18px;right:20px;">
+                                    <!-- old reactions -->
+                                <!-- <div style="position: absolute; top: 18px;right:20px;">
                                         <ul hidden  id="post_{{$post->id}}" style=" display: flex;margin-right: -5px;">
                                             @foreach($reactions as $reaction)
-                                <li id="reaction{{$reaction->id}}" style="margin: 3px;margin-right: {{$loop->last?8:3}}px;">
+                                    <li id="reaction{{$reaction->id}}" style="margin: 3px;margin-right: {{$loop->last?8:3}}px;">
                                                     <a>
                                                         <img src="{{$reaction->icon}}">
                                                     </a>
                                                 </li>
                                             @endforeach
-                                    </ul>
-                                </div>-->
-                            <!-- <div class="control-block-button post-control-button">
+                                        </ul>
+                                    </div>-->
+                                <!-- <div class="control-block-button post-control-button">
                                     <a id="btn_react{{$post->id}}" class="btn btn-control"
                                        style="background-color: {{$liked?'red':''}}">
                                         <svg class="olymp-like-post-icon">
@@ -657,10 +854,444 @@
                                     </a>
 
                                 </div>-->
-                            </article>
+                                </article>
+                            @elseif($post->social_network_id==1)
 
+                                <article class="hentry post video">
+                                    <div class="post__author author vcard inline-items">
+                                        <img src="{{$post->user->image}}"
+                                             alt="author">
+                                        <div class="author-date">
+                                            <a class="h6 post__author-name fn"
+                                               href="#">{{$post->user->display_name}}</a>
+                                            @if($post->taggedFriends)
+                                                @if($post->taggedFriends->count()==1)
+                                                    <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                @elseif($post->taggedFriends->count()==2)
+                                                    <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                    <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
+                                                @elseif($post->taggedFriends->count()>2)
+                                                    <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                    <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
+                                                    <?php
+                                                    $name = "";
+                                                    for ($i = 2; $i < $post->taggedFriends->count(); $i = $i + 1) {
+                                                        $name = $name . $post->taggedFriends[$i]->user->display_name . "\n";
+                                                    }
+                                                    ?>
+                                                    <span title="{{$name}}">And {{$post->taggedFriends->count()-2}}
+                                                        more</span>
+                                                @endif
+                                            @endif
+                                            <div class="post__date">
+                                                <time class="published" datetime="2004-07-24T18:18">
+                                                    {{$post->created_at->diffForHumans()}}
+                                                </time>
+                                            </div>
+                                        </div>
 
-                            <!-- Comments -->
+                                        <div class="more">
+                                            <svg class="olymp-three-dots-icon">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                            </svg>
+                                            <ul class="more-dropdown">
+                                                <li>
+                                                    <a href="#">Edit Post</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0)" class="post-delete" id="{{$post->id}}">Delete
+                                                        Post</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Turn Off Notifications</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Select as Featured</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+
+                                    <p style="word-wrap: break-word;">{{$post->text}}</p>
+                                    <!--post shared-->
+                                    <article class="hentry post video" style=" border: 3px solid;
+    border-radius: 10px;
+    border-color: #9a9fbf;">
+                                        <div class="post__author author vcard inline-items">
+                                            <img src="{{$post->post->user->image}}" alt="author">
+                                            <div class="author-date">
+                                                <a class="h6 post__author-name fn"
+                                                   href="#">{{$post->post->user->display_name}}</a>
+                                                @if($post->post->taggedFriends)
+                                                    @if($post->post->taggedFriends->count()==1)
+                                                        <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
+                                                    @elseif($post->post->taggedFriends->count()==2)
+                                                        <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
+                                                        <span>&nbsp;And&nbsp;<a>{{$post->post->taggedFriends[1]->user->display_name}}</a></span>
+                                                    @elseif($post->post->taggedFriends->count()>2)
+                                                        <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
+                                                        <span>&nbsp;And&nbsp;<a>{{$post->post->taggedFriends[1]->user->display_name}}</a></span>
+                                                        <?php
+                                                        $name = "";
+                                                        for ($i = 2; $i < $post->post->taggedFriends->count(); $i = $i + 1) {
+                                                            $name = $name . $post->post->taggedFriends[$i]->user->display_name . "\n";
+                                                        }
+                                                        ?>
+                                                        <span title="{{$name}}">And {{$post->post->taggedFriends->count()-2}}
+                                                            more</span>
+                                                    @endif
+                                                @endif
+                                                <div class="post__date">
+                                                    <time class="published" datetime="2004-07-24T18:18">
+                                                        {{$post->post->created_at->diffForHumans()}}
+                                                    </time>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p style="word-wrap: break-word;">{{$post->post->text}}</p>
+                                        @if($post->post->type == 'picture')
+                                            <div class="{{$post->post->files->count()>1?'swiper-container':""}}"
+                                                 data-slide="fade">
+                                                <div class="swiper-wrapper">
+                                                    @foreach($post->post->files as $file)
+                                                        <div class="swiper-slide">
+                                                            <div class="photo-item" style="display:block;">
+                                                                <img src="{{$file->store_name}}"
+                                                                     alt="photo">
+                                                                <div class="flexFont" style="position: absolute;
+                                                        bottom: 1%;
+                                                        border-radius: 5px;
+                                                        -ms-transform: rotate(45deg); /* IE 9 */
+                                                        -webkit-transform: rotate(45deg); /* Safari 3-8 */
+                                                        transform: rotate(45deg);">
+                                                                    <p style="padding: 10px;
+                                                            color: #f2f3f7;
+                                                            background-color: #9a9fbf85;
+                                                            border-radius: 50px;">Friending</p></div>
+                                                                <div class="overlay"></div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+
+                                                </div>
+                                                @if($post->post->files->count()>1)
+                                                    <svg class="btn-next-without olymp-popup-right-arrow">
+                                                        <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                                    </svg>
+
+                                                    <svg class="btn-prev-without olymp-popup-left-arrow">
+                                                        <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                                    </svg>
+                                                @endif
+                                            </div>
+
+                                        @elseif($post->post->type == 'video')
+                                            <div class="swiper-container" data-slide="fade">
+                                                <div class="swiper-wrapper">
+                                                    @foreach($post->post->files as $file)
+                                                        <div class="swiper-slide my-video">
+                                                            <div class="photo-item" style="display:block;">
+                                                                <div style="background-color: black;display: flex;justify-content: center;
+                                                        align-items: center;" class="video_post">
+                                                                    <video class="video_post_element my-video"
+                                                                           {{--id="forAutoPlay{{$post->id}}"--}} controls
+                                                                           {{--autoplay--}} muted
+                                                                           oncanplay="this.muted=true"
+                                                                           src="{{$file->store_name}}"
+                                                                           {{--data-src=""--}} type="video/mp4"
+                                                                           style="width: 100%;height: auto;">
+                                                                    </video>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                <svg class="btn-next-without olymp-popup-right-arrow video_choser">
+                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                                </svg>
+
+                                                <svg class="btn-prev-without olymp-popup-left-arrow video_choser">
+                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                                </svg>
+                                            </div>
+
+                                        @endif
+                                        <div style="display: inline-block;">
+                                            <ul>
+                                                @foreach($post->post->topics as $topic)
+                                                    <li style="margin:5px; float: left">
+                                                        <a style="border-radius: 25px;
+                                       background-color: #9a9fbf;
+                                       display: block;
+                                       text-align: center;
+                                       color: aliceblue;
+                                       padding: 3px;
+                                       padding-left: 8px;
+                                       padding-right: 8px;">
+                                                            {{$topic->name}}
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </article>
+                                    <!--end post shared-->
+
+                                    <!-- new reactions -->
+                                    <div class="post-additional-info form-inline post-control-button flex-container reaction">
+
+                                        <a id="btn_react{{$post->id}}" class="btn btn-control btn_react_first "
+                                          {{-- style="background-color: {{$liked?'red':''}};"--}}>
+                                            <svg class="olymp-like-post-icon">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
+                                            </svg>
+
+                                        </a>
+
+                                        <a id="comment_post{{$post->id}}" class="btn btn-control  ">
+                                            <svg class="olymp-comments-post-icon">
+                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>
+                                            </svg>
+
+                                        </a>
+                                        <!--share-section-->
+                                        <div class="more">
+                                            <a href="#" class="btn btn-control ">
+                                                <svg class="olymp-share-icon">
+                                                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-share-icon"></use>
+                                                </svg>
+                                            </a>
+                                            <ul class="more-dropdown">
+                                                <li>
+                                                    <a href="#" data-toggle="modal" data-target="#Modal-Share">Share</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Share in group</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">share on friend's diary</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!--model-share-->
+                                        <div class="modal fade" id="Modal-Share" tabindex="-1" role="dialog"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Share Post </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                    <textarea class="form-control" id="taxt-share"
+                                                              placeholder=" Share what you are thinking here.."
+                                                              style="width: 100%; margin-bottom: 5px"></textarea>
+                                                        <div class="ui-block">
+                                                            <article class="hentry post video">
+                                                                <div class="post__author author vcard inline-items">
+                                                                    <img src="{{$post->post->user->image}}"
+                                                                         alt="author">
+
+                                                                    <div class="author-date">
+                                                                        <a class="h6 post__author-name fn"
+                                                                           href="#">{{$post->post->user->display_name}}</a>
+
+                                                                        @if($post->post->taggedFriends)
+                                                                            @if($post->post->taggedFriends->count()==1)
+                                                                                <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
+                                                                            @elseif($post->post->taggedFriends->count()==2)
+                                                                                <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
+                                                                                <span>&nbsp;And&nbsp;<a>{{$post->post->taggedFriends[1]->user->display_name}}</a></span>
+                                                                            @elseif($post->post->taggedFriends->count()>2)
+                                                                                <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
+                                                                                <span>&nbsp;And&nbsp;<a>{{$post->post->taggedFriends[1]->user->display_name}}</a></span>
+                                                                                <?php
+                                                                                $name = "";
+                                                                                for ($i = 2; $i < $post->post->taggedFriends->count(); $i = $i + 1) {
+                                                                                    $name = $name . $post->post->taggedFriends[$i]->user->display_name . "\n";
+                                                                                }
+                                                                                ?>
+                                                                                <span title="{{$name}}">And {{$post->post->taggedFriends->count()-2}}
+                                                                                    more</span>
+                                                                            @endif
+                                                                        @endif
+                                                                        <div class="post__date">
+                                                                            <time class="published"
+                                                                                  datetime="2004-07-24T18:18">
+                                                                                {{$post->post->created_at->diffForHumans()}}
+                                                                            </time>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <p style="word-wrap: break-word;">{{$post->post->text}}</p>
+                                                                @if($post->post->type == 'picture')
+                                                                    <div class="{{$post->post->files->count()>1?'swiper-container':""}}"
+                                                                         data-slide="fade">
+                                                                        <div class="swiper-wrapper">
+                                                                            @foreach($post->post->files as $file)
+                                                                                <div class="swiper-slide">
+                                                                                    <div class="photo-item"
+                                                                                         style="display:block;">
+                                                                                        <img src="{{$file->store_name}}"
+                                                                                             alt="photo">
+                                                                                        <div class="flexFont" style="position: absolute;
+                                                        bottom: 1%;
+                                                        border-radius: 5px;
+                                                        -ms-transform: rotate(45deg); /* IE 9 */
+                                                        -webkit-transform: rotate(45deg); /* Safari 3-8 */
+                                                        transform: rotate(45deg);">
+                                                                                            <p style="padding: 10px;
+                                                            color: #f2f3f7;
+                                                            background-color: #9a9fbf85;
+                                                            border-radius: 50px;">Friending</p></div>
+                                                                                        <div class="overlay"></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endforeach
+
+                                                                        </div>
+                                                                        @if($post->post->files->count()>1)
+                                                                            <svg class="btn-next-without olymp-popup-right-arrow">
+                                                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                                                            </svg>
+
+                                                                            <svg class="btn-prev-without olymp-popup-left-arrow">
+                                                                                <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                                                            </svg>
+                                                                        @endif
+                                                                    </div>
+                                                                @elseif($post->post->type == 'video')
+                                                                    <div class="swiper-container" data-slide="fade">
+                                                                        <div class="swiper-wrapper">
+                                                                            @foreach($post->post->files as $file)
+                                                                                <div class="swiper-slide my-video">
+                                                                                    <div class="photo-item"
+                                                                                         style="display:block;">
+                                                                                        <div style="background-color: black;display: flex;justify-content: center;
+                                                        align-items: center;" class="video_post">
+                                                                                            <video class="video_post_element my-video"
+                                                                                                   {{--id="forAutoPlay{{$post->id}}"--}} controls
+                                                                                                   {{--autoplay--}} muted
+                                                                                                   oncanplay="this.muted=true"
+                                                                                                   src="{{$file->store_name}}"
+                                                                                                   {{--data-src=""--}} type="video/mp4"
+                                                                                                   style="width: 100%;height: auto;">
+                                                                                            </video>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endforeach
+                                                                        </div>
+                                                                        <svg class="btn-next-without olymp-popup-right-arrow video_choser">
+                                                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>
+                                                                        </svg>
+
+                                                                        <svg class="btn-prev-without olymp-popup-left-arrow video_choser">
+                                                                            <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
+                                                                        </svg>
+                                                                    </div>
+                                                                @endif
+                                                                <div style="display: inline-block;">
+                                                                    <ul>
+                                                                        @foreach($post->post->topics as $topic)
+                                                                            <li style="margin:5px; float: left">
+                                                                                <a style="border-radius: 25px;
+                                       background-color: #9a9fbf;
+                                       display: block;
+                                       text-align: center;
+                                       color: aliceblue;
+                                       padding: 3px;
+                                       padding-left: 8px;
+                                       padding-right: 8px;">
+                                                                                    {{$topic->name}}
+                                                                                </a>
+                                                                            </li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div>
+                                                            </article>
+                                                        </div>
+                                                    </div>
+                                                    <!--end-body-model-->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Close
+                                                        </button>
+                                                        <button id="addShare{{$post->post->id}}" type="button"
+                                                                class="btn btn-primary">Share
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--endmodel-share-->
+                                        <!--end-share-section-->
+                                        <ul id="reactioners_photos{{$post->id}}"
+                                            style=" position: absolute; right: 27%;"
+                                            class="friends-harmonic inline-items float-right">
+                                            @php($liked=false)
+                                            @foreach($post->reactions as $reaction)
+                                                <?php
+                                                $liked = $reaction->user->id == Auth::id() || $liked
+                                                ?>
+                                                @if($loop->index<5)
+                                                    <li>
+                                                        <a href="#">
+                                                            <img src="{{$reaction->user->image}}" alt="friend">
+                                                        </a>
+                                                    </li>
+                                                @else
+                                                    @break
+                                                @endif
+                                            @endforeach
+                                        </ul>
+
+                                        <div class="post_reacts_users" id="{{$post->id}}"
+                                             style="position: absolute;right: 5%;">
+                                            <a class="post-add-icon inline-items">
+                                                <?php
+                                                $engagement = $post->reactions->count();
+                                                $engagement += $post->supportFriends->count();
+                                                $engagement += $post->comments_count;
+                                                foreach ($post->comments as $comment) {
+                                                    $engagement += $comment->replies->count();
+                                                }
+                                                ?>
+                                                <span id="engagement_count{{$post->id}}">{{$engagement}}</span>
+                                            </a>
+                                            <span {{--style="position: absolute;right: 5%;"--}}>&nbsp;Engagements</span>
+                                        </div>
+
+                                        <style>
+                                            @media only screen and (max-width: 481px) {
+                                                .reaction {
+                                                    display: flex;
+                                                    flex-direction: row;
+                                                    width: 100%;
+
+                                                }
+
+                                                .btn_react_first {
+                                                    margin-top: 10px;
+                                                }
+
+                                                /*  .post-control-button .btn-control {
+                                                      margin-top: 10px;
+                                                  }*/
+                                            }
+                                        </style>
+                                    </div>
+
+                                </article>
+
+                        @endif
+
+                        <!-- Comments -->
                             <ul class="comments-list comments-list--{{$post->id}}">
                                 @if($post->newest_comment)
 
