@@ -435,6 +435,11 @@
 <!--                        <li><a href="{{ route('admin.users.search') }}">
                                 <i class="fa fa-search"></i> <span>Users Search</span> 
                             </a></li>-->
+                            <li @if($name_list=='users_ids')class="active" id="active" @endif ><a href="{{ route('admin.users_ids.index') }}">
+                                    <i class="fa fa-users"></i> <span>Verification Account</span>
+                                </a></li>
+
+
                     </ul>
                 </li>
                 @endif
@@ -461,6 +466,85 @@
                     </ul>
                 </li>
                 @endif
+
+                @if($access_all == 1)
+                    <li @if(in_array($name_list,['stats']))class="active"@endif>
+                        <a href="#">
+                            <i class="livicon" data-name="map" data-c="#5bc0de" data-hc="#5bc0de" data-size="18" data-loop="true"></i>
+                            <span class="title">Tracker Statistics</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="/admin/stats">
+                                    <i class="fa fa-angle-double-right"></i> Summary
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/stats/all">
+                                    <i class="fa fa-angle-double-right"></i> All requests
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/stats/visits">
+                                    <i class="fa fa-angle-double-right"></i> Visits
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/stats/ajax">
+                                    <i class="fa fa-angle-double-right"></i> Ajax requests
+                                </a>
+                            </li>                            <li>
+                                <a href="/admin/stats/bots">
+                                    <i class="fa fa-angle-double-right"></i> Bots visits
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/stats/login-attempts">
+                                    <i class="fa fa-angle-double-right"></i> Login attempts
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/stats/countries">
+                                    <i class="fa fa-angle-double-right"></i> Countries visits
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/stats/os">
+                                    <i class="fa fa-angle-double-right"></i> OS visits
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/stats/browsers">
+                                    <i class="fa fa-angle-double-right"></i> Browsers visits
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/stats/languages">
+                                    <i class="fa fa-angle-double-right"></i> Languages visits
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/stats/unique">
+                                    <i class="fa fa-angle-double-right"></i> Unique visitors
+                                </a>
+                            </li>                            <li>
+                                <a href="/admin/stats/users">
+                                    <i class="fa fa-angle-double-right"></i> Users visits
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/stats/urls">
+                                    <i class="fa fa-angle-double-right"></i> Urls visits
+                                </a>
+                            </li>
+
+
+
+                        </ul>
+                    </li>
+                @endif
+
                 <li>
                     <a href="#">
                         <i class="livicon" data-name="map" data-c="#5bc0de" data-hc="#5bc0de" data-size="18" data-loop="true"></i>

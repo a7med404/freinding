@@ -11,6 +11,7 @@ use App\Model\Comment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -21,6 +22,7 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot() {
         //
+    Schema::defaultStringLength(191);
 
         Relation::morphMap([
             'posts' => 'App\Model\Post',

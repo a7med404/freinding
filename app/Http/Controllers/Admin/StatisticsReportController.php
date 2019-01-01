@@ -14,7 +14,14 @@ class StatisticsReportController extends AdminController {
 
     public function homeAdmin() {
         if ($this->user->can('access-all')) {
+
+
+
             return $this->statisticsUsers();
+
+
+
+
 //        } elseif ($this->user->can('post*')) {
 //            return $this->statisticsPublic();
         } else {
@@ -45,24 +52,40 @@ class StatisticsReportController extends AdminController {
         $femal_count = User::countColum('gender', 'female');
         $user_male = round(($male_count/$user_count)*100,2);
         $user_female = round(($femal_count/$user_count)*100,2);
+
+
+
         //hour
-        $morning_count = SessionTime::lastHour('06:00:00', '12:00:00');
-        $afternoon_count = SessionTime::lastHour('12:00:01', '18:00:00');
-        $night_count = SessionTime::lastHour('18:00:01', '23:59:59.999999');
-        $midnight_count = SessionTime::lastHour('00:00:01', '05:59:59.999999');
-        //day
-        $saturday_count = SessionTime::countDay('Sat');
-        $Sunday_count = SessionTime::countDay('Sun');
-        $Monday_count = SessionTime::countDay('Mon');
-        $Tuesday_count = SessionTime::countDay('Tue');
-        $Wednesday_count = SessionTime::countDay('Wed');
-        $Thursday_count = SessionTime::countDay('Thu');
-        $Friday_count = SessionTime::countDay('Fri');
-        //month
-        $total_month = SessionTime::ALLDataMonth(1,2);
-        $new_month = SessionTime::ALLDataMonth(1);
+
+
+
+
+//        $morning_count = SessionTime::lastHour('06:00:00', '12:00:00');
+//        $afternoon_count = SessionTime::lastHour('12:00:01', '18:00:00');
+//        $night_count = SessionTime::lastHour('18:00:01', '23:59:59.999999');
+//        $midnight_count = SessionTime::lastHour('00:00:01', '05:59:59.999999');
+//        //day
+//        $saturday_count = SessionTime::countDay('Sat');
+//        $Sunday_count = SessionTime::countDay('Sun');
+//        $Monday_count = SessionTime::countDay('Mon');
+//        $Tuesday_count = SessionTime::countDay('Tue');
+//        $Wednesday_count = SessionTime::countDay('Wed');
+//        $Thursday_count = SessionTime::countDay('Thu');
+//        $Friday_count = SessionTime::countDay('Fri');
+//        //month
+//        $total_month = SessionTime::ALLDataMonth(1,2);
+//        $new_month = SessionTime::ALLDataMonth(1);
         
+//        print_r($total_month);
+//        print_r($new_month);die;
         //age
+
+
+
+
+
+
+
         $total_sum = User::ALLAgeSum(1);
         $age_avg = round(($total_sum['total']/$user_count),0);
         $age_male = round(($total_sum['total_mal']/$male_count),0);

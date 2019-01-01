@@ -7,9 +7,12 @@
         <div class="card">
             <div class="card-header" role="tab" id="headingOne-1">
                 <h6 class="mb-0">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-1" aria-expanded="true" aria-controls="collapseOne">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-1" aria-expanded="true"
+                       aria-controls="collapseOne">
                         Profile Settings
-                        <svg class="olymp-dropdown-arrow-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon"></use></svg>
+                        <svg class="olymp-dropdown-arrow-icon">
+                            <use xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon"></use>
+                        </svg>
                     </a>
                 </h6>
             </div>
@@ -31,6 +34,19 @@
                     <li>
                         <a href="32-YourAccount-EducationAndEmployement.html">Education and Employement</a>
                     </li>
+                    <li>
+                        <a href="{{ route('profile.statistics') }}">Statistics</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('profile.verification') }}">Verify your profile</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('profile.stage') }}">Profile Stage</a>
+                    </li>
+                    <li>
+                        <a id="deleteacc" href="#">Delete Account</a>
+                    </li>
+
                 </ul>
             </div>
         </div>

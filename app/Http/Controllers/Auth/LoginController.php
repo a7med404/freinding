@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Model\SessionTime;
+use App\User;
+
+use Modules\UserSite\Http\Controllers\UserSiteController;
+
 
 class LoginController extends SiteController {
     /*
@@ -78,17 +82,24 @@ use AuthenticatesUsers;
         return $this->sendFailedLoginResponse($request);
     }
 
-    public function authenticated($request, $user) {
-        SessionTime::InsertData($user->id);
-//        return redirect(session()->pull('url.intended', $this->redirectTo));
+    public function authenticated($request, $user)
+    {
+        $users = User::where('id', Auth::user()->id)->first();
+        if ($users->birthdate == Null) {
+            return redirect('registration_two');
+        } else if ($users->nationality == Null) {
+            return redirect('registration_three');
+        }
+        $UserSiteController = new UserSiteController;
+        $UserSiteController->save_activity();
     }
 
     public function logout(Request $request) {
         $user = Auth::User();
-        $user_sesstion = SessionTime::getSessionTime($user->id, 'hour_out', NULL);
-        $date = strtotime(time());
-        $input['hour_out'] = date('H:i:s'); //date('H:i:s', time());
-        $user_sesstion->update($input);
+       // $user_sesstion = SessionTime::getSessionTime($user->id, 'hour_out', NULL);
+       // $date = strtotime(time());
+       // $input['hour_out'] = date('H:i:s'); //date('H:i:s', time());
+       // $user_sesstion->update($input);
         Auth::logout();
         return redirect()->intended($this->redirectPath());
     }

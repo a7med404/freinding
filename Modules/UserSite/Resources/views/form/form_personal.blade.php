@@ -1,4 +1,3 @@
-
 <div class="ui-block-title">
     <h6 class="title">Personal Information</h6>
 </div>
@@ -11,24 +10,25 @@
         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="form-group label-floating">
                 <label class="control-label">User Name</label>
-                {!! Form::text('name', $user->name, array('placeholder' => 'User Name','class' => 'form-control','data-rangelength'=>'[3,100]')) !!}
+                {!! Form::text('name', $user->name, array('class' => 'form-control','data-rangelength'=>'[3,100]')) !!}
             </div>
             <div class="form-group label-floating">
                 <label class="control-label">Your Email</label>
-                {!! Form::email('email', $user->email, array('placeholder' => 'Your Email','class' => 'form-control','required'=>'','data-parsley-type'=>"email")) !!}
+                {!! Form::email('email', $user->email, array('class' => 'form-control','required'=>'','data-parsley-type'=>"email")) !!}
             </div>
             <div class="form-group date-time-picker label-floating">
                 <label class="control-label">Your Birthday</label>
-                <input name="datetimepicker" value="{{$user->birthdate}}" />
+                <input name="datetimepicker" value="{{$user->birthdate}}"/>
                 <span class="input-group-addon">
-                    <svg class="olymp-month-calendar-icon icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-month-calendar-icon"></use></svg>
+                    <svg class="olymp-month-calendar-icon icon"><use
+                                xlink:href="svg-icons/sprites/icons.svg#olymp-month-calendar-icon"></use></svg>
                 </span>
             </div>
         </div>
         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="form-group label-floating">
-                <label class="control-label">Display Name</label>
-                {!! Form::text('display_name', $user->display_name, array('placeholder' => 'Display Name','class' => 'form-control','data-rangelength'=>'[3,100]')) !!}
+                <label class="control-label">Nickname</label>
+                {!! Form::text('display_name', $user->display_name, array('class' => 'form-control','data-rangelength'=>'[3,100]')) !!}
             </div>
 
             <div class="form-group label-floating is-select">
@@ -38,11 +38,11 @@
 
             <div class="form-group label-floating">
                 <label class="control-label">Your Phone Number</label>
-                {!! Form::text('phone', $user->phone, array('placeholder' => 'Phone','id'=>'phone','class' => ' user_phone_buy form-control')) !!}
+                {!! Form::text('phone', $user->phone, array('id'=>'phone','class' => ' user_phone_buy form-control')) !!}
             </div>
         </div>
 
-<!--        <div class="col col-lg-4 col-md-4 col-sm-12 col-12">
+    <!--        <div class="col col-lg-4 col-md-4 col-sm-12 col-12">
             <div class="form-group label-floating is-select">
                 <label class="control-label">Your Country</label>
                 {!! Form::select('country',allCountry() ,$user->country, array('id'=>'country','class' => 'selectpicker form-control')) !!}
@@ -52,29 +52,44 @@
         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="form-group label-floating">
                 <label class="control-label">Write a little description about you</label>
-                {!! Form::textarea('about_me', $user->about_me, array('placeholder' => 'About me','id'=>'about_me','rows'=>'3','class' => '  form-control')) !!}
+                {!! Form::textarea('about_me', $user->about_me, array('id'=>'about_me','rows'=>'8','class' => '  form-control')) !!}
             </div>
-            <div class="form-group label-floating">
-                <label class="control-label">Jop Title</label>
-                {!! Form::text('occupation', $user->occupation, array('placeholder' => 'Jop Title','id'=>'occupation','class' => '  form-control')) !!}
-            </div>
-            <div class="form-group label-floating">
-                <label class="control-label">Working at</label>
-                {!! Form::text('address_jop', $user->address_jop, array('placeholder' => 'Working at','id'=>'address_jop','class' => '  form-control')) !!}
-            </div>
+
         </div>
         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="form-group label-floating is-select">
                 <label class="control-label">Your Nationality</label>
-                {!! Form::select('nationality',allNationals() ,$user->nationality, array('id'=>'nationality','class' => 'selectpicker form-control')) !!}
+                <select name="nationality" id="nationality" class="selectpicker form-control">
+                    @foreach($countries as $country)
+                        <option value="{{$country->country}}"   @if ($user->nationality == $country->country)
+                        selected="selected"
+                                @endif
+                        >{{$country->country}}</option>
+                    @endforeach
+                </select>
             </div>
+
+            <div style="display: block;text-align: center;margin-left: auto;margin-right: auto;" class="loader"><img
+                        class="loader"
+                        src="{{ asset('olympus/img/loader.gif') }}"
+                        alt="Loading....">
+            </div>
+                                    <select name="country" id="select2">
+                    @foreach($cities as $city)
+                        <option value="{{$city->city_ascii}}"   @if ($user->country == $city->city_ascii)
+                        selected="selected"
+                                @endif
+                        >{{$city->city_ascii}}</option>
+                    @endforeach
+                                    </select>            
+            <br>
+            {{--<div class="form-group label-floating is-select">--}}
+                {{--<label class="control-label">Living City</label>--}}
+                {{--{!! Form::text('address', $user->address, array('id'=>'address','class' => 'select2  form-control')) !!}--}}
+            {{--</div>--}}
             
             <div class="form-group label-floating is-select">
-                <label class="control-label">Your City</label>
-                {!! Form::text('address', $user->address, array('placeholder' => 'City','id'=>'address','class' => '  form-control')) !!}
-            </div>
-              <div class="form-group label-floating is-select">
-                <label class="control-label">Social Status</label>
+                <label class="control-label">Relationship</label>
                 {!! Form::select('social_status',socialstatusType() ,$user->social_status, array('id'=>'social_status','class' => 'selectpicker form-control')) !!}
             </div>
         </div>
@@ -110,8 +125,115 @@
             <input name="submit" class="btn btn-primary btn-lg full-width" value="Save all Changes" type="submit">
         </div>
         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
-            <button class="btn btn-secondary btn-lg full-width">Restore all Attributes</button>
+            <button class="btn btn-secondary btn-lg full-width" id="restore">Restore all Attributes</button>
         </div>
     </div>
     {!! Form::close() !!}
 </div>
+
+
+
+{{--<div class="modal fade" id="delete-modal">--}}
+    {{--<div class="modal-dialog">--}}
+        {{--<div class="modal-content">--}}
+            {{--<div class="modal-header">--}}
+                {{--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>--}}
+                {{--<h4 class="modal-title">Delete </h4>--}}
+            {{--</div>--}}
+            {{--<div class="modal-body">--}}
+                {{--Do you want to confirm the delete ? ؟--}}
+            {{--</div>--}}
+            {{--<div class="modal-footer">--}}
+                {{--<button type="button" class="btn btn-default" data-dismiss="modal">No</button>--}}
+                {{--<button id="confirm-delete" type="button" class="btn btn-danger">Yes</button>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
+{{--</div>--}}
+
+@section("after_foot")
+<style>
+        .loader{
+        width:60px;
+        display: none;
+    }
+</style>
+    <script>
+        name = $('input[name=name]').val();
+        email = $('input[name=email]').val();
+        social_status = $('select[name=social_status]').val();
+        about_me = $('textarea[name=about_me]').val();
+        address = $('input[name=address]').val();
+        nationality = $('select[name=nationality]').val();
+        phone = $('input[name=phone]').val();
+        gender = $('select[name=gender]').val();
+        display_name = $('input[name=display_name]').val();
+        datetimepicker = $('input[name=datetimepicker]').val();
+
+        $("#restore").click(function () {
+//            $('#delete-modal').modal('show');
+
+            $('input[name=name]').val(name);
+            $('input[name=email]').val(email);
+            $('select[name=social_status]').val(social_status);
+            $('.selectpicker').selectpicker('refresh');
+
+            $('input[name=address]').val(address);
+            $('input[name=about_me]').val(about_me);
+            $('select[name=nationality]').val(nationality);
+            $('.selectpicker').selectpicker('refresh');
+
+            $('input[name=phone]').val(phone);
+            $('select[name=gender]').val(gender);
+            $('.selectpicker').selectpicker('refresh');
+
+            $('input[name=display_name]').val(display_name);
+            $('input[name=datetimepicker]').val(datetimepicker);
+            return false;
+        })
+        $('.top-header').bind('mouseover', function () {
+            $('.cangecover').fadeIn();
+        });
+        $(".top-header").mouseleave(function () {
+            $('.cangecover').fadeOut();
+
+        });
+        
+            $(document).on('change', '#nationality', function () {
+            $('#select2').hide('slow');
+            $('.loader').show('slow');
+            $('.errnationality').hide('slow');
+
+            country = $("#nationality option:selected").text();
+                                console.log(country);
+
+
+            event.preventDefault();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('#csfr').val()
+                },
+                url: "{{ route('getcities') }}",
+                method: "GET",
+                data: {country: country},
+                success: function (data) {
+                    console.log(data);
+
+                    $("#select2 option").remove();
+                    for (var i = 0; i < data.length; i++) {
+                        $('#select2').append($('<option>', {
+                            value: data[i].city_ascii,
+                            text: data[i].city_ascii
+                        }));
+                    }
+                    $('#select2').show('slow');
+                    $('.loader').hide('slow');
+
+                }
+            });
+        });
+
+
+    </script>
+
+@endsection

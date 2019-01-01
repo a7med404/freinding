@@ -52,10 +52,15 @@
 
 <script src="{{ asset('js/progressbar.js') }}"></script>
 <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+<script src="{{ asset('js/jquery.validate.js') }}"></script>
 
 
 
-
+<script>
+$(window).on("beforeunload", function() {
+     $.ajax( '/profileleave' );
+});
+</script>
 
 
 

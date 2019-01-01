@@ -1,19 +1,112 @@
+<!-- Top Header-Profile -->
+<div class="container">
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="ui-block">
+                <div class="top-header">
+                    <div class="top-header-thumb">
+                        <img src="{{ asset('storage/images/headers/default.jpg') }}" alt="nature">
+                       <p class="cangecover"><i class="fas fa-camera"></i> Update Cover Photo</p>
+                    </div>
+                    <div class="profile-section">
+                        <div class="row">
+                            <div class="col col-lg-5 col-md-5 col-sm-12 col-12">
+                                <ul class="profile-menu">
+                                    <li>
+                                        <a href="{{ route('profile.index') }}" class="active">Timeline</a>
+                                    </li>
+                                    <li>
+                                        <a href="05-ProfilePage-About.html">About</a>
+                                    </li>
+                                    <li>
+                                        <a href="06-ProfilePage.html">Friends</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
+                                <ul class="profile-menu">
+                                    <li>
+                                        <a href="07-ProfilePage-Photos.html">Photos</a>
+                                    </li>
+                                    <li>
+                                        <a href="09-ProfilePage-Videos.html">Videos</a>
+                                    </li>
+                                    <li>
+                                        <div class="more">
+                                            <svg class="olymp-three-dots-icon">
+                                                <use xlink:href="/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                            </svg>
+                                            <ul class="more-dropdown more-with-triangle">
+                                                <li>
+                                                    <a href="#">Report Profile</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Block Profile</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
 
-<div class="header-spacer header-spacer-small"></div>
-<!-- Main Header Account -->
-<div class="main-header">
-    <div class="content-bg-wrap bg-account"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col col-lg-8 m-auto col-md-8 col-sm-12 col-12">
-                <div class="main-header-content">
-                    <h1>Your Account Dashboard</h1>
-                    <p>Welcome to your account dashboard! Here you’ll find everything you need to change your profile
-                        information, settings, read notifications and requests, view your latest messages, change your pasword and much
-                        more! Also you can create or manage your own favourite page, have fun!</p>
+                        <div class="control-block-button">
+                            <a href="35-YourAccount-FriendsRequests.html" class="btn btn-control bg-blue">
+                                <svg class="olymp-happy-face-icon">
+                                    <use xlink:href="/svg-icons/sprites/icons.svg#olymp-happy-face-icon"></use>
+                                </svg>
+                            </a>
+
+                            <a href="#" class="btn btn-control bg-purple">
+                                <svg class="olymp-chat---messages-icon">
+                                    <use xlink:href="/svg-icons/sprites/icons.svg#olymp-chat---messages-icon"></use>
+                                </svg>
+                            </a>
+
+                            <div class="btn btn-control bg-primary more">
+                                <svg class="olymp-settings-icon">
+                                    <use xlink:href="/svg-icons/sprites/icons.svg#olymp-settings-icon"></use>
+                                </svg>
+
+                                <ul class="more-dropdown more-with-triangle triangle-bottom-right">
+                                    <li>
+                                        <a href="#" data-toggle="modal" data-target="#update-header-photo">Update
+                                            Profile Photo</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" data-toggle="modal" data-target="#update-header-photo">Update Header
+                                            Photo</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('profile.setting') }}">Account Settings</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-header-author">
+                        <a href="{{ route('profile.index') }}" class="author-thumb">
+                            @if(!empty($user->image))
+                                <img class="profileimg" alt="author" src="{{ $user->image }}">
+                            @else
+                                <img alt="author" src="{{ asset('olympus/img/author-page.jpg') }}">
+                            @endif
+                        </a>
+                        <div class="author-content">
+                            @if(empty($verstatus) || $verstatus->status=="unverified" || $verstatus->status=="underprocess")
+                                <a href="{{ route('profile.index') }}"
+                                   class="h4 author-name">{{$user->display_name}}</a>
+                            @else
+                                <a href="{{ route('profile.index') }}" class="h4 author-name">{{$user->display_name}} <i
+                                            style="color:green; font-size:17px;" class="fas fa-check-circle"></i></a>
+                            @endif
+                            <div class="country">{!!countryData($user->country)!!}</div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <img class="img-bottom" src="{{ asset('olympus/img/account-bottom.png') }}" alt="friends">
 </div>
+<!-- ... end Top Header-Profile -->

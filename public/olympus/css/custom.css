@@ -22,3 +22,22 @@
     border-radius: 6px;
     font-size: 12px;
 }
+.profileimg{
+    width: 110px;
+    height: 110px;
+    margin-top: 9px;
+}
+p.cangecover {
+    position: absolute;
+    z-index:1;
+    padding: 13px;
+    background: #00000080;
+    color: white;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+	display:none;
+	right: 0px;
+    top: 0px;
+}

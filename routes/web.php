@@ -84,7 +84,18 @@ Route::group([
     //Resource
     Route::resource('users', 'UserController');
     Route::resource('roles', 'RoleController');
+
+    Route::resource('users_ids', 'IdsController');
+
+    VisitStats::routes();
+
 });
+
+Route::post('postverification', ['as' => 'postverification', 'uses' => 'Admin\IdsController@postverification']);
+Route::get('deleteimgid/{id}', ['as' => 'deleteimgid', 'uses' => 'Admin\IdsController@destroy']);
+
+
+
 
 Route::get('/storage-link', function () {
     $exitCode = \Artisan::call('storage:link');
