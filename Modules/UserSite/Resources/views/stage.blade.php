@@ -29,13 +29,13 @@
 
                                 <div class="center">
                                 <label class="layersMenu">
-                                    <input type="radio" {{ ($checkprofilestage->stage=="1")? "checked" : "" }} id="personal" name="profilestage" value="1"  />
+                                    <input type="radio" {{ (isset ($checkprofilestage->stage) && $checkprofilestage->stage=="1")? "checked" : "" }} id="personal" name="profilestage" value="1"  />
                                     <img class="chsst" src="{{ asset('olympus/img/user.png') }}">
                                     <div class="fontst">Personal Profile</div>
                                 </label>
 
                                 <label class="layersMenu">
-                                    <input type="radio" {{ ($checkprofilestage->stage=="2")? "checked" : "" }} id="business" name="profilestage" value="2" />
+                                    <input type="radio" {{ (isset ($checkprofilestage->stage) && $checkprofilestage->stage=="2")? "checked" : "" }} id="business" name="profilestage" value="2" />
                                     <img class="chsst" src="{{ asset('olympus/img/business.png') }}">
                                     <div class="fontst">Business Profile</div>
                                 </label>
