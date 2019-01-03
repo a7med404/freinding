@@ -1,271 +1,750 @@
+<script type="text/javascript">
+$(document).ready(function(){
+       $(function() {
+    
+          $('input[name="datefilter"]').daterangepicker({
+              autoUpdateInput: false,
+              startDate: '01/01/2018',
+              locale: {
+                  cancelLabel: 'Clear'
+              }
+          });
+        
+          $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+              $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+          });
+
+
+        
+          $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+              $(this).val('');
+          });   
+    
+    }); 
+});
+</script>
 <script>
-  $(function () {
+    $(function () {
+         // tab total user
+        $(".js-range-slider").ionRangeSlider({
+            type: "double",
+            grid: true,
+            min: 13,
+            max: 63,
+            from: 13,
+            to: 63,
+            skin: "flat",
 
-    //start line chart
-    var lineChartData = {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [
-            {
-                fill:true,
-                tension:0,
-                pointBackgroundColor:"#01bc8c",
-                pointBorderColor:"#fff",
-                borderJoinStyle: 'miter',
-                pointBorderWidth:"1",
-                label:"NEW",
-                data : [130,63,103,51,93,55,80,140,100,92,108,110],
-                backgroundColor:"#01bc8c"
-            },
-            {
-                fill:true,
-                tension:0,
-                pointBackgroundColor:"rgba(239,111,108,0.5)",
-                pointBorderColor:"#fff",
-                borderJoinStyle: 'miter',
-                pointBorderWidth:"1",
-                pointStrokeColor: "#fff",
-                label:"TOTAL",
-                data : [30,48,35,24,35,27,50,40,60,35,46,30],
-                backgroundColor:"rgba(239,111,108,0.5)"
-            }
-        ]
 
-    };
+        });
 
-    function draw() {
 
-        var selector = '#line-chart';
 
-        $(selector).attr('width', $(selector).parent().width());
-        var myLine = new Chart($("#line-chart"), {
+        var ctxGROWTHUSERS = document.getElementById("line-chart-GROWTH-USERS");
+        var myChartGROWTHUSERS = new Chart(ctxGROWTHUSERS, {
             type: 'line',
-            data: lineChartData,
+            data: {
+                title: '',
+                labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
+                datasets: [
+                    {
+                        data: [0, 100, 50, 90, 10, 20, 30],
+                        label: "ACTIVE USER ",
+                        borderColor: "#9966ff",
+                        fill: false,
+                        backgroundColor:"#9966ff"
+                    },
+                    {
+                        data: [5,100,80,9],
+                        label: "SLEEPING USER ",
+                        borderColor: "#2b9eb3",
+                        fill: false,
+                        backgroundColor:"#2b9eb3"
+                    },
+
+                    {
+                        data: [100,500,40,30,8],
+                        label: "DELETED USERS ",
+                        borderColor: "#d22f2f",
+                        fill: false,
+                        backgroundColor:"#d22f2f"
+                    }
+                ]
+
+
+            },
             options: {
-                title: {
-                    display: false,
-                    text: 'Line Chart'
+                animation: {
+                    duration: 0, // general animation time
+                },
+                hover: {
+                    animationDuration: 0, // duration of animations when hovering an item
+                },
+                responsiveAnimationDuration: 0, // animation duration after a resize
+            }
+        });
+
+        var ctxUSERSSTATUs = document.getElementById("doughnut-chart-USERS-STATUs");
+        var myChartctxUSERSSTATUs = new Chart(ctxUSERSSTATUs, {
+            type: 'pie',
+            data: {
+
+                labels: ["ACTIVE USERS", "SLEEPING USERS", "DELETED USERS"],
+                datasets: [{
+
+                    label: "Population (millions)",
+                    backgroundColor: ["#9966ff", "#2b9eb3",  "#d22f2f"],
+                    data: [2,2,2]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
                 }
             }
         });
-    }
 
-    $(window).resize(draw);
-    draw();
-    //endline chart
+        // end tab total user
+        //new user
 
-    //start bar chart
-    var barChartData = {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [
-            {
-                label:"NEW",
-                backgroundColor: "#01bc8c",
-                hoverBackgroundColor: "#01bc8c",
-                data :<?php echo json_encode($new_month); ?>
-
-            },
-            {
-                label:"TOTAL",
-                backgroundColor: "#418bca",
-                hoverBackgroundColor: "#418bca",
-                data: <?php echo json_encode($total_month); ?>
-            }
-        ]
-
-    };
-
-    function draw1() {
-
-        var selector = '#bar-chart';
-
-        $(selector).attr('width', $(selector).parent().width());
-        var myBar = new Chart($("#bar-chart"), {
-            type: 'bar',
-            data: barChartData
-        });
-    }
-
-    $(window).resize(draw1);
-    draw1();
-
-
-    //end bar chart
-
-    //start radar chart
-    var radarChartData = {
-        labels: ["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Partying", "Running"],
-        datasets: [
-
-            {
-                backgroundColor: "rgba(248,154,20,0.5)",
-                hoverBackgroundColor: "rgba(248,154,20,0.5)",
-                pointBackgroundColor: "rgba(248,154,20,0.5)",
-                pointHoverBackgroundColor: "#fff",
-                data: [65, 59, 90, 81, 56, 55, 40],
-                label: 'data1'
-            },
-            {
-                backgroundColor: "rgba(1,188,140,0.5)",
-                hoverBackgroundColor: "rgba(1,188,140,0.5)",
-                pointBackgroundColor: "rgba(1,188,140,0.5)",
-                pointHoverBackgroundColor: "#fff",
-                data: [28, 48, 40, 19, 96, 27, 100],
-                label: 'data2'
-            }
-        ]
-
-    };
-
-    function draw2() {
-
-        var selector = '#radar-chart';
-
-        $(selector).attr('width', $(selector).parent().width());
-        var myRadar = new Chart($("#radar-chart"),
-            {
-                type: 'radar',
-                data: radarChartData
-            });
-    }
-
-    $(window).resize(draw2);
-    draw2();
-
-    //end  radar chart
-
-    //start polar area chart
-
-
-    var chartData = {
-        datasets: [{
-            data: [
-                15,
-                18,
-                10,
-                8,
-                16,
-                20
-
-            ],
-            backgroundColor: [
-                "#01BC8C",
-                "#F89A14",
-                "#418BCA",
-                "#EF6F6C",
-                "#A9B6BC",
-                "#67C5DF"
-            ],
-            label: 'My dataset' // for legend
-        }],
-        labels: [
-            "data1",
-            "data2",
-            "data3",
-            "data4",
-            "data5",
-            "data6"
-        ]
-    };
-
-
-    function draw3() {
-
-        var selector = '#polar-area-chart';
-
-        $(selector).attr('width', $(selector).parent().width());
-        var myPolarArea = new Chart($("#polar-area-chart"), {
-            data: chartData,
-            type: 'polarArea'
-        });
-    }
-
-    $(window).resize(draw3);
-    draw3();
-
-    //end polar area chart
-
-    //start pie chart
-    var pieData = {
-        labels: [
-            "18-24 AGE",
-            "25-35 AGE",
-            "60+ AGE"
-        ],
-        datasets: [
-            {
-                data: <?php echo json_encode($data_age); ?>,
-                backgroundColor: [
-                    "#418BCA",
-                    "#01BC8C",
-                    "#F89A14"
-                ],
-                hoverBackgroundColor: [
-                    "#418BCA",
-                    "#01BC8C",
-                    "#F89A14"
+        var ctxGROWTHnewUSERS = document.getElementById("line-chart-NEW-USERS-GROWTH");
+        var myChartctxGROWTHnewUSERS= new Chart(ctxGROWTHnewUSERS, {
+            type: 'line',
+            data: {
+                title: '',
+                labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
+                datasets: [
+                    {
+                        data: [0, 100, 50, 90, 10, 20, 30],
+                        label: "NEW USER ",
+                        borderColor: "#00bc8c",
+                        fill: false,
+                        backgroundColor:"#00bc8c"
+                    }
                 ]
-            }]
-    };
 
-    function draw4() {
 
-        var selector = '#pie-chart';
+            },
+            options: {
+                animation: {
+                    duration: 0, // general animation time
+                },
+                hover: {
+                    animationDuration: 0, // duration of animations when hovering an item
+                },
+                responsiveAnimationDuration: 0, // animation duration after a resize
+            }
+        });
 
-        $(selector).attr('width', $(selector).parent().width());
-        var myPie = new Chart($("#pie-chart"), {
+        var ctxREGISTRATIONPERIOD = document.getElementById("doughnut-chart-REGISTRATION-PERIOD");
+        var myChartREGISTRATIONPERIOD = new Chart(ctxREGISTRATIONPERIOD, {
+            type: 'doughnut',
+            data: {
+                labels: ["Morning : 6 AM - 12 PM", "Mid Day : 12 PM - 6 PM", "Night : 6 PM - 12 AM", "Midnight : 12 AM - 6 AM"],
+                datasets: [
+                    {
+                        backgroundColor: ["#ff6384", "#ff9f40", "#ffcd56", "#4bc0c0"],
+                        data: [2478, 5267, 734, 784]
+                    }
+                ]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+
+        });
+
+        var ctxdoughnutchartREGISTRATIONDAYS = document.getElementById("doughnut-chart-REGISTRATION-DAYS");
+        var myChartctxdoughnutchartREGISTRATIONDAYS  = new Chart(ctxdoughnutchartREGISTRATIONDAYS , {
+            type: 'doughnut',
+            data: {
+                labels: ["SUN", "MON", "TUES","WED","THURS","FRI","SAT"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#4bc0c0", "#ffcd56","#a49262","#ffccff","#33ccff","#00bc8c"],
+                    data: [2478, 5267, 734,200,400,800,100]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
+
+        var ctxREGISTRATIONMONTHS = document.getElementById("REGISTRATION_MONTHS");
+        var myChartPOSTPERIODBYHOURS  = new Chart(ctxREGISTRATIONMONTHS , {
+            type: 'doughnut',
+            data: {
+                labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#4bc0c0", "#ffcd56","#a49262","#ffccff","#33ccff","#00bc8c","#fff5dd","#9966ff","#ff9f40","#ef6f6c","#00bc8c"],
+                    data: [2478, 5267, 734,200,400,800,100,50,8000,100,1200,1500]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
+
+        var ctxREGISTRATIONTYPE = document.getElementById("REGISTRATION_TYPE");
+        var ctxREGISTRATIONTYPE  = new Chart(ctxREGISTRATIONTYPE , {
             type: 'pie',
-            data: pieData
+            data: {
+                labels: ["EMAIL","MOBILE","SOCIAL NETWORK"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#4bc0c0", "#ffcd56"],
+                    data: [2478, 5267, 734]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
         });
-    }
 
-    $(window).resize(draw4);
-    draw4();
+        var ctxgender = document.getElementById("doughnut-chart-GENDER");
+        var myChartctxgender = new Chart(ctxgender, {
+            type: 'doughnut',
+            data: {
+                labels: ["male","female"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#ff9f40"],
+                    data: [2478, 5267]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
 
-    //end pie chart
+        var ctxAGETYPE = document.getElementById("doughnut-chart-AGE-TYPE");
+        var myChartAGETYPE = new Chart(ctxAGETYPE, {
+            type: 'doughnut',
+            data: {
+                labels: ["18-24", "25-35", "36-50", "51-65", "65+"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#ff9f40", "#ffcd56", "#4bc0c0", "#36a2eb"],
+                    data: [2478, 5267, 734, 784, 433]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
 
-    //start doughnut chart
-    var doughnutData = {
+        var ctxRELATIONSHIP= document.getElementById("doughnut-chart-RELATIONSHIP");
+        var myChartctxRELATIONSHIP= new Chart(ctxRELATIONSHIP, {
+            type: 'doughnut',
+            data: {
+                labels: ["None", "Single", "Engaged", "Married", "In a Relationship"],
+                datasets:
+                    [
+                        {
+                            backgroundColor: ["#ff6384", "#ff9f40", "#ffcd56", "#4bc0c0","#fa4a3b"],
+                            data: [14,14,14,14,14]
+                        }
+                    ]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
 
-        labels: [
-            "91-365 DAYS",
-            "365+ DAYS",
-            "0-90 DAYS"
-        ],
-        datasets: [
-            {
-                data: <?php echo json_encode($data_life); ?>,
-                backgroundColor: [
-                    "#F89A14",
-                    "#01BC8C",
-                    "#67c5df"
-                ],
-                hoverBackgroundColor: [
-                    "#F89A14",
-                    "#01BC8C",
-                    "#67c5df"
+
+        var ctxOPTIONALINFORMATIONSVSNONE = document.getElementById("doughnut-chart-OPTIONAL-INFORMATIONS-VS-NONE");
+        var mychartctxOPTIONALINFORMATIONSVSNONE  = new Chart(ctxOPTIONALINFORMATIONSVSNONE , {
+            type: 'pie',
+            data: {
+                labels: ["OPTIONAL INFORMATIONS","NONE"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#4bc0c0"],
+                    data: [2478, 5267]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
+
+        var ctxVERIFIEDVSNONE = document.getElementById("doughnut-chart-VERIFIED-VS-NONE");
+        var mychartctxVERIFIEDVSNONE  = new Chart(ctxVERIFIEDVSNONE , {
+            type: 'pie',
+            data: {
+                labels: ["VERIFIED","NONE"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#4bc0c0"],
+                    data: [2478, 5267]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
+
+        var ctxPERCENTAGESTAGE = document.getElementById("doughnut-chart-PERCENTAGE-STAGE");
+        var mychartctxPERCENTAGESTAGE  = new Chart(ctxPERCENTAGESTAGE , {
+            type: 'pie',
+            data: {
+                labels: ["PERSONAL","BUSINESS","VIP "],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#4bc0c0", "#ffcd56"],
+                    data: [2478, 5267, 734]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
+
+        var ctxACTIVEHOURS= document.getElementById("ACTIVE-HOURS");
+        var myChartctxACTIVEHOURS= new Chart(ctxACTIVEHOURS, {
+            type: 'doughnut',
+            data: {
+                labels: ["Morning : 6 AM - 12 PM", "Mid Day : 12 PM - 6 PM", "Night : 6 PM - 12 AM", "Midnight : 12 AM - 6 AM"],
+                datasets: [
+                    {
+                        backgroundColor: ["#ff6384", "#ff9f40", "#ffcd56", "#4bc0c0"],
+                        data: [2478, 5267, 734, 784]
+                    }
                 ]
-            }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
 
-    };
+        var ctxACTIVEDAYS = document.getElementById("ACTIVE-DAYS");
+        var myChartctxACTIVEDAYS = new Chart(ctxACTIVEDAYS , {
+            type: 'doughnut',
+            data: {
+                labels: ["SUN", "MON", "TUES","WED","THURS","FRI","SAT"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#4bc0c0", "#ffcd56","#a49262","#ffccff","#33ccff","#00bc8c"],
+                    data: [2478, 5267, 734,200,400,800,100]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
 
-    function draw5() {
+        var ctxACTIVEMONTHS = document.getElementById("ACTIVE-MONTHS");
+        var myChartctxACTIVEMONTHS  = new Chart(ctxACTIVEMONTHS , {
+            type: 'doughnut',
+            data: {
+                labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#4bc0c0", "#ffcd56","#a49262","#ffccff","#33ccff","#00bc8c","#fff5dd","#9966ff","#ff9f40","#ef6f6c","#00bc8c"],
+                    data: [2478, 5267, 734,200,400,800,100,50,8000,100,1200,1500]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
 
-        var selector = '#doughnut-chart';
 
-        $(selector).attr('width', $(selector).parent().width());
-        var myDoughnut = new Chart($("#doughnut-chart"),
-            {
-                type: 'doughnut',
-                data: doughnutData
-            });
-    }
+        var ctxDELETEREASONS = document.getElementById("DELETE-REASONS");
+        var mychartctxDELETEREASONS = new Chart(ctxDELETEREASONS , {
+            type: 'pie',
+            data: {
+                labels: ["REASON 1 ","REASON 2","REASON 3","REASON 4"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#721817", "#FA9F42","#2B4162","#0B6E4F"],
+                    data: [2478, 5267, 734,125]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
 
-    $(window).resize(draw5);
-    draw5();
+
+        //end doughnut chart
+
+        //LINE
+        //posts
+
+        var ctxPOSTSGROWTH = document.getElementById("line-chart-POSTS-GROWTH");
+        var myChartPOSTSGROWTH = new Chart(ctxPOSTSGROWTH, {
+            type: 'line',
+            data: {
+                title: '',
+                labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
+                datasets: [
+                    {
+                        data: [0, 100, 50, 90, 10, 20, 30],
+                        label: "NEW POSTS",
+                        borderColor: "#00bc8c",
+                        fill: false,
+                        backgroundColor:"#00bc8c"
+                    }
+                ]
 
 
-    //end doughnut chart
+            },
+            options: {
+                animation: {
+                    duration: 0, // general animation time
+                },
+                hover: {
+                    animationDuration: 0, // duration of animations when hovering an item
+                },
+                responsiveAnimationDuration: 0, // animation duration after a resize
+            }
+        });
 
-});  
+//POST_TYPE
+
+
+
+
+        //POST_PERIOD
+        var ctxPOSTSTYPE = document.getElementById("pie-chart-POSTS-TYPE");
+        var myPIEPOSTSTYPE = new Chart(ctxPOSTSTYPE, {
+            type: 'pie',
+            data: {
+                labels: [
+                    'TEXT',
+                    'PHOTO',
+                    'VIDEO'
+                ],
+                datasets: [
+                    {
+                        backgroundColor: ["#ff6384", "#ff9f40", "#ffcd56", "#4bc0c0"],
+                        data: [10,20,30]
+                    }
+                ]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
+
+        var ctxPOSTPERIODBYHOURS = document.getElementById("POST_PERIOD_BY_HOURS");
+        var myChartPOSTPERIODBYHOURS  = new Chart(ctxPOSTPERIODBYHOURS , {
+            type: 'doughnut',
+            data: {
+                labels: ["Morning : 6 AM - 12 PM", "Mid Day : 12 PM - 6 PM", "Night : 6 PM - 12 AM", "Midnight : 12 AM - 6 AM"],
+                datasets: [
+                    {
+                        backgroundColor: ["#ff6384", "#ff9f40", "#ffcd56", "#4bc0c0"],
+                        data: [2478, 5267, 734, 784]
+                    }
+                ]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
+
+
+        var ctx4 = document.getElementById("POST_PERIOD_BY_DAYS");
+        var myChartPOSTPERIODBYHOURS  = new Chart(ctx4 , {
+            type: 'doughnut',
+            data: {
+                labels: ["SUN", "MON", "TUES","WED","THURS","FRI","SAT"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#4bc0c0", "#ffcd56","#a49262","#ffccff","#33ccff","#00bc8c"],
+                    data: [2478, 5267, 734,200,400,800,100]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
+
+
+        var ctx5 = document.getElementById("POST_PERIOD_BY_MONTH");
+        var myChartPOSTPERIODBYHOURS  = new Chart(ctx5 , {
+            type: 'doughnut',
+            data: {
+                labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#ff6384", "#4bc0c0", "#ffcd56","#a49262","#ffccff","#33ccff","#00bc8c","#fff5dd","#9966ff","#ff9f40","#ef6f6c","#00bc8c"],
+                    data: [2478, 5267, 734,200,400,800,100,50,8000,100,1200,1500]
+                }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var total = 0;
+                            for (var i in allData) {
+                                total += allData[i];
+                            }
+                            var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                            return tooltipLabel + ': ' + tooltipPercentage + '%';
+                        }
+                    }
+                }
+            }
+        });
+
+
+    });
 </script>
     

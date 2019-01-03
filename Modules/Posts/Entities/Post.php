@@ -11,12 +11,16 @@ class Post extends Model
     use SoftDeletes;
 
     protected $fillable = ['user_id', 'text', 'type', 'dir', 'view_count', 'is_pined', 'privacy', 'time', 'is_boost', 'check_in','post_id','social_network_id'];
-    protected $appends=['newest_comment'];
-    protected $with=['user'/*,'comments'*/,'reactions','files','taggedFriends','supportFriends','topics'];
+    protected $appends=['newest_comment','is_liked'];
+    protected $with=['user'/*,'comments'*/,'reactions','files','taggedFriends','supportFriends','topics','post'];
     protected $withCount=['comments'];
 
     public function getNewestCommentAttribute(){
       return Comment::where('post_id',$this->id)->orderBy('created_at','desc')->first();
+    }
+
+    public function getIsLikedAttribute(){
+        return PostReaction::where('post_id',$this->id)->where('user_id',\Auth::id())->count()>0;
     }
 
     public function user()

@@ -430,3 +430,154 @@
     </div>
 
 </div>
+
+<!-- model tag friends -->
+<div class="modal fade" id="tag-Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">TAG YOUR FRIENDS</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!--tag-->
+                <div id="tag-post-section">
+                    <select select class="js-example-basic-multiple" name="states[]" multiple="multiple"
+                            data-placeholder="Select a friend">
+                        @foreach($users as $user)
+                            <option id="tagselected{{$user->id}}" value="{{$user->id}}"
+                                    data-image="{{$user->image}} " data-text="{{$user->display_name}} "
+                                    style="margin:5%"></option>
+                        @endforeach
+                    </select>
+                </div>
+                <!--end-tag-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="addtag" type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end model tag friends -->
+
+<!-- crop image model -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Crop the image</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="max-width: 100%;">
+                    <img id="image"
+                         src="https://avatars0.githubusercontent.com/u/3456749">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" id="crop" data-url="{{route('storePostsPhotosInTemp')}}" data-delete-url="{{route('deleteFromTemp')}}">Crop</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end crop image model-->
+
+<!-- users reactioners model -->
+<div class="modal fade" id="reactions" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog window-popup create-friend-group "
+         role="document">
+        <div class="modal-content">
+            <a href="javascript:void(0)" class="close icon-close" data-dismiss="modal"
+               aria-label="Close">
+                <svg class="olymp-close-icon">
+                    <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-close-icon"></use>
+                </svg>
+            </a>
+
+            <div class="modal-header">
+                <h6 class="title">Users Who Reactioned With This Post</h6>
+            </div>
+
+            <div class="modal-body modal-body1" style="max-height: 500px; overflow-y: scroll">
+                <ul id="users_reaction"
+                    class="widget w-friend-pages-added notification-list friend-requests dynamicContent">
+                    <div id="wait" style="
+                                    display:    none;
+                                    position:   fixed;
+                                    z-index:    1000;
+                                    top:        0;
+                                    left:       0;
+                                    height:     100%;
+                                    width:      100%;
+                                    background: rgba( 255, 255, 255, .8 )
+                                    url('images/FhHRx.gif')
+                                    50% 50%
+                                    no-repeat;"
+                    ></div>
+                </ul>
+
+                <a href="javascript:void(0)" class="btn btn-blue btn-lg full-width test"
+                   data-dismiss="modal">Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end users reactioners model -->
+
+<!-- model-share -->
+<div class="modal fade" id="Modal-Share" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Share Post </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group label-floating is-empty">
+                    <label class="control-label">Share what you are thinking here...</label>
+                    <textarea class="form-control" id="taxt-share"
+                              placeholder="" style="width: 100%; margin-bottom: 5px"></textarea>
+                </div>
+                <div class="ui-block">
+                    <article class="hentry post video">
+                        <div class="post__author author vcard inline-items">
+                        </div>
+                        <p style="word-wrap: break-word;"></p>
+                        <div class="picture-section" data-slide="fade">
+                        </div>
+                        <div class="video-section swiper-container" data-slide="fade">
+                        </div>
+                        <div class="topic-section" style="display: inline-block;">
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <!--end-body-model-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">Close
+                </button>
+                <button id="addShare" type="button" data-url="{{route('share-post')}}"
+                        class="btn btn-primary btn-share-section">Share
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end model-share -->

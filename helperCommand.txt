@@ -51,4 +51,5 @@ php artisan module:make-seed modelName ModuleName
 
 corn job
 delete image from temp on server
-publish button enable after all images uploaded
+delete image from images/posts on server
+arrows right left on images after ajax
