@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 //use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
 use App\Model\Options;
-use App\Role;
+use App\Model\Role;
 use App\User;
 use App\Model\SessionTime;
 use Carbon\Carbon;
@@ -75,7 +75,7 @@ class StatisticsReportController extends AdminController {
 //        //month
 //        $total_month = SessionTime::ALLDataMonth(1,2);
 //        $new_month = SessionTime::ALLDataMonth(1);
-        
+
 //        print_r($total_month);
 //        print_r($new_month);die;
         //age

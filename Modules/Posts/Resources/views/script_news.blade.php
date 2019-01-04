@@ -430,7 +430,7 @@
                 },
             });
         });*/
-		
+
 		$('body').on('click', '.comment-delete', function () {
             console.log('good');
             var btn_comment = $(this);
@@ -910,31 +910,41 @@
 </script>
 
 <script>
-    window.addEventListener('DOMContentLoaded', function () {
-        var image = document.getElementById('image');
-        var input = document.getElementById('input');
-        var $modal = $('#modal');
-        var cropper;
+    let disableShare =()=> {
+        if ($numOfPendingPhotos == 0) {
+            $('#newShare').attr('disabled', false);
+        } else {
+            $('#newShare').attr('disabled', true);
+        }
+    }
+
+    let $numOfPendingPhotos = 0;
+    window.addEventListener('DOMContentLoaded',()=> {
+        let image = document.getElementById('image');
+        let input = document.getElementById('input');
+        let $modal = $('#modal');
+        let cropper;
+
         $('[data-toggle="tooltip"]').tooltip();
-        input.addEventListener('change', function (e) {
-            var files = e.target.files;
-            var done = function (url) {
+
+        input.addEventListener('change',  (e)=>{
+            let files = e.target.files;
+            let done = function (url) {
                 input.value = '';
                 image.src = url;
                 $modal.modal('show');
             };
-            var reader;
-            var file;
-            var url;
+
+            let reader;
+            let file;
+            let url;
             if (files && files.length > 0) {
                 file = files[0];
                 if (URL) {
-                    console.log(URL,3);
                     done(URL.createObjectURL(file));
                 } else if (FileReader) {
-                    console.log(FileReader,4);
                     reader = new FileReader();
-                    reader.onload = function (e) {
+                    reader.onload = (e)=> {
                         done(reader.result);
                     };
                     reader.readAsDataURL(file);
@@ -942,101 +952,126 @@
             }
         });
 
-        $modal.on('shown.bs.modal', function () {
+        $modal.on('shown.bs.modal',  ()=> {
             cropper = new Cropper(image, {
                 aspectRatio: 1,
                 viewMode: 3,
             });
-        }).on('hidden.bs.modal', function () {
+        }).on('hidden.bs.modal',  ()=> {
             cropper.destroy();
             cropper = null;
         });
 
-        function guid() {
-            function s4() {
-                return Math.floor((1 + Math.random()) * 0x10000)
-                    .toString(16)
-                    .substring(1);
-            }
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-        }
-
-        document.getElementById('crop').addEventListener('click', function () {
-            var canvas;
+        document.getElementById('crop').addEventListener('click', (e)=> {
+            const clickedItem = $(e.currentTarget);
+            const $url = clickedItem.data('url');
+            const $delete_url = clickedItem.data('delete-url');
+            $numOfPendingPhotos = $numOfPendingPhotos + 1;
+            disableShare();
+            let canvas;
             $modal.modal('hide');
             if (cropper) {
                 canvas = cropper.getCroppedCanvas({
-                    width: 1080,
-                    height: 1080,
+                    width: 540,
+                    height: 540,
                 });
-                var src = canvas.toDataURL();
-                nameOfphoto = guid()+'.png';
-                console.log(nameOfphoto);
+                let src = canvas.toDataURL();
+                nameOfphoto = guid() + '.jpg';
                 $('#choosephoto').append(
                     '<li style="width: 100px;height: 100px;display: inline-flex;margin: 5px;">' +
-                    '<img class="rounded" data-name='+nameOfphoto+' src="'+src+'">' +
-                    '<button type="button" data-name='+nameOfphoto+' class="close delete-photo" aria-label="Close" style="background: red;' +
+                    '<img class="rounded" data-name="' + nameOfphoto + '" src="' + src + '">' +
+                    '<button type="button" data-name="' + nameOfphoto + '"data-url="'+$delete_url+'" class="close delete-photo" aria-label="Close" style="background: red;' +
                     'margin-left: -98px;' +
                     'margin-top: 2px;' +
                     'border-radius: 50%;' +
-                    'width: 30px;' +
-                    'height: 30px;' +
+                    'width: 15px;' +
+                    'height: 15px;' +
+                    'font-size:15px;' +
                     'opacity: .7;">' +
                     '<span aria-hidden="true">×</span>' +
                     '</button>' +
-                    /*'<a style="position: absolute;' +
-                    'text-align: center;' +
-                    'background-color: red;' +
-                    'margin:1%;' +
-                    'border-radius:50%;' +
-                    'width:15px;' +
-                    'height:15px;' +
-                    'color:#FFFFFF">' +
-                    '<span>x</span>' +
-                    '</a>'+*/
+                    '<div class="progress myProgress' + $numOfPendingPhotos + '" style="margin-top: 100px;margin-left: -26.5px;width: 100%;">' +
+                    '<div class="progress-bar myProgressBar' + $numOfPendingPhotos + ' progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>\n' +
+                    '</div>' +
                     '</li>'
                 );
-                canvas.toBlob(function (blob) {
-                    var _token = $("input[name='_token']").val();
-                    var formData = new FormData();
+                let $progress = $('.myProgress' + $numOfPendingPhotos);
+                let $progressBar = $('.myProgressBar' + $numOfPendingPhotos);
+                canvas.toBlob( (blob)=> {
+                    let _token = $("input[name='_token']").val();
+                    let formData = new FormData();
                     formData.append('avatar', blob, 'avatar.jpg');
                     formData.append('_token', _token);
                     formData.append('name', nameOfphoto);
+                    $progressBar.addClass('active');
                     $.ajax({
                         method: 'POST',
-                        url: '{{route('storePostsPhotosInTemp')}}',
+                        url: $url,
                         data: formData,
-                        processData: false,
                         contentType: false,
-                        /*xhr: function () {
-                            var xhr = new XMLHttpRequest();
-                            xhr.upload.onprogress = function (e) {
-                                var percent = '0';
-                                var percentage = '0%';
-                                if (e.lengthComputable) {
-                                    percent = Math.round((e.loaded / e.total) * 100);
-                                    percentage = percent + '%';
-                                    // $progressBar.width(percentage).attr('aria-valuenow', percent).text(percentage);
-                                }
-                            };
-                            return xhr;
-                        },*/
+                        processData: false,
+                        xhr: function () {
+                            let appXhr = $.ajaxSettings.xhr();
+                            if (appXhr.upload) {
+                                appXhr.upload.addEventListener('progress', (e) => {
+                                    updateProgress(e, $progressBar);
+                                }, false);
+                            }
+                            return appXhr;
+                        },
                         success: function () {
                             console.log('success');
-                            // $alert.show().addClass('alert-success').text('Upload success');
                         },
                         error: function () {
                             console.log('error');
-                            // avatar.src = initialAvatarURL;
-                            // $alert.show().addClass('alert-warning').text('Upload error');
                         },
                         complete: function () {
                             console.log('complete');
-                            // $progress.hide();
+                            $progress.hide();
+                            $numOfPendingPhotos = $numOfPendingPhotos - 1;
+                            disableShare();
                         },
                     });
-                });
+                }, 'image/jpeg', 2);
             }
+        });
+
+        let updateProgress = (e, progressbar)=> {
+            if (e.lengthComputable) {
+                let currentProgress = Math.round((e.loaded / e.total) * 100); // Amount uploaded in percent
+                percentage = currentProgress + '%';
+                progressbar.width(percentage).attr('aria-valuenow', currentProgress).text(percentage);
+                if (currentProgress == 100)
+                    console.log('Progress : 100%');
+            }
+        }
+    });
+
+    $(document).ready(()=>{
+        //delete photo from temp
+        $('body').on('click', '.delete-photo',  (e)=> {
+            const clickedItem = $(e.currentTarget);
+            const $url = clickedItem.data('url');
+            let name = clickedItem.data('name');
+            let _token = $("input[name='_token']").val();
+            $.ajax({
+                type: 'POST',
+                url: $url,
+                data: {
+                    photo_name: name,
+                    _token: _token
+                },
+                success:  (data)=> {
+                    console.log(data);
+                    clickedItem.parent().remove();
+                },
+                error:(data)=>{
+                    console.log(data);
+                    swal("Error",
+                        "Server error try again later",
+                        "error");
+                }
+            });
         });
     });
 </script>

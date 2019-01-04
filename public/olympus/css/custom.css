@@ -9,7 +9,7 @@
 .header--standard-landing.headroom--not-top .logo,
 .header--standard-landing.headroom--not-top .logo .logo-title{color: #fff;}
 
-/*.header--standard-landing.headroom--not-top .header-menu .nav-item a, 
+/*.header--standard-landing.headroom--not-top .header-menu .nav-item a,
 .header--standard-landing.headroom--not-top .header-menu .nav-item a:hover,
 .header--standard-landing.headroom--not-top .header-menu li .nav-link,
 .header--standard-landing.headroom--not-top .header-menu li .nav-link:hover
@@ -25,7 +25,7 @@
 .profileimg{
     width: 110px;
     height: 110px;
-    margin-top: 9px;
+    margin-top: 5px;
 }
 p.cangecover {
     position: absolute;

@@ -27,7 +27,7 @@ use AuthenticatesUsers;
      *
      * @var string
      */
-     
+
 //    protected $redirectTo = '/admin';
     protected $redirectTo;
 
@@ -39,7 +39,7 @@ use AuthenticatesUsers;
     public function __construct() {
         $admin_panel = DB::table('options')->where('option_key', 'admin_url')->value('option_value');
         if($admin_panel == '' || $admin_panel == NULL){
-        $admin_panel = 'admin';   
+        $admin_panel = 'admin';
         }
         $this->redirectTo = '/'.$admin_panel;
         $this->middleware('guest', ['except' => 'logout']);
@@ -51,7 +51,7 @@ use AuthenticatesUsers;
      * @return \Illuminate\Http\Response
      */
     public function showLoginForm() {
-        
+
 
 //         if (!session()->has('url.intended')) {
 //            if(url()->previous() != 'http://127.0.0.1:8000/admin/login'){
@@ -63,10 +63,10 @@ use AuthenticatesUsers;
 
     public function authenticated($request, $user) {
         return redirect(session()->pull('url.intended', $this->redirectTo));
-        
+
     }
 
-    
+
 
 //    public function redirectPath() {
 //        if (method_exists($this, 'redirectTo')) {

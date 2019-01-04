@@ -2,7 +2,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!-- Tell the browser to be responsive to screen width -->
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-
+<base href="/">
 <!-- Meta -->
 <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
 <meta name="description" content="{{ $description }} " />

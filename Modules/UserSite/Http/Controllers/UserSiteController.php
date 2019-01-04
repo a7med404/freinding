@@ -2,24 +2,27 @@
 
 namespace Modules\UserSite\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use \Illuminate\Support\Facades\View;
-use Illuminate\Routing\Controller;
-use App\Http\Controllers\Site\SiteController; //as SiteController
-use Illuminate\Support\Facades\Validator;
-use Auth;
-use Hash;
-use App\User;
-use Session;
-use DB;
-use App\Model\SessionTime;
-use App\Model\SaveSession;
+use App\Http\Controllers\Site\SiteController;
 use App\Model\ProfileStage;
+use App\Model\SaveSession;
+use App\Model\UserMeta;
 use App\Model\UsersIds;
 use App\Model\World;
+use App\User;
+use Auth;
+use DB;
 use File;
+use Hash;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
+use Modules\UserSite\Entities\City;
+use Modules\UserSite\Entities\Country;
 use Redirect;
+use Session;
+
+//as SiteController
 
 //use App\Model\Options;
 class UserSiteController extends SiteController
@@ -70,11 +73,10 @@ class UserSiteController extends SiteController
             $wrong_form = $dataForm['wrong_form'];
 
             $verstatus = UsersIds::where('user_id', Auth::user()->id)->first();
-            $countries = World::distinct()->orderBy('country')->get(['country']);
-            $cities=World::select('city_ascii')->distinct()->where('country',Auth::user()->nationality)->get();
+            $countries = Country::distinct()->orderBy('id')->get(['name_en', 'code','nationality_en']);
+            $cities = City::select('name_en')->distinct()->get();
 
-
-            return view('usersite::setting', compact('prof', 'form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form','verstatus','countries','cities'));
+            return view('usersite::setting', compact('prof', 'form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form', 'verstatus', 'cities', 'countries'));
         } else {
             return redirect()->route('close');
         }
@@ -183,7 +185,8 @@ class UserSiteController extends SiteController
 
     public function storeCount(Request $request)
     {
-        $user = $this->user;
+        $user = Auth::user();
+        $input = $request->all();
         if (isset($input['submit'])) {
             $this->validate($request, [
                 'name' => 'required|max:255|unique:users,name,' . $user->id,
@@ -196,7 +199,6 @@ class UserSiteController extends SiteController
                 'password' => 'same:confirm-password',
             ]);
         }
-        $input = $request->all();
         foreach ($input as $key => $value) {
             $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
         }
@@ -505,11 +507,11 @@ class UserSiteController extends SiteController
             } else {
                 $imagename = "default.png";
             }
-            
+
             $date1 = strtr($request->datetimepicker, '/', '-');
 
             $birthdate = date("Y-m-d", strtotime($date1));
-            $nickname=$request->nickname;
+            $nickname = $request->nickname;
             User::where('id', Auth::user()->id)
                 ->update(['image' => $imagename, 'birthdate' => $birthdate, 'gender' => $request->gendar, 'display_name' => $nickname]);
             return redirect('posts');

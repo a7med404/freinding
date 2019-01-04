@@ -59,35 +59,40 @@
         <div class="col col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="form-group label-floating is-select">
                 <label class="control-label">Your Nationality</label>
-                <select name="nationality" id="nationality" class="selectpicker form-control">
+                <select name="nationality" id="nationality" data-live-search="true" class="selectpicker form-control">
                     @foreach($countries as $country)
-                        <option value="{{$country->country}}"   @if ($user->nationality == $country->country)
-                        selected="selected"
+                        <option value="{{strtolower($country->nationality_en)}}"
+                                @if (strtolower($user->nationality )== strtolower($country->nationality_en))
+                                selected="selected"
                                 @endif
-                        >{{$country->country}}</option>
+                        >{{$country->nationality_en}}</option>
                     @endforeach
                 </select>
             </div>
 
-            <div style="display: block;text-align: center;margin-left: auto;margin-right: auto;" class="loader"><img
-                        class="loader"
-                        src="{{ asset('olympus/img/loader.gif') }}"
-                        alt="Loading....">
-            </div>
-                                    <select name="country" id="select2">
-                    @foreach($cities as $city)
-                        <option value="{{$city->city_ascii}}"   @if ($user->country == $city->city_ascii)
-                        selected="selected"
-                                @endif
-                        >{{$city->city_ascii}}</option>
-                    @endforeach
-                                    </select>            
-            <br>
-            {{--<div class="form-group label-floating is-select">--}}
-                {{--<label class="control-label">Living City</label>--}}
-                {{--{!! Form::text('address', $user->address, array('id'=>'address','class' => 'select2  form-control')) !!}--}}
+            {{--<div style="display: block;text-align: center;margin-left: auto;margin-right: auto;" class="loader"><img--}}
+            {{--class="loader"--}}
+            {{--src="{{ asset('olympus/img/loader.gif') }}"--}}
+            {{--alt="Loading....">--}}
             {{--</div>--}}
-            
+            <div class="form-group label-floating is-select">
+                <label class="control-label">Your City</label>
+                <select name="country" class="selectpicker form-control" data-live-search="true" id="select2 ">
+                    @foreach($cities as $city)
+                        <option value="{{strtolower($city->name_en)}}"
+                                @if (strtolower($user->country )== strtolower($city->name_en))
+                                selected="selected"
+                                @endif
+                        >{{$city->name_en}}</option>
+                    @endforeach
+                </select>
+            </div>
+            {{--<br>--}}
+            {{--<div class="form-group label-floating is-select">--}}
+            {{--<label class="control-label">Living City</label>--}}
+            {{--{!! Form::text('address', $user->address, array('id'=>'address','class' => 'select2  form-control')) !!}--}}
+            {{--</div>--}}
+
             <div class="form-group label-floating is-select">
                 <label class="control-label">Relationship</label>
                 {!! Form::select('social_status',socialstatusType() ,$user->social_status, array('id'=>'social_status','class' => 'selectpicker form-control')) !!}
@@ -132,32 +137,32 @@
 </div>
 
 
-
 {{--<div class="modal fade" id="delete-modal">--}}
-    {{--<div class="modal-dialog">--}}
-        {{--<div class="modal-content">--}}
-            {{--<div class="modal-header">--}}
-                {{--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>--}}
-                {{--<h4 class="modal-title">Delete </h4>--}}
-            {{--</div>--}}
-            {{--<div class="modal-body">--}}
-                {{--Do you want to confirm the delete ? ؟--}}
-            {{--</div>--}}
-            {{--<div class="modal-footer">--}}
-                {{--<button type="button" class="btn btn-default" data-dismiss="modal">No</button>--}}
-                {{--<button id="confirm-delete" type="button" class="btn btn-danger">Yes</button>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</div>--}}
+{{--<div class="modal-dialog">--}}
+{{--<div class="modal-content">--}}
+{{--<div class="modal-header">--}}
+{{--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>--}}
+{{--<h4 class="modal-title">Delete </h4>--}}
+{{--</div>--}}
+{{--<div class="modal-body">--}}
+{{--Do you want to confirm the delete ? ؟--}}
+{{--</div>--}}
+{{--<div class="modal-footer">--}}
+{{--<button type="button" class="btn btn-default" data-dismiss="modal">No</button>--}}
+{{--<button id="confirm-delete" type="button" class="btn btn-danger">Yes</button>--}}
+{{--</div>--}}
+{{--</div>--}}
+{{--</div>--}}
 {{--</div>--}}
 
 @section("after_foot")
-<style>
-        .loader{
-        width:60px;
-        display: none;
-    }
-</style>
+    @include('posts::script_news')
+    <style>
+        .loader {
+            width: 60px;
+            display: none;
+        }
+    </style>
     <script>
         name = $('input[name=name]').val();
         email = $('input[name=email]').val();
@@ -198,14 +203,14 @@
             $('.cangecover').fadeOut();
 
         });
-        
-            $(document).on('change', '#nationality', function () {
+
+        $(document).on('change', '#nationality', function () {
             $('#select2').hide('slow');
             $('.loader').show('slow');
             $('.errnationality').hide('slow');
 
             country = $("#nationality option:selected").text();
-                                console.log(country);
+            console.log(country);
 
 
             event.preventDefault();

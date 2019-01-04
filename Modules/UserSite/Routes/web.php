@@ -14,7 +14,7 @@
 Route::group([
     'prefix' => 'profile',
     'as' => 'profile.',
-//    'middleware' => ['auth']
+    'middleware' => ['auth']
 ], function () {
     Route::get('', ['as' => 'index', 'uses' => 'UserSiteController@index']);
     Route::get('setting', ['as' => 'setting', 'uses' => 'UserSiteController@profileSetting']);

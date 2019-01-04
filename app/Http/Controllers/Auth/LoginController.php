@@ -3,17 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Site\SiteController;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
-use \Illuminate\Support\Facades\View;
-use Illuminate\Http\Request;
-use App\Model\SessionTime;
 use App\User;
-
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Modules\UserSite\Http\Controllers\UserSiteController;
 
 
-class LoginController extends SiteController {
+class LoginController extends SiteController
+{
     /*
       |--------------------------------------------------------------------------
       | Login Controller
@@ -25,7 +23,7 @@ class LoginController extends SiteController {
       |
      */
 
-use AuthenticatesUsers;
+    use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
@@ -34,7 +32,8 @@ use AuthenticatesUsers;
      */
     protected $redirectTo = '/';
 
-    private function checkActive() {
+    private function checkActive()
+    {
         if (!Auth::user()->isActive()) {
             Auth::logout();
         }
@@ -45,7 +44,8 @@ use AuthenticatesUsers;
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->middleware('guest')->except('logout');
@@ -54,10 +54,12 @@ use AuthenticatesUsers;
     /**
      * Handle a login request to the application.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -91,15 +93,17 @@ use AuthenticatesUsers;
             return redirect('registration_three');
         }
         $UserSiteController = new UserSiteController;
-        $UserSiteController->save_activity();
+        action('UserSiteController@save_activity');
+//        $UserSiteController->save_activity();
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $user = Auth::User();
-       // $user_sesstion = SessionTime::getSessionTime($user->id, 'hour_out', NULL);
-       // $date = strtotime(time());
-       // $input['hour_out'] = date('H:i:s'); //date('H:i:s', time());
-       // $user_sesstion->update($input);
+        // $user_sesstion = SessionTime::getSessionTime($user->id, 'hour_out', NULL);
+        // $date = strtotime(time());
+        // $input['hour_out'] = date('H:i:s'); //date('H:i:s', time());
+        // $user_sesstion->update($input);
         Auth::logout();
         return redirect()->intended($this->redirectPath());
     }
