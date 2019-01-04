@@ -44,10 +44,7 @@ php artisan module:make-seed modelName ModuleName
       module:unuse
       module:update
       module:use
-
-
 عدد الاصدقاء المشتركين في dialog الاصدقاء المتفاعلين
-اعادة توجيه عتسجيل الدخول لما ينطلب البوستات من ال url
 
 corn job
 delete image from temp on server

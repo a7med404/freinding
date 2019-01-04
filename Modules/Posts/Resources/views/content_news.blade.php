@@ -21,8 +21,8 @@
                                          alt="author">
 
                                     <div class="author-date">
-                                        <a class="h6 post__author-name fn"
-                                           href="#">{{$post->user->display_name}}</a>
+                                            <a class="h6 post__author-name fn"
+                                               href="#">{{$post->user->display_name}}</a>
 
                                         @if($post->taggedFriends)
                                             @if($post->taggedFriends->count()==1)
@@ -73,7 +73,7 @@
 
                                 </div>
                                 <p style="word-wrap: break-word;">{{$post->text}}</p>
-                                @if($post->type == 'picture')
+                            @if($post->type == 'picture')
                                     <div class="picture-section {{$post->files->count()>1?'swiper-container':""}}"
                                          data-slide="fade">
                                         <div class="swiper-wrapper">
@@ -85,7 +85,7 @@
                                                         <div class="overlay"></div>
                                                     </div>
                                                 </div>
-                                            @endforeach
+                                        @endforeach
                                         </div>
                                         @if($post->files->count()>1)
                                             <svg class="btn-next-without olymp-popup-right-arrow">
@@ -123,9 +123,8 @@
                                                 <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
                                             </svg>
                                         @endif
-                                    </div>
+                                </div>
                                 @endif
-
                             <!--post shared-->
                                 @if($post->post_id != 0 && $post->social_network_id==1)
                                     <article class="hentry post video" style="border: 3px solid;border-radius: 10px;border-color: #9a9fbf;">
@@ -186,7 +185,6 @@
                                                     </svg>
                                                 @endif
                                             </div>
-
                                         @elseif($post->post->type == 'video')
                                             <div class="video-section swiper-container" data-slide="fade">
                                                 <div class="swiper-wrapper">
@@ -216,7 +214,7 @@
                                                     <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
                                                 </svg>
                                             </div>
-                                        @endif
+                                    @endif
                                         <div style="display: inline-block;">
                                             <ul>
                                                 @foreach($post->post->topics as $topic)
@@ -238,7 +236,6 @@
                                     </article>
                                 @endif
                             <!--end post shared-->
-
                                 <div class="topic-section" style="display: inline-block;">
                                     <ul>
                                         @foreach($post->topics as $topic)
@@ -257,7 +254,6 @@
                                         @endforeach
                                     </ul>
                                 </div>
-
                                 <div class="post-additional-info form-inline post-control-button flex-container reaction">
                                     <a id="btn_react{{$post->id}}" class="btn btn-control btn_react_first "
                                        style="background-color: {{$post->is_liked?'red':''}};"
@@ -265,14 +261,11 @@
                                         <svg class="olymp-like-post-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
                                         </svg>
-
                                     </a>
-
                                     <a id="comment_post{{$post->id}}" class="btn btn-control  ">
                                         <svg class="olymp-comments-post-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>
                                         </svg>
-
                                     </a>
 
                                     <!--share-section-->
@@ -294,7 +287,6 @@
                                             </li>
                                         </ul>
                                     </div>
-
                                     <!--end-share-section-->
 
                                     <ul id="reactioners_photos{{$post->id}}"
@@ -312,7 +304,6 @@
                                             @endif
                                         @endforeach
                                     </ul>
-
                                     <div class="post_reacts_users" id="{{$post->id}}" data-url="{{route('users-reactions')}}"
                                          style="position: absolute;right: 5%;cursor: pointer;">
                                         <a class="post-add-icon inline-items">
@@ -335,7 +326,6 @@
                                                 flex-direction: row;
                                                 width: 100%;
                                             }
-
                                             .btn_react_first {
                                                 margin-top: 10px;
                                             }
@@ -343,8 +333,7 @@
                                     </style>
                                 </div>
                             </article>
-
-                        <!-- Comments -->
+                            <!-- Comments -->
                             <ul class="comments-list comments-list--{{$post->id}}">
                                 @if($post->newest_comment)
 

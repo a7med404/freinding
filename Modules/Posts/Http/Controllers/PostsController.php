@@ -18,12 +18,18 @@ use App\Http\Controllers\Site\SiteController;
 use App\User;
 
 
-
 class PostsController extends SiteController
 {
 
     public function index()
     {
+        $users = User::where('id', Auth::user()->id)->first();
+        if ($users->birthdate == Null) {
+            return redirect('registration_two');
+        } else if ($users->nationality == Null) {
+            return redirect('registration_three');
+        }
+
         if ($this->site_open == 1 || $this->site_open == "1") {
             $user = Auth::user();
             $user_key = $user->name;
@@ -39,7 +45,7 @@ class PostsController extends SiteController
 
 //            $reactions = Reaction::where('is_active', 1)->get();
 
-            return view('posts::newsfeed', compact('user', 'posts', 'admin_panel', 'user_key','users'));
+            return view('posts::newsfeed', compact('user', 'posts', 'admin_panel', 'user_key', 'users'));
         } else {
             return redirect()->route('close');
         }
@@ -47,17 +53,19 @@ class PostsController extends SiteController
 
     public function storePostsPhotosInTemp(Request $request)
     {
-        $image = $request->file('avatar');
-        $destinationPath =public_path('storage/temp');
-        $fileName = $request->name;
-        $img = Image::make($image->getRealPath());
-        $watermark = Image::make(public_path('/storage/images/waterMark.png'));
-        $img->insert($watermark,'bottom-left', 15, 15);
-        $img->save($destinationPath.'/'.$fileName);
-//        $jpg = $img->encode('jpg',0);
-//        $jpg->save($destinationPath.'/'.explode('.',$fileName)[0].'1.jpg');
-        return $fileName;
+        $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
+        return $x;
+//        $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
+//        $img = Image::make(asset('storage/temp/'.$request->name));
+//        $img->insert('public/images/waterMark.png','bottom-left', 10, 10);
+//        return $x;
 
+//        $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
+//        $path   = $request->file('avatar')->getRealPath();
+//        $img = Image::make($path);
+//        $img->insert('public/images/waterMark.png','bottom-left', 10, 10);
+//        $img->save();
+//        return $img;
     }
 
     public function react(Request $request)
@@ -100,11 +108,9 @@ class PostsController extends SiteController
             $loop = 0;
             foreach ($post->reactions as $reaction) {
                 if ($loop < 5) {
-                    $reactioners_photos = $reactioners_photos . '<li>
-                                    <a href="#">
-                                        <img src="' . $reaction->user->image . '" alt="friend">
-                                    </a>
-                                </li>';
+                    $reactioners_photos = $reactioners_photos . '<li><a href="#"> <img src="' .
+                        $reaction->user->image .
+                        '" alt="friend"></a></li>';
                     $loop++;
                 } else {
                     break;
@@ -124,7 +130,7 @@ class PostsController extends SiteController
 
     public function usersReactions(Request $request)
     {
-        $data = PostReaction::where('post_id', $request->id)->orderBy('created_at','decs')->paginate(25);
+        $data = PostReaction::where('post_id', $request->id)->orderBy('created_at', 'decs')->paginate(25);
         return $data;
     }
 
@@ -188,8 +194,8 @@ class PostsController extends SiteController
         if ($post) {
             if ($post->type == "video" || $post->type == "picture") {
                 $files = File::where('dependent_id', $post->id)->where('type', 'post')->get();
-                foreach ($files as $file){
-                    Storage::disk('public')->delete( '/images/posts/'. $file->real_name.'.'.$file->extension);
+                foreach ($files as $file) {
+                    Storage::disk('public')->delete('/images/posts/' . $file->real_name . '.' . $file->extension);
                     $file->Delete();
                 }
             }
@@ -224,20 +230,21 @@ class PostsController extends SiteController
                     $childreactions->delete();
                 }
             }
-            if ($post->taggedFriends) {
-                foreach ($post->taggedFriends as $childtaggedFriends) {
-                    $childtaggedFriends->delete();
+
+            if ($post->taggedFriends()) {
+                foreach ($post->taggedFriends as $tag) {
+                    $tag->Delete();
                 }
             }
 
             $success = $post->Delete();
-            return Response::json(['success' => true, 'message' => 'Post deleted','arrayshare'=>$arrayshare], 200);
+            return Response::json(['success' => $success, 'message' => 'Post deleted','arrayshare'=>$arrayshare], 200);
         } else {
             return Response::json(['success' => false, 'message' => 'The Post has not been deleted'], 200);
         }
     }
-	
-	public function commentDelete(Request $request)
+
+    public function commentDelete(Request $request)
     {
 
         $canDelete = false;
@@ -247,7 +254,7 @@ class PostsController extends SiteController
 
         if ($comment->user_id == Auth::id() || $comment->post->user_id == Auth::id()) {
             $success = $comment->Delete();
-            $post->comments_count =$post->comments_count-1;
+            $post->comments_count = $post->comments_count - 1;
             $engagement = $post->reactions->count();
             $engagement += $post->supportFriends->count();
             $engagement += $post->comments->count();
@@ -260,12 +267,10 @@ class PostsController extends SiteController
                 $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name .
                     '</a>, <a href="#">' . $post->reactions[1]->user->display_name . '</a> and <br>' .
                     ($post->reactions->count() - 2) . ' more react this';
-            }
-            elseif ($post->reactions->count() == 2) {
+            } elseif ($post->reactions->count() == 2) {
                 $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name . '</a>, <a
                                     href="#">' . $post->reactions[1]->user->display_name . '</a>';
-            }
-            elseif ($post->reactions->count() == 1) {
+            } elseif ($post->reactions->count() == 1) {
                 $reactioners = '<a href="#">' . $post->reactions[0]->user->display_name . '</a>';
             }
             $reactioners_photos = '';
@@ -291,11 +296,10 @@ class PostsController extends SiteController
                 $newestcomment['id'] = $newestcomment->id;
 
 
-
                 return Response::json(['success' => true, 'message' => ' comment deleted', 200,
                     'newestcomment' => $newestcomment, 'engagement' => $engagement,
                     'reactioners' => $reactioners, 'reactioners_photos' => $reactioners_photos,
-                    'react_count' => $react_count, 'post' => $post, 'comments_count'=>$post->comments_count ]);
+                    'react_count' => $react_count, 'post' => $post, 'comments_count' => $post->comments_count]);
 
             } else return Response::json(['success' => true, 'message' => ' comment deleted', 200, 'engagement' => $engagement,
                 'reactioners' => $reactioners, 'reactioners_photos' => $reactioners_photos, 'react_count' => $react_count, 'post' => $post]);
@@ -309,8 +313,6 @@ class PostsController extends SiteController
         $newpost = new Post();
         $newpost->user_id = Auth::id();
         $newpost->text = $request->text;
-        $newpost->post_id = '0';
-        $newpost->social_network_id = '0';
         if ($request->post_has_files) {
             $newpost->type = "picture";
         } else {
@@ -382,13 +384,13 @@ class PostsController extends SiteController
             '<div class="swiper-wrapper">';
 
         $html_for_pictures = "";
-        if ($request->post_has_files && sizeof($request['files'])>1){
+        if ($request->post_has_files && sizeof($request['files']) > 1) {
             $html_for_pictures = $html_for_pictures .
-                '<div class="swiper-container" data-slide="fade">' .
+                '<div class="picture-section swiper-container" data-slide="fade">' .
                 '<div class="swiper-wrapper">';
-        }else{
+        } else {
             $html_for_pictures = $html_for_pictures .
-                '<div class="" data-slide="fade">' .
+                '<div class="picture-section" data-slide="fade">' .
                 '<div class="swiper-wrapper">';
         }
 
@@ -443,107 +445,108 @@ class PostsController extends SiteController
         $html_for_pictures = $html_for_pictures .
 //            '<a data-toggle="modal" data-target="#open-photo-popup-v1{{$post->id}}"  href="#" class="full-block"></a>' .
             '</div>';
-        if($newpost->files()->count()>1){
+        if ($newpost->files()->count() > 1) {
             $html_for_pictures = $html_for_pictures .
-            '<svg class="btn-next-without olymp-popup-right-arrow">' .
-            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>' .
-            '</svg>' .
-            '<svg class="btn-prev-without olymp-popup-left-arrow">' .
-            '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>' .
-            '</svg>';
+                '<svg class="btn-next-without olymp-popup-right-arrow">' .
+                '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow"></use>' .
+                '</svg>' .
+                '<svg class="btn-prev-without olymp-popup-left-arrow">' .
+                '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>' .
+                '</svg>';
         }
-        $html_for_pictures = $html_for_pictures .'</div>';
+        $html_for_pictures = $html_for_pictures . '</div>';
 
-        $tagsection='';
-        $arraytag=array();
+        $tagsection = '';
+        $arraytag = array();
 
-        if($request->selecttag)
+        if ($request->selecttag)
         {
 
-            foreach ($request->selecttag as $x )
-            {
+            foreach ($request->selecttag as $x) {
                 $arraytag[] = [
-                    'user_id'    =>  (int)$x,
+                    'user_id' => (int)$x,
                 ];
             }
             $newpost->taggedFriends()->createMany($arraytag);
 
-            if($newpost->taggedFriends){
-                if($newpost->taggedFriends->count()==1){
-                    $tagsection='<span>&nbsp;With&nbsp;<a>'.$newpost->taggedFriends[0]->user->display_name.'</a></span>';
-                }
-                elseif($newpost->taggedFriends->count()==2){
-                    $tagsection='<span>&nbsp;With&nbsp;<a>'.$newpost->taggedFriends[0]->user->display_name.'</a></span>'.
-                        '<span>&nbsp;And&nbsp;<a>'.$newpost->taggedFriends[1]->user->display_name.'</a></span>';
-                }
-                elseif($newpost->taggedFriends->count()>2){
-                    $tagsection='<span>&nbsp;With&nbsp;<a>'.$newpost->taggedFriends[0]->user->display_name.'</a></span>'.
-                        '<span>&nbsp;And&nbsp;<a>'.$newpost->taggedFriends[1]->user->display_name.'</a></span>';
+            if ($newpost->taggedFriends) {
+                if ($newpost->taggedFriends->count() == 1) {
+                    $tagsection = '<span>&nbsp;With&nbsp;<a>' . $newpost->taggedFriends[0]->user->display_name . '</a></span>';
+                } elseif ($newpost->taggedFriends->count() == 2) {
+                    $tagsection = '<span>&nbsp;With&nbsp;<a>' . $newpost->taggedFriends[0]->user->display_name . '</a></span>' .
+                        '<span>&nbsp;And&nbsp;<a>' . $newpost->taggedFriends[1]->user->display_name . '</a></span>';
+                } elseif ($newpost->taggedFriends->count() > 2) {
+                    $tagsection = '<span>&nbsp;With&nbsp;<a>' . $newpost->taggedFriends[0]->user->display_name . '</a></span>' .
+                        '<span>&nbsp;And&nbsp;<a>' . $newpost->taggedFriends[1]->user->display_name . '</a></span>';
                     $name = "";
                     for ($i = 2; $i < $newpost->taggedFriends->count(); $i = $i + 1) {
-                        $name = $name . $newpost->taggedFriends[$i]->user->display_name ."\n";
+                        $name = $name . $newpost->taggedFriends[$i]->user->display_name . "\n";
                     }
 
-                    $tagsection=$tagsection.'<span title="'.$name.'">&nbsp;And '. ($newpost->taggedFriends->count()-2) .' more</span>';
+                    $tagsection = $tagsection . '<span title="' . $name . '">&nbsp;And ' . ($newpost->taggedFriends->count() - 2) . ' more</span>';
                 }
             }
         }
         $react_url = route("react");
         $users_reactions = route('users-reactions');
-        $new_comment =route('new-comment');
+        $new_comment = route('new-comment');
         $comment_delete = route('comment-delete');
+        $share_url = route('share-post');
 
-        if ($request->post_has_files){
+        if ($request->post_has_files) {
             return Response::json(['success' => $success,
                 'htmlnewpost' => $htmlnewpost,
                 'newpost' => $newpost,
                 'user_image' => Auth::user()->image,
                 'user_name' => Auth::user()->display_name,
-                'html_for_pictures_popup'=>$html_for_pictures_popup,
-                'html_for_pictures'=>$html_for_pictures,
-                'with_files'=>true,
-                'tagsection'=>$tagsection,
-                'react_url'=>$react_url,
-                'users_reactions'=>$users_reactions,
-                'new_comment'=>$new_comment,
-                'comment_delete'=>$comment_delete
+                'html_for_pictures_popup' => $html_for_pictures_popup,
+                'html_for_pictures' => $html_for_pictures,
+                'with_files' => true,
+                'tagsection' => $tagsection,
+                'react_url' => $react_url,
+                'users_reactions' => $users_reactions,
+                'new_comment' => $new_comment,
+                'comment_delete' => $comment_delete,
+                'share_url'=>$share_url
             ]);
-        }else{
+        } else {
             return Response::json(['success' => $success,
                 'htmlnewpost' => $htmlnewpost,
                 'newpost' => $newpost,
                 'user_image' => Auth::user()->image,
                 'user_name' => Auth::user()->display_name,
-                'with_files'=>false,
-                'tagsection'=>$tagsection,
-                'react_url'=>$react_url,
-                'users_reactions'=>$users_reactions,
-                'new_comment'=>$new_comment,
-                'comment_delete'=>$comment_delete
+                'with_files' => false,
+                'tagsection' => $tagsection,
+                'react_url' => $react_url,
+                'users_reactions' => $users_reactions,
+                'new_comment' => $new_comment,
+                'comment_delete' => $comment_delete,
+                'share_url'=>$share_url
             ]);
         }
     }
 
-    public function deleteFromTemp(Request $request){
-       $success =  Storage::delete('temp/'.$request->photo_name);
-       return ['success'=>$success];
+    public function deleteFromTemp(Request $request)
+    {
+        $success = Storage::delete('temp/' . $request->photo_name);
+        return ['success' => $success];
     }
 
     public function sharePost(Request $request)
     {
         $post = Post::where('user_id', Auth::id())->with(['post'])->where('id', $request->id)->first();
 
-        if($post->post){
-            $post=$post->post;
+        if ($post->post) {
+            $post = $post->post;
         }
 
         $user_id = Auth::id();
         $text = $request->share_text;
         $social_network_id = 1;
-        $post_id= $post->id;
+        $post_id = $post->id;
 
         $newPost = new Post();
-        $newPost->user_id=$user_id;
+        $newPost->user_id = $user_id;
         $newPost->text = $text;
         $newPost->post_id = $post_id;
         $newPost->social_network_id = $social_network_id;
@@ -569,6 +572,7 @@ class PostsController extends SiteController
             '<div class="swiper-wrapper">';
 
         $html_for_pictures = "";
+
         if ($post->files->count() > 0) {
             $html_for_pictures = $html_for_pictures .
                 '<div class="picture-section swiper-container" data-slide="fade">' .
@@ -579,13 +583,12 @@ class PostsController extends SiteController
                 '<div class="swiper-wrapper">';
         }
 
-
         if ($post->files) {
             foreach ($post->files as $file) {
                 $html_for_pictures_popup = $html_for_pictures_popup .
                     '<div class="swiper-slide">' .
                     '<div class="photo-item " style="display:block;">' .
-                    '<img src="'.$file->store_name. '" alt="photo">' .
+                    '<img src="' . $file->store_name . '" alt="photo">' .
                     '<div class="overlay"></div>' .
                     '</div>' .
                     '</div>';
@@ -593,14 +596,13 @@ class PostsController extends SiteController
                 $html_for_pictures = $html_for_pictures .
                     '<div class="swiper-slide">' .
                     '<div class="photo-item" style="display:block;">' .
-                    '<img src="' .$file->store_name. '" alt="photo">' .
+                    '<img src="' . $file->store_name . '" alt="photo">' .
                     '<div class="overlay"></div>' .
                     '</div>' .
                     '</div>';
 
             }
         }
-
         $html_for_pictures_popup = $html_for_pictures_popup .
             '</div>' .
             '<svg class="btn-next-without olymp-popup-right-arrow">' .
@@ -629,7 +631,7 @@ class PostsController extends SiteController
                 '</svg>';
         }
         $html_for_pictures = $html_for_pictures . '</div>';
-        $tagsection = "";
+        $tagsection ='';
         if ($post->taggedFriends) {
             if ($post->taggedFriends->count() == 1)
                 $tagsection = ' <span>&nbsp;With&nbsp;<a>' . $post->taggedFriends[0]->user->display_name . '</a></span>';
@@ -648,13 +650,13 @@ class PostsController extends SiteController
                 $tagsection = $tagsection . ' <span title="' . $name . '">And ' . $rest . ' more</span>';
             }
         }
+
         $react_url = route("react");
         $delete_url = route("delete-post");
         $share_url = route('share-post');
         $newCommentUrl = route('new-comment');
         $deleteCommentUrl = route('comment-delete');
         $users_reactions = route('users-reactions');
-
 
         if ($post->files->count() > 0) {
             return Response::json(['success' => $success,
@@ -674,8 +676,7 @@ class PostsController extends SiteController
                 'share_url'=>$share_url,
                 'new_comment_url'=>$newCommentUrl,
                 'users_reactions'=>$users_reactions,
-                'dalete_comment_url'=>$deleteCommentUrl
-            ]);
+                'dalete_comment_url'=>$deleteCommentUrl ]);
         } else {
             return Response::json(['success' => $success,
                 'ShareDate' => $ShareDate,
@@ -687,14 +688,12 @@ class PostsController extends SiteController
                 'with_files' => false,
                 'newpost' => $newPost,
                 'tagsection' => $tagsection,
-                'react_url'=>$react_url,
-                'delete_url'=>$delete_url,
-                'share_url'=>$share_url,
-                'new_comment_url'=>$newCommentUrl,
-                'users_reactions'=>$users_reactions,
-                'dalete_comment_url'=>$deleteCommentUrl
-            ]);
+                'react_url' => $react_url,
+                'delete_url' => $delete_url,
+                'share_url' => $share_url,
+                'new_comment_url' => $newCommentUrl,
+                'users_reactions' => $users_reactions,
+                'dalete_comment_url' => $deleteCommentUrl]);
         }
     }
-
 }

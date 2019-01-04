@@ -25,8 +25,8 @@
             $( "h4.modal-title" ).text(title_h);
             $( "div.modal-body" ).text(text_div);
         });
-        
-        $('body').on('click', '#confirm-delete', function(){ 
+
+        $('body').on('click', '#confirm-delete', function(){
     
         $('#delete-modal').modal('hide');
         

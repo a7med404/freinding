@@ -131,7 +131,7 @@ $(document).ready(function(){
                         label: "NEW USER ",
                         borderColor: "#00bc8c",
                         fill: false,
-                        backgroundColor:"#00bc8c"
+                        backgroundColor: "#00bc8c"
                     }
                 ]
 
@@ -145,6 +145,7 @@ $(document).ready(function(){
                     animationDuration: 0, // duration of animations when hovering an item
                 },
                 responsiveAnimationDuration: 0, // animation duration after a resize
+    //end bar chart
             }
         });
 

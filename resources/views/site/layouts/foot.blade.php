@@ -52,6 +52,7 @@
 
 <script src="{{ asset('js/progressbar.js') }}"></script>
 <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+<script src="{{ asset('js/jquery.validate.js') }}"></script>
 
 
 <!-- custom posts js files-->
@@ -66,7 +67,11 @@
 
 
 
-
+<script>
+$(window).on("beforeunload", function() {
+     $.ajax( '/profileleave' );
+});
+</script>
 
 
 

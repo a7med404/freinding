@@ -22,4 +22,5 @@ Route::prefix('posts')->group(function() {
 	Route::post('/post-photo-temp', 'PostsController@storePostsPhotosInTemp')->name('storePostsPhotosInTemp');
 	Route::post('/delete-from-temp', 'PostsController@deleteFromTemp')->name('deleteFromTemp');
     Route::post('/share-post', 'PostsController@sharePost')->name('share-post');
+
 });

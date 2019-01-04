@@ -125,7 +125,7 @@ $(document).ready(() => {
                             '  </a>' +
                             '  <ul class="more-dropdown">' +
                             '  <li>' +
-                            '  <a href="javascript:void(0)" id="sharePost" data-id="'+data.newpost.id+'">Share</a>' +
+                            '  <a href="javascript:void(0)" id="sharePost" data-id="'+data.newpost.id+'" data-share-url="'+data.share_url+'">Share</a>' +
                             '  </li>' +
                             '  <li>' +
                             '  <a href="#">Share in group</a>' +

@@ -1227,11 +1227,14 @@ opacity: 0.6;">DELETED USER
 
 
     </section>
+
 @stop
 
 @section('after_foot')
 
     @include('admin.statistics.chartjs')
-{{--    @include('admin.statistics.custompiecharts')--}}
+
+
+    {{--@include('admin.statistics.custompiecharts')--}}
 
 @stop

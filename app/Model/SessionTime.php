@@ -10,7 +10,7 @@ class SessionTime extends Model {
 
     protected $table = 'session_times';
     protected $fillable = [
-        'user_id', 'hour_out', 'hour_in', 'day_name'
+        'user_id', 'session_id', 'start_time', 'last_activity_time'
     ];
 
     public function user() {
@@ -196,7 +196,6 @@ class SessionTime extends Model {
         }
         return $data_year;
     }
-
 }
 
 //$start_time = Carbon::yesterday('UTC');

@@ -139,58 +139,62 @@ use RegistersUsers;
         ]);
     }
 
-    public function register(Request $request) {
-        $input = $request->all();
-        foreach ($input as $key => $value) {
-            $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
-        }
-        $register=1;
-        $wrong_form = $correct_form = NULL;
-        $wrong_form = $this->MakeConfirmValidat($input);
-        if (empty($wrong_form)) {
-            $user = $this->addCreate($request, $input);
-            //save SessionTime
-            SessionTime::InsertData($user['id']);
-            //send email
-            $sen_email = User::SendEmailTOUser($user['id'], 'register');
-            return $this->registered($request, $user) ?: redirect($this->redirectPath());
-        } else {
-            return view('auth.register', compact('wrong_form', 'correct_form','register'));
-        }
-    }
-    //*************************** ajax register ****************************************
-    public function ajax_add_register_first(Request $request) {
-        if ($request->ajax()) {
-            $input = $request->input();
-            foreach ($input as $key => $value) {
-                $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
-            }
-            //$name,$email,$password,$password_confirmation,
-            $response = $status  = 0;
-            $wrong_form = $correct_form = NULL;
-            $wrong_form = $this->MakeConfirmValidat($input);
-            $user_key='';
-            if (empty($wrong_form)) {
-                $status = 1;
-                $user = $this->addCreate($request, $input);
-                //save SessionTime
-                SessionTime::InsertData($user['id']);
-                //send email
-                $sen_email = User::SendEmailTOUser($user['id'], 'register');
-                $this->registered($request, $user); //?: redirect($this->redirectPath());
-                $data_user['user_id']=$user['id'];
-                $user_key=$user['name'];
-                $data_user['user_key']=$user_key;
-                $data_user['register']=2;
-                $response = view('auth.form_register', $data_user)->render();
-            } else {
-                $status = 0;
-                $data_course['wrong_form'] = $wrong_form;
-                $data_course['correct_form'] = $correct_form;
-                $response = view('site.layouts.alert_save', compact('wrong_form', 'correct_form'))->render();
-            }
-            return response()->json(['status' => $status, 'response' => $response,'user_key'=>$user_key]);
-        }
-    }
+
+
+
+
+//    public function register(Request $request) {
+//        $input = $request->all();
+//        foreach ($input as $key => $value) {
+//            $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
+//        }
+//        $register=1;
+//        $wrong_form = $correct_form = NULL;
+//        $wrong_form = $this->MakeConfirmValidat($input);
+//        if (empty($wrong_form)) {
+//            $user = $this->addCreate($request, $input);
+//            //save SessionTime
+//            SessionTime::InsertData($user['id']);
+//            //send email
+//            $sen_email = User::SendEmailTOUser($user['id'], 'register');
+//            return $this->registered($request, $user) ?: redirect($this->redirectPath());
+//        } else {
+//            return view('auth.register', compact('wrong_form', 'correct_form','register'));
+//        }
+//    }
+//    //*************************** ajax register ****************************************
+//    public function ajax_add_register_first(Request $request) {
+//        if ($request->ajax()) {
+//            $input = $request->input();
+//            foreach ($input as $key => $value) {
+//                $input[$key] = stripslashes(trim(filter_var($value, FILTER_SANITIZE_STRING)));
+//            }
+//            //$name,$email,$password,$password_confirmation,
+//            $response = $status  = 0;
+//            $wrong_form = $correct_form = NULL;
+//            $wrong_form = $this->MakeConfirmValidat($input);
+//            $user_key='';
+//            if (empty($wrong_form)) {
+//                $status = 1;
+//                $user = $this->addCreate($request, $input);
+//                //save SessionTime
+//                SessionTime::InsertData($user['id']);
+//                //send email
+//                $sen_email = User::SendEmailTOUser($user['id'], 'register');
+//                $this->registered($request, $user); //?: redirect($this->redirectPath());
+//                $data_user['user_id']=$user['id'];
+//                $user_key=$user['name'];
+//                $data_user['user_key']=$user_key;
+//                $data_user['register']=2;
+//                $response = view('auth.form_register', $data_user)->render();
+//            } else {
+//                $status = 0;
+//                $data_course['wrong_form'] = $wrong_form;
+//                $data_course['correct_form'] = $correct_form;
+//                $response = view('site.layouts.alert_save', compact('wrong_form', 'correct_form'))->render();
+//            }
+//            return response()->json(['status' => $status, 'response' => $response,'user_key'=>$user_key]);
+//        }
+//    }
 
 }

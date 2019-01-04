@@ -685,4 +685,7 @@ class UserController extends AdminController {
                         ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
+
+
+
 }
