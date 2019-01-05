@@ -55,6 +55,17 @@
 <script src="{{ asset('js/jquery.validate.js') }}"></script>
 
 
+<!-- custom posts js files-->
+<script src="{{ asset('js/posts/new-post.js') }}"></script>
+<script src="{{ asset('js/posts/share-post.js') }}"></script>
+<script src="{{ asset('js/posts/crop-image.js') }}"></script>
+<script src="{{ asset('js/posts/post-operations.js') }}"></script>
+<script src="{{ asset('js/posts/reactions-model.js') }}"></script>
+<script src="{{ asset('js/posts/video-operation.js') }}"></script>
+<script src="{{ asset('js/util.js') }}"></script>
+
+
+
 
 <script>
 $(window).on("beforeunload", function() {

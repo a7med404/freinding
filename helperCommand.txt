@@ -46,4 +46,7 @@ php artisan module:make-seed modelName ModuleName
       module:use
 عدد الاصدقاء المشتركين في dialog الاصدقاء المتفاعلين
 
-
+corn job
+delete image from temp on server
+delete image from images/posts on server
+arrows right left on images after ajax

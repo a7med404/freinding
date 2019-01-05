@@ -87,7 +87,7 @@ Route::group([
 
     Route::resource('users_ids', 'IdsController');
 
-    VisitStats::routes();
+//    VisitStats::routes();
 
 });
 
