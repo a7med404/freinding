@@ -50,7 +50,7 @@ use RegistersUsers;
      */
     protected function validator(array $data) {
         return Validator::make($data, [
-                    'name' => 'required|string|max:255',
+                    'name' => 'required|string|max:255|unique:users',
                     'email' => 'required|string|email|max:255|unique:users',
                     'password' => 'required|string|min:6|confirmed',
         ]);
@@ -59,8 +59,8 @@ use RegistersUsers;
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
-     * @return \App\User
+     * @param array $input
+     * @return string
      */
     protected function MakeConfirmValidat(array $input) {
         $wrong_form = $correct_form = NULL;

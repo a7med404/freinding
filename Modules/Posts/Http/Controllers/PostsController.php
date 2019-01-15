@@ -25,9 +25,9 @@ class PostsController extends SiteController
     {
         $users = User::where('id', Auth::user()->id)->first();
         if ($users->birthdate == Null) {
-            return redirect('registration_two');
+            return redirect('registration-two');
         } else if ($users->nationality == Null) {
-            return redirect('registration_three');
+            return redirect('registration-three');
         }
 
         if ($this->site_open == 1 || $this->site_open == "1") {
@@ -43,9 +43,9 @@ class PostsController extends SiteController
 
             $users = User::where('id', '!=', Auth::id())->get();
 
-//            $reactions = Reaction::where('is_active', 1)->get();
+            $reactions = Reaction::where('is_active', 1)->get();
 
-            return view('posts::newsfeed', compact('user', 'posts', 'admin_panel', 'user_key', 'users'));
+            return view('posts::newsfeed', compact('user', 'posts', 'admin_panel', 'user_key', 'users','reactions'));
         } else {
             return redirect()->route('close');
         }

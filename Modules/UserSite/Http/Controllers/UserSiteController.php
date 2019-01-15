@@ -2,12 +2,15 @@
 
 namespace Modules\UserSite\Http\Controllers;
 
+use App\Events\FriendShipEvent;
 use App\Http\Controllers\Site\SiteController;
 use App\Model\ProfileStage;
 use App\Model\SaveSession;
 use App\Model\UserMeta;
 use App\Model\UsersIds;
 use App\Model\World;
+use App\Notifications\AcceptFriendNotification;
+use App\Notifications\NewFriendNotification;
 use App\User;
 use Auth;
 use DB;
@@ -32,22 +35,25 @@ class UserSiteController extends SiteController
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
+    public function index($username =null)
     {
         if ($this->site_open == 1 || $this->site_open == "1") {
             $lang = 'en';
             $prof = 1;
-            $user = Auth::user();
-            $user_key = $user->name;
+            if ($username != null)
+                $profile_user = $username;
+            else
+                $profile_user = Auth::user();
+            $user_key = $profile_user->name;
             $admin_panel = 0;
-            if ($user->can(['access-all', 'post-type-all', 'post-all'])) {
+            if ($profile_user->can(['access-all', 'post-type-all', 'post-all'])) {
                 $admin_panel = 1;
             }
             $title = 'Home' . " &#8211; " . $this->site_title;
             View::share('title', $title);
             $form_type = 'personal';
-            $verstatus = UsersIds::where('user_id', Auth::user()->id)->first();
-            return view('usersite::index', compact('prof', 'form_type', 'user', 'admin_panel', 'user_key', 'verstatus'));
+            $verified_status = UsersIds::where('user_id', Auth::user()->id)->first();
+            return view('usersite::index', compact('prof', 'form_type', 'profile_user', 'admin_panel', 'user_key', 'verified_status'));
         } else {
             return redirect()->route('close');
         }
@@ -73,9 +79,9 @@ class UserSiteController extends SiteController
             $wrong_form = $dataForm['wrong_form'];
 
             $verstatus = UsersIds::where('user_id', Auth::user()->id)->first();
-            $countries = Country::distinct()->orderBy('id')->get(['name_en', 'code','nationality_en']);
-            $cities = City::select('name_en')->distinct()->get();
 
+            $cities = World::orderBy('city_ascii')->get(['city_ascii']);
+            $countries = World::distinct()->orderBy('country')->get(['country']);
             return view('usersite::setting', compact('prof', 'form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form', 'verstatus', 'cities', 'countries'));
         } else {
             return redirect()->route('close');
@@ -476,44 +482,64 @@ class UserSiteController extends SiteController
     {
         $users = User::where('id', Auth::user()->id)->first();
         if (!empty($users->birthdate)) {
-            return redirect('registration_three');
+            return redirect('registration-three');
         }
-        return view('usersite::Auth.registration_two');
+        return view('usersite::Auth.registration-two');
     }
 
     public function step_three()
     {
         $users = User::where('id', Auth::user()->id)->first();
         if (!empty($users->nationality)) {
-            return redirect('suggestion_friends');
+            return redirect('suggestion-friends');
         }
-
+        $cities = World::orderBy('city_ascii')->get();
         $countries = World::distinct()->orderBy('country')->get(['country']);
-        return view('usersite::Auth.registration_three', compact('countries'));
+        return view('usersite::Auth.registration-three', compact('countries', 'cities'));
     }
 
-    public function updateusertwo(request $request)
+    function compress($source, $destination, $quality)
+    {
+
+        $info = getimagesize($source);
+        $image = '';
+
+        if ($info['mime'] == 'image/jpeg')
+            $image = imagecreatefromjpeg($source);
+
+        elseif ($info['mime'] == 'image/gif')
+            $image = imagecreatefromgif($source);
+
+        elseif ($info['mime'] == 'image/png')
+            $image = imagecreatefrompng($source);
+
+        imagejpeg($image, $destination, $quality);
+
+        return $destination;
+    }
+
+    public function updateUserImage(request $request)
+    {
+        File::move(storage_path('app/public/temp/' . $request->get('name')), storage_path('app/public/images/users/' . $request->get('name')));
+        Auth::user()->image = $request->get('name');
+        Auth::user()->save();
+        $this->compress(storage_path('app/public/images/users/' . $request->get('name')), public_path('storage/images/users/' . $request->get('name')), 75);
+        return ['msg' => 'Profile Image update Successfully', 'image' => asset('storage/images/users/' . $request->get('name'))];
+    }
+
+    public function updateUserTwo(request $request)
     {
         $validation = Validator::make($request->all(), [
             'profileimage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'nickname' => 'required|min:2|max:100',
+            'nickname' => 'required|min:4|max:100',
         ]);
         if ($validation->passes()) {
-            if ($request->file('profileimage')) {
-                $image = $request->file('profileimage');
-                $new_name = rand() . '_' . Auth::user()->id . '_.' . $image->getClientOriginalExtension();
-                $imagename = $new_name;
-                $image->move(public_path('storage/images/users'), $new_name);
-            } else {
-                $imagename = "default.png";
-            }
-
             $date1 = strtr($request->datetimepicker, '/', '-');
 
             $birthdate = date("Y-m-d", strtotime($date1));
             $nickname = $request->nickname;
-            User::where('id', Auth::user()->id)
-                ->update(['image' => $imagename, 'birthdate' => $birthdate, 'gender' => $request->gendar, 'display_name' => $nickname]);
+            Auth::user()
+                ->update(['birthdate' => $birthdate, 'gender' => $request->gendar, 'display_name' => $nickname]);
             return redirect('posts');
 
         } else {
@@ -522,7 +548,7 @@ class UserSiteController extends SiteController
     }
 
 
-    public function updateuserthree(request $request)
+    public function updateUserThree(request $request)
     {
         $validation = Validator::make($request->all(), [
             'relationship' => 'required',
@@ -530,18 +556,33 @@ class UserSiteController extends SiteController
             'livingcity' => 'required',
         ]);
         if ($validation->passes()) {
-            User::where('id', Auth::user()->id)
+            Auth::user()
                 ->update(['social_status' => $request->relationship, 'nationality' => $request->nationality, 'country' => $request->livingcity]);
-            return redirect('suggestion_friends');
+            return redirect('suggestion-friends');
 
         } else {
             return Redirect::back()->withErrors([$validation->errors()->all()]);
         }
     }
 
-    public function suggestionfriends()
+    public function suggestionFriends()
     {
-        return view('usersite::Auth.suggestion');
+        $users = User::all()->except(Auth::id());
+        return view('usersite::Auth.suggestion', compact('users'));
+    }
+
+    public function saveSuggestionFriends(Request $request)
+    {
+        if ($request->has('friends')) {
+
+            $ids = $request->get('friends');
+            foreach ($ids as $id => $item) {
+                Auth::user()->addFriend($id);
+                $user = User::find($id);
+                $user->notify(new NewFriendNotification(Auth::user()));
+            }
+        }
+        return redirect('/posts');
     }
 
     public function getcities()
@@ -554,4 +595,44 @@ class UserSiteController extends SiteController
 
     }
 
+    /**
+     * @param $action
+     * @param $id
+     * @return array|int
+     * @throws \Exception
+     */
+    public function friendAction($action, $id)
+    {
+        switch ($action) {
+            case 'follow':
+                Auth::user()->follow($id);
+                return ['msg' => '', 'text' => 'Un Follow', 'class' => 'btn btn-danger add-friend', 'url' => route('profile.friend-action', ['unfollow', $id])];
+
+            case 'un-follow':
+                Auth::user()->follow($id);
+                return ['msg' => '', 'text' => 'Follow', 'class' => 'btn btn-success add-friend', 'url' => route('profile.friend-action', ['follow', $id])];
+            case 'accept':
+                Auth::user()->acceptFriend($id);
+                $user = User::find($id);
+                $user->notify(new AcceptFriendNotification(Auth::user()));
+                return ['msg' => '', 'text' => 'Delete FriendShip', 'class' => 'btn btn-danger add-friend', 'url' => route('profile.friend-action', ['delete', $id])];
+            case 'add':
+                Auth::user()->addFriend($id);
+                event(new FriendShipEvent($id));
+                return ['msg' => '', 'text' => 'Delete Friend Request', 'class' => 'btn btn-danger add-friend', 'url' => route('profile.friend-action', ['delete', $id])];
+            case 'delete':
+                Auth::user()->deleteFriendship($id);
+                return ['msg' => '', 'text' => 'Add Friend', 'class' => 'btn btn-blue add-friend', 'url' => route('profile.friend-action', ['add', $id])];
+        }
+    }
+
+    public function readNotification($id = null)
+    {
+        if ($id == null) {
+            Auth::user()->unreadNotifications()->update(['read_at' => now()]);
+        } else {
+            Auth::user()->unreadNotifications()->where('id', $id)->update(['read_at' => now()]);
+        }
+        return ['success'];
+    }
 }

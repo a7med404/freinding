@@ -36,8 +36,8 @@
                                                       id="user_error_namess"></span>
                                                 @if ($errors->has('name'))
                                                     <span class="help-block">
-        <strong>{{ $errors->first('name') }}</strong>
-    </span>
+                                                        <strong>{{ $errors->first('name') }}</strong>
+                                                    </span>
                                                 @endif
                                             </div>
                                             <div class="form-group label-floating is-empty {{ $errors->has('email') ? ' has-error' : '' }}">
@@ -49,8 +49,8 @@
                                                       id="user_error_emailss"></span>
                                                 @if ($errors->has('email'))
                                                     <span class="help-block">
-        <strong>{{ $errors->first('email') }}</strong>
-    </span>
+                                                        <strong>{{ $errors->first('email') }}</strong>
+                                                    </span>
                                                 @endif
                                             </div>
                                             <div class="form-group label-floating is-empty {{ $errors->has('password') ? ' has-error' : '' }}">
@@ -61,8 +61,8 @@
                                                       id="user_error_pass"></span>
                                                 @if ($errors->has('password'))
                                                     <span class="help-block">
-        <strong>{{ $errors->first('password') }}</strong>
-    </span>
+                                                        <strong>{{ $errors->first('password') }}</strong>
+                                                    </span>
                                                 @endif
                                             </div>
                                             <div class="form-group label-floating is-empty">
@@ -79,9 +79,11 @@
                                                                id="user_terms_condition" type="checkbox">
                                                         I accept the <a href="#">Terms and Conditions</a> of the website
                                                     </label>
-<br>
-                                                       <em class="err" style="display: none">Required!,  please accept our terms and
-                                                           conditions.  </em>
+
+                                                    <br>
+                                                    <em class="err" style="display: none">Required!, please accept our
+                                                        terms and
+                                                        conditions. </em>
 
                                                 </div>
                                                 <span class="hide form-control  error-span user_error_terms"
@@ -108,7 +110,7 @@
 @section('after_foot')
     <script>
 
-$(document).on('submit','#register',function(){
+        $(document).on('submit', '#register', function () {
             if (!$('input[name="optionsCheckboxes"]').is(':checked')) {
                 $('.err').show();
                 return false;
@@ -122,7 +124,6 @@ $(document).on('submit','#register',function(){
         $("#register").validate({
             errorElement: "em",
             rules: {
-
                 name: {
                     required: true,
                     minlength: 5
@@ -144,8 +145,8 @@ $(document).on('submit','#register',function(){
                     required: "#newsletter:checked",
                     minlength: 2
                 },
-                      optionsCheckboxes: {
-         required : true
+                optionsCheckboxes: {
+                    required: true
                 }
             },
             messages: {
@@ -153,15 +154,15 @@ $(document).on('submit','#register',function(){
                 lastname: "Please enter your lastname",
                 username: {
                     required: "Please enter a username",
-                    minlength: "Your username must consist of at least 2 characters"
+                    minlength: "Your username must consist of at least 4 characters"
                 },
                 password: {
                     required: "Please provide a password",
-                    minlength: "Your password must be at least 5 characters long"
+                    minlength: "Your password must be at least 8 characters long"
                 },
                 confirm_password: {
                     required: "Please provide a password",
-                    minlength: "Your password must be at least 5 characters long",
+                    minlength: "Your password must be at least 8 characters long",
                     equalTo: "Please enter the same password as above"
                 },
                 optionsCheckboxes: "Required!,  please accept our terms and conditions.",
@@ -171,14 +172,11 @@ $(document).on('submit','#register',function(){
         });
 
 
-
-
-
     </script>
 
     <style>
-        em{
-            color:red;
+        em {
+            color: red;
         }
     </style>
 @endsection

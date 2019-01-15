@@ -85,7 +85,7 @@
                         </div>
                     </div>
                     <div class="top-header-author">
-                        <a href="{{ route('profile.index') }}" class="author-thumb">
+                        <a href="#" data-toggle="modal" data-target="#update-header-photo" class="author-thumb">
                             @if(!empty($user->image))
                                 <img class="profileimg" alt="author" src="{{ $user->image }}">
                             @else

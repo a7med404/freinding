@@ -26,6 +26,7 @@
     width: 110px;
     height: 110px;
     margin-top: 5px;
+    border-radius: 100% !important;
 }
 p.cangecover {
     position: absolute;
@@ -40,4 +41,24 @@ p.cangecover {
 	display:none;
 	right: 0px;
     top: 0px;
+}
+@media (max-width: 425px) {
+    .upload-btn-wrapper{
+        position: relative;
+        overflow: unset;
+    }
+    .open-responsive-menu {
+        position: absolute;
+        right: 20px;
+        top: 33%;
+    }
+    div#header--standard{
+        padding: 0 !important;
+    }
+    .header--standard .logo{
+        margin: 10px 0;
+    }
+    .logo-container{
+        display: flex;
+    }
 }

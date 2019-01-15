@@ -85,27 +85,44 @@
                         </div>
                     </div>
                     <div class="top-header-author">
-                        <a href="{{ route('profile.index') }}" class="author-thumb">
-                            @if(!empty($user->image))
-                                <img class="profileimg" alt="author" src="{{ $user->image }}">
+                        <a href="{{ route('profile.index',[$profile_user->slug]) }}" class="author-thumb">
+                            @if(!empty($profile_user->image))
+                                <img class="profileimg" alt="author" src="{{ $profile_user->image }}">
                             @else
                                 <img alt="author" src="{{ asset('olympus/img/author-page.jpg') }}">
                             @endif
                         </a>
                         <div class="author-content">
 
-                        @if(empty($verstatus) || $verstatus->status=="unverified" || $verstatus->status=="underprocess")
-                                <a href="{{ route('profile.index') }}"
-                                   class="h4 author-name">{{$user->display_name}}</a>
+                            @if(empty($verified_status) || $verified_status->status=="unverified" || $verified_status->status=="underprocess")
+                                <a href="{{ route('profile.index',[$profile_user->slug]) }}"
+                                   class="h4 author-name">{{$profile_user->display_name}}</a>
                             @else
-                                <a href="{{ route('profile.index') }}" class="h4 author-name">{{$user->display_name}} <i
+                                <a href="{{ route('profile.index',[$profile_user->slug]) }}" class="h4 author-name">{{$profile_user->display_name}} <i
                                             style="color:green; font-size:17px;" class="fas fa-check-circle"></i></a>
                             @endif
-                            <div class="country">{!!countryData($user->country)!!}</div>
+                            <div class="country">{!!countryData($profile_user->country)!!}</div>
 
                         </div>
                     </div>
                 </div>
+                @if($profile_user->id != Auth::id())
+                    @php
+                        $status=Auth::user()->check($profile_user->id)
+                    @endphp
+                    <div class="text-center">
+                        <button data-url="{{$status['url']}}" data-toggle="tooltip" title="{{$status['status']}}"
+                                class="{{$status['class']}}">
+                            <img src="{{asset('olympus/img/add-user.png')}}" alt="">
+                            <span>{{$status['text']}}</span>
+                        </button>
+                        <button data-url="{{route('profile.friend-action',['follow',$profile_user->id])}}"
+                                class="btn btn-success add-friend">
+                            <img src="{{asset('olympus/img/rss.png')}}" alt="">
+                            <span>Just Follow</span>
+                        </button>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

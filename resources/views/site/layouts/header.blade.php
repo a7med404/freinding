@@ -2,7 +2,7 @@
     @include('site.layouts.headerlogout')
 @else
     @if(isset($prof)&&$prof==1)
-        @include('usersite::profilelist')
+        @include('usersite::profile-list')
     @endif
     @include('site.home.sideleft')
     @include('site.home.sideright')

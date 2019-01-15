@@ -102,7 +102,7 @@
             <div class="col col-xl-3 order-xl-1 col-lg-3 order-lg-1 col-md-12 order-md-2 col-sm-12  responsive-display-none">
                 <div class="ui-block">
                     <!-- Your Profile  -->
-                @include('usersite::listmenu')
+                @include('usersite::list-menu')
                 <!-- ... end Your Profile  -->
                 </div>
             </div>

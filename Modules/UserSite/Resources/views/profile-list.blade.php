@@ -5,7 +5,7 @@
     </a>
     <div class="mCustomScrollbar" data-mcs-theme="dark">
         <div class="ui-block">
-            @include('usersite::listmenu')
+            @include('usersite::list-menu')
         </div>
     </div>
 </div>

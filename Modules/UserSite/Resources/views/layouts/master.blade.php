@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Module UserSite</title>
+<html>
+<head>
+    @include('site.layouts.head')
+    @yield('after_head')
+    {!! $facebook_pixel !!}
+</head>
+<body site-Homeurl="{{ route('home') }}" data-user="{{ $user_key }}" @if(empty($user_key)) class="landing-page" @endif>
+{!! $google_analytic !!}
+@include('site.layouts.header')
+@yield('content')
 
-       {{-- Laravel Mix - CSS File --}}
-       {{-- <link rel="stylesheet" href="{{ mix('css/usersite.css') }}"> --}}
+@include('site.layouts.footer')
 
-    </head>
-    <body>
-        @yield('content')
+@include('site.layouts.foot')
 
-        {{-- Laravel Mix - JS File --}}
-        {{-- <script src="{{ mix('js/usersite.js') }}"></script> --}}
-    </body>
+@yield('after_foot')
+</body>
 </html>

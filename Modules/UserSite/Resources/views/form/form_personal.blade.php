@@ -60,13 +60,11 @@
             <div class="form-group label-floating is-select">
                 <label class="control-label">Your Nationality</label>
                 <select name="nationality" id="nationality" data-live-search="true" class="selectpicker form-control">
-                    @foreach($countries as $country)
-                        <option value="{{strtolower($country->nationality_en)}}"
-                                @if (strtolower($user->nationality )== strtolower($country->nationality_en))
-                                selected="selected"
-                                @endif
-                        >{{$country->nationality_en}}</option>
-                    @endforeach
+                        @foreach($countries as $country)
+                            <option    @if (strtolower($user->nationality )== strtolower($country->country))
+                                       selected="selected"
+                                       @endif value="{{$country->country}}">{{$country->country}}</option>
+                        @endforeach
                 </select>
             </div>
 
@@ -76,14 +74,14 @@
             {{--alt="Loading....">--}}
             {{--</div>--}}
             <div class="form-group label-floating is-select">
-                <label class="control-label">Your City</label>
-                <select name="country" class="selectpicker form-control" data-live-search="true" id="select2 ">
+                <label class="control-label" style="z-index: 11;">Your City</label>
+                <select name="country" class="autocomplete form-control" data-placeholder="Your City"  id="select2 ">
+                    <option value=""></option>
                     @foreach($cities as $city)
-                        <option value="{{strtolower($city->name_en)}}"
-                                @if (strtolower($user->country )== strtolower($city->name_en))
+                        <option value="{{$city->city_ascii}}"
+                                @if ($user->country == $city->city_ascii)
                                 selected="selected"
-                                @endif
-                        >{{$city->name_en}}</option>
+                                @endif>{{$city->city_ascii}}</option>
                     @endforeach
                 </select>
             </div>

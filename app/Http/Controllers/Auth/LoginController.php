@@ -88,9 +88,9 @@ class LoginController extends SiteController
     {
         $users = User::where('id', Auth::user()->id)->first();
         if ($users->birthdate == Null) {
-            return redirect('registration_two');
+            return redirect('registration-two');
         } else if ($users->nationality == Null) {
-            return redirect('registration_three');
+            return redirect('registration-three');
         }
         $UserSiteController = new UserSiteController;
         action('UserSiteController@save_activity');

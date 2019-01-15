@@ -21,7 +21,7 @@ class CreateUserMetaTable extends Migration
             $table->string('meta_value')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
         });
-        
+
         Schema::table('users', function (Blueprint $table) {
             $table->string('display_name')->after('name');
             $table->string('phone',50)->nullable()->after('email'); //unique
@@ -39,8 +39,9 @@ class CreateUserMetaTable extends Migration
             $table->string('fcm_token')->nullable()->after('password');
             $table->tinyInteger('state_fcm_token')->default(1)->after('password');
             $table->tinyInteger('is_active')->default(0);
+            $table->string('slug',200)->nullable();
         });
-        
+
     }
 
     /**

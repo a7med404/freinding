@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\Friendable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
@@ -12,8 +13,7 @@ use Carbon\Carbon;
 
 class User extends Authenticatable {
 
-    use Notifiable;
-    use EntrustUserTrait;
+    use Notifiable,Friendable,EntrustUserTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +23,8 @@ class User extends Authenticatable {
     protected $fillable = [
         'name', 'email', 'password', 'display_name', 'image', 'address', 'phone',
         'is_active', 'site_register', 'country', 'gender', 'social_status', 'address_jop',
-        'nationality', 'birthdate', 'occupation', 'about_me'
+        'nationality', 'birthdate', 'occupation', 'about_me',
+        'slug'
     ];
 
     const USERS_IMAGE_PATH = "/storage/images/users/";

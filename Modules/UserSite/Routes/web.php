@@ -11,12 +11,14 @@
 |
 */
 
+use App\Notifications\NewFriendNotification;
+use App\User;
+
 Route::group([
     'prefix' => 'profile',
     'as' => 'profile.',
     'middleware' => ['auth']
 ], function () {
-    Route::get('', ['as' => 'index', 'uses' => 'UserSiteController@index']);
     Route::get('setting', ['as' => 'setting', 'uses' => 'UserSiteController@profileSetting']);
     Route::get('changepassword', ['as' => 'changepassword', 'uses' => 'UserSiteController@changepasswordSetting']);
     Route::post('setting', ['as' => 'setting.store', 'uses' => 'UserSiteController@storeSetting']);
@@ -28,6 +30,8 @@ Route::group([
     Route::get('verification', ['as' => 'verification', 'uses' => 'UserSiteController@getverify']);
 
     Route::get('stage', ['as' => 'stage', 'uses' => 'UserSiteController@getstage']);
+    Route::get('/@{username?}', ['as' => 'index', 'uses' => 'UserSiteController@index']);
+    Route::post('/{action}/{id}', 'UserSiteController@friendAction')->name('friend-action');
 
 
 });
@@ -39,22 +43,35 @@ Route::POST('postverify', ['as' => 'postverify', 'uses' => 'UserSiteController@p
 Route::POST('poststage', ['as' => 'poststage', 'uses' => 'UserSiteController@poststage']);
 
 
-Route::get('registration_two', ['as' => 'registration_two', 'uses' => 'UserSiteController@step_two']);
+Route::get('registration-two', ['as' => 'registration-two', 'uses' => 'UserSiteController@step_two']);
 
-Route::get('registration_three', ['as' => 'registration_three', 'uses' => 'UserSiteController@step_three']);
+Route::get('registration-three', ['as' => 'registration-three', 'uses' => 'UserSiteController@step_three']);
 
-Route::get('suggestion_friends', ['as' => 'suggestion_friends', 'uses' => 'UserSiteController@suggestionfriends']);
+Route::get('suggestion-friends', ['as' => 'suggestion-friends', 'uses' => 'UserSiteController@suggestionFriends']);
+Route::post('suggestion-friends', ['as' => 'suggestion-friends', 'uses' => 'UserSiteController@saveSuggestionFriends']);
 
 Route::get('getcities', ['as' => 'getcities', 'uses' => 'UserSiteController@getcities']);
 
 
-Route::POST('updateusertwo', ['as' => 'updatetwo', 'uses' => 'UserSiteController@updateusertwo']);
+Route::POST('update-user-image', ['as' => 'update-user-image', 'uses' => 'UserSiteController@updateUserImage']);
 
-Route::POST('updateuserthree', ['as' => 'updatethree', 'uses' => 'UserSiteController@updateuserthree']);
+Route::POST('update-user-two', ['as' => 'update-user-two', 'uses' => 'UserSiteController@updateUserTwo']);
 
+Route::POST('update-user-three', ['as' => 'update-user-three', 'uses' => 'UserSiteController@updateUserThree']);
+
+
+Route::get('read-notifications/{id?}','UserSiteController@readNotification')->name('read-notifications');
 //Route::prefix('profile')->group(function() {
 //    Route::get('/', 'UserSiteController@index');
 ////    Route::get('', ['as' => 'index', 'uses' => 'UserSiteController@index']);
 //
 //});
 //
+Route::get('/pusher', function() {
+//    $id=3;
+//    $resp=\Auth::user()->addFriend($id);
+//    User::find($id)->notify(new NewFriendNotification(\Auth::user()));
+//    return $resp;
+    event(new App\Events\FriendShipEvent(1004));
+    return "Event has been sent!";
+});

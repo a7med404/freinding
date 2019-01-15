@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -23,8 +24,12 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
+        Route::bind('username', function ($user) {
+            return User::where('name',$user)->orWhere('display_name',$user)->orWhere('slug',$user)->orWhere(function ($query) use ($user){
+                if (is_numeric($user))
+                    $query->where('id',$user);
+            })->first();
+        });
         parent::boot();
     }
 

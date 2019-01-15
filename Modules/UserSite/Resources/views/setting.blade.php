@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 @section('content')
-@include('usersite::settingheader')
+@include('usersite::setting_header')
 <!-- Your Account Personal Information -->
 <div class="container">
     <div class="row">
@@ -10,9 +10,9 @@
                     @if($form_type=='personal')
                     @include('usersite::form.form_personal')
                     @elseif($form_type=='changepassword')
-                    @include('usersite::form.form_changepassword')
+                    @include('usersite::form.form_change_password')
                     @elseif($form_type=='countsetting')
-                    @include('usersite::form.form_countsetting')
+                    @include('usersite::form.form_account_setting')
                     @endif
                     <!-- ... end Personal Information Form  -->
             </div>
@@ -20,7 +20,7 @@
         <div class="col col-xl-3 order-xl-1 col-lg-3 order-lg-1 col-md-12 order-md-2 col-sm-12  responsive-display-none">
             <div class="ui-block">
                 <!-- Your Profile  -->
-                @include('usersite::listmenu')
+                @include('usersite::list-menu')
                 <!-- ... end Your Profile  -->
             </div>
         </div>

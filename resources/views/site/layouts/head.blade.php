@@ -18,7 +18,7 @@
 <meta name="medium" content="image" />
 <meta property="og:type" content="instapp:photo" />
 
-<!-- for Facebook, Pinterest, LinkedIn, Google+ --> 
+<!-- for Facebook, Pinterest, LinkedIn, Google+ -->
 <meta property="og:image" content="{{ $share_image  }}">
 <meta property="og:url" content="{{ Request::url() }}">
 <meta property="og:title" content="{{ $title  }}">
@@ -32,7 +32,7 @@
 <meta name="twitter:site" content="{{ config('app.name', 'Friending') }}">
 <meta name="twitter:title" content="{{ $title  }}">
 <meta name="twitter:description" content="{{ $description }}">
-<meta name="twitter:image" content="{{ $share_image }}">  
+<meta name="twitter:image" content="{{ $share_image }}">
 
 <!-- CSRF Token -->
 <meta name="_token" content="{{ csrf_token() }}"/>
@@ -65,6 +65,10 @@
 
 <!--notifications-->
 <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
+
+<!--select2-->
+<link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/select2.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/select2-bootstrap.min.css') }}">
 
 
 

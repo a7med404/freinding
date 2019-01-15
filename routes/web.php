@@ -40,7 +40,7 @@ if (Request::ajax()){
     require __DIR__ . '/ajax_site.php';
 }
 // Auth
-Auth::routes();  
+Auth::routes();
 
 // Auth Admin
 Route::get($admin_panel . '/login', ['as' => 'admin.login', 'uses' => 'Auth\LoginAdminController@showLoginForm']);
@@ -63,7 +63,7 @@ Route::group([
     Route::get('statisticslifetime', ['as' => 'statisticslifetime', 'uses' => 'StatisticsReportController@statisticslifetime']);
     Route::get('statisticsagegender', ['as' => 'statisticsagegender', 'uses' => 'StatisticsReportController@statistics_ageGender']);
     Route::get('statisticspublic', ['as' => 'statisticspublic', 'uses' => 'StatisticsReportController@statisticsPublic']);
-   
+
     Route::get('test', ['as' => 'test', 'uses' => 'StatisticsReportController@test']);
 
     //User
