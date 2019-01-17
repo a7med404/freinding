@@ -8,7 +8,6 @@ use App\Http\Controllers\Site\SiteController;
 use App\User;
 use Illuminate\Routing\Controller;
 use Auth;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
