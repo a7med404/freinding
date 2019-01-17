@@ -1,4 +1,4 @@
-let disableShare =()=> {
+let disableShare = () => {
     if ($numOfPendingPhotos == 0) {
         $('#newShare').attr('disabled', false);
     } else {
@@ -46,7 +46,6 @@ window.addEventListener('DOMContentLoaded',()=> {
             aspectRatio: image.dataset.width / image.dataset.height,
             viewMode: 3,
         });
-        console.log(image.dataset)
         initCroppper(image.dataset.callback);
     }).on('hidden.bs.modal', () => {
         cropper.destroy();
@@ -54,20 +53,35 @@ window.addEventListener('DOMContentLoaded',()=> {
     });
 
     initCroppper = (callback) => {
-        document.getElementById('crop').addEventListener('click', (e) => {
+       $('#crop').off('click').on('click', (e) => {
             const clickedItem = $(e.currentTarget);
             const $url = clickedItem.data('url');
             const $delete_url = clickedItem.data('delete-url');
             $numOfPendingPhotos = $numOfPendingPhotos + 1;
+            let crop = image.dataset.crop;
+            let canvasF, src, roundedCanvas;
             disableShare();
-            let canvas;
+            let canvas, $ext;
             $modal.modal('hide');
             if (cropper) {
                 canvas = cropper.getCroppedCanvas({
-                    width: 540,
-                    height: 540,
+                    width: image.dataset.width,
+                    height: image.dataset.height,
                 });
-                let src = canvas.toDataURL();
+                if (crop === 'circle') {
+                    let croppedCanvas = cropper.getCroppedCanvas();
+                    // Round
+                    roundedCanvas = getRoundedCanvas(croppedCanvas);
+                    $ext = roundedCanvas.toDataURL().includes('data:image/png') ? 'image/png' : 'image/jpeg';
+                    src = roundedCanvas.toDataURL();
+                    canvasF = roundedCanvas;
+                    $('.avatar,.profileimg').attr('src', roundedCanvas.toDataURL());
+                } else {
+                    src = canvas.toDataURL();
+                    canvasF = canvas;
+                    $ext = canvas.toDataURL().includes('data:image/png') ? 'image/png' : 'image/jpeg';
+                }
+
                 nameOfphoto = guid() + '.jpg';
                 $('#choosephoto').append(
                     '<li style="width: 100px;height: 100px;display: inline-flex;margin: 5px;">' +
@@ -90,63 +104,78 @@ window.addEventListener('DOMContentLoaded',()=> {
                 let $progress = $('.myProgress' + $numOfPendingPhotos);
                 let $progressBar = $('.myProgressBar' + $numOfPendingPhotos);
                 $progress.show();
-                canvas.toBlob((blob) => {
-                    let _token = $("input[name='_token']").val();
-                    let formData = new FormData();
-                    formData.append('avatar', blob, 'avatar.jpg');
-                    formData.append('_token', _token);
-                    formData.append('name', nameOfphoto);
-                    $progressBar.addClass('active');
-                    $.ajax({
-                        method: 'POST',
-                        url: $url,
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        beforeSubmit: function () {
-                            $("#progressDivId").css("display", "block");
-                            var percentValue = '0%';
-
-                            $('#progressBar').width(percentValue);
-                            $('#percent').html(percentValue);
-                        },
-                        uploadProgress: function (event, position, total, percentComplete) {
-
-                            console.log(total,percentComplete)
-                            var percentValue = percentComplete + '%';
-                            $("#progressBar").animate({
-                                width: '' + percentValue + ''
-                            }, {
-                                duration: 5000,
-                                easing: "linear",
-                                step: function (x) {
-                                    percentText = Math.round(x * 100 / percentComplete);
-                                    $("#percent").text(percentText + "%");
-                                    if(percentText == "100") {
-                                        $("#outputImage").show();
-                                    }
+                canvasF.toBlob((blob) => {
+                        let _token = $("input[name='_token']").val();
+                        let formData = new FormData();
+                        formData.append('avatar', blob, 'avatar.png');
+                        formData.append('_token', _token);
+                        formData.append('name', nameOfphoto);
+                        if (crop === 'circle'){
+                            formData.append('image', roundedCanvas.toDataURL());
+                            formData.append('table', image.dataset.table);
+                        }
+                        $progressBar.addClass('active');
+                        $.ajax({
+                            method: 'POST',
+                            url: $url,
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            xhr: function () {
+                                let appXhr = $.ajaxSettings.xhr();
+                                if (appXhr.upload) {
+                                    appXhr.upload.addEventListener('progress', (e) => {
+                                        updateProgress(e, $progressBar);
+                                    }, false);
                                 }
-                            });
-                        },
-                        success: function () {
-                            console.log('success');
-                            $numberOfPhotos = $numberOfPhotos + 1;
-                            EnaDisShareBtn();
-                            window [callback](formData)
+                                return appXhr;
+                            },
+                            beforeSubmit: function () {
+                                $("#progressDivId").css("display", "block");
+                                var percentValue = '0%';
 
-                        },
-                        error: function () {
-                            console.log('error');
-                        },
-                        complete: function () {
-                            console.log('complete');
-                            $progress.hide();
-                            $numOfPendingPhotos = $numOfPendingPhotos - 1;
-                            disableShare();
-                        },
-                    });
+                                $('#progressBar').width(percentValue);
+                                $('#percent').html(percentValue);
+                            },
+                            uploadProgress: function (event, position, total, percentComplete) {
 
-                }, 'image/jpeg', 2);
+                                console.log(total, percentComplete)
+                                var percentValue = percentComplete + '%';
+                                $("#progressBar").animate({
+                                    width: '' + percentValue + ''
+                                }, {
+                                    duration: 5000,
+                                    easing: "linear",
+                                    step: function (x) {
+                                        percentText = Math.round(x * 100 / percentComplete);
+                                        $("#percent").text(percentText + "%");
+                                        if (percentText == "100") {
+                                            $("#outputImage").show();
+                                        }
+                                    }
+                                });
+                            },
+                            success: function (data) {
+                                console.log('success');
+                                $numberOfPhotos = $numberOfPhotos + 1;
+                                EnaDisShareBtn();
+                                $('.avatar,.profileimg').attr('src', data);
+                                window [callback](data)
+
+                            },
+                            error: function () {
+                                console.log('error');
+                            },
+                            complete: function () {
+                                console.log('complete');
+                                $progress.hide();
+                                $numOfPendingPhotos = $numOfPendingPhotos - 1;
+                                disableShare();
+                            },
+                        });
+
+                    },
+                    $ext, 2);
             }
         });
     }
@@ -161,28 +190,41 @@ window.addEventListener('DOMContentLoaded',()=> {
         }
     }
 });
+getRoundedCanvas = (sourceCanvas) => {
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    var width = sourceCanvas.width;
+    var height = sourceCanvas.height;
+    canvas.width = width;
+    canvas.height = height;
+    context.imageSmoothingEnabled = true;
+    context.drawImage(sourceCanvas, 0, 0, width, height);
+    context.globalCompositeOperation = 'destination-in';
+    context.beginPath();
+    context.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, 2 * Math.PI, true);
+    context.fill();
+    return canvas;
+};
+
 
 ajaxCall = (formData) => {
+    let image=formData.split('temp/')[1];
     $.ajax({
         method: 'POST',
         url: '/update-user-image',
-        data: formData,
-        contentType: false,
-        processData: false,
+        data: 'name='+ image+'&_token='+ $('meta[name=_token]').attr('content'),
         success: function (data) {
-            $('.avatar,.profileimg').attr('src', data.image)
+            $('.avatar,.profileimg').attr('src', data.image);
             $('#update-header-photo').modal('hide');
         },
         error: function () {
             console.log('error');
         }
     });
-}
-
-
-$(document).ready(()=>{
+};
+$(document).ready(() => {
     //delete photo from temp
-    $('body').on('click', '.delete-photo',  (e)=> {
+    $('body').on('click', '.delete-photo', (e) => {
         const clickedItem = $(e.currentTarget);
         const $url = clickedItem.data('url');
         let name = clickedItem.data('name');

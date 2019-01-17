@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 @section('content')
-@include('usersite::setting_header')
+@include('usersite::profile_header')
 <!-- Your Account Personal Information -->
 <div class="container">
     <div class="row">
@@ -28,5 +28,8 @@
 </div>
 <!-- ... end Your Account Personal Information -->
 @include('site.home.popup')
+@endsection
+@section('scripts')
+    @include('site.partials.crop-image',['width'=>110,'height'=>110,'callback'=>'ajaxCall','crop'=>'circle','table'=>'users'])
 @endsection
 

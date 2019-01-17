@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\Followable;
 use App\Traits\Friendable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,7 +14,7 @@ use Carbon\Carbon;
 
 class User extends Authenticatable {
 
-    use Notifiable,Friendable,EntrustUserTrait;
+    use Notifiable,Friendable,EntrustUserTrait,Followable;
 
     /**
      * The attributes that are mass assignable.

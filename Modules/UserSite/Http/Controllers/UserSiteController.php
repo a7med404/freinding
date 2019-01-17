@@ -20,8 +20,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
-use Modules\UserSite\Entities\City;
-use Modules\UserSite\Entities\Country;
 use Redirect;
 use Session;
 
@@ -35,7 +33,7 @@ class UserSiteController extends SiteController
      * Display a listing of the resource.
      * @return Response
      */
-    public function index($username =null)
+    public function index($username = null)
     {
         if ($this->site_open == 1 || $this->site_open == "1") {
             $lang = 'en';
@@ -67,6 +65,7 @@ class UserSiteController extends SiteController
             $prof = 1;
             $user = Auth::user();
             $user_key = $user->name;
+            $profile_user = $user;
             $admin_panel = 0;
             if ($user->can(['access-all', 'post-type-all', 'post-all'])) {
                 $admin_panel = 1;
@@ -82,7 +81,7 @@ class UserSiteController extends SiteController
 
             $cities = World::orderBy('city_ascii')->get(['city_ascii']);
             $countries = World::distinct()->orderBy('country')->get(['country']);
-            return view('usersite::setting', compact('prof', 'form_type', 'user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form', 'verstatus', 'cities', 'countries'));
+            return view('usersite::setting', compact('prof', 'form_type', 'user', 'profile_user', 'admin_panel', 'user_key', 'correct_form', 'wrong_form', 'verstatus', 'cities', 'countries'));
         } else {
             return redirect()->route('close');
         }
@@ -504,26 +503,28 @@ class UserSiteController extends SiteController
         $info = getimagesize($source);
         $image = '';
 
-        if ($info['mime'] == 'image/jpeg')
+        if ($info['mime'] == 'image/jpeg') {
             $image = imagecreatefromjpeg($source);
+            imagejpeg($image, $destination, $quality);
 
-        elseif ($info['mime'] == 'image/gif')
+        } elseif ($info['mime'] == 'image/gif') {
             $image = imagecreatefromgif($source);
-
-        elseif ($info['mime'] == 'image/png')
+        } elseif ($info['mime'] == 'image/png') {
             $image = imagecreatefrompng($source);
+            imagepng($image, $destination, 7);
+        }
 
-        imagejpeg($image, $destination, $quality);
 
         return $destination;
     }
 
-    public function updateUserImage(request $request)
+    public function updateUserImage(Request $request)
     {
+//        dd($request->all());
         File::move(storage_path('app/public/temp/' . $request->get('name')), storage_path('app/public/images/users/' . $request->get('name')));
         Auth::user()->image = $request->get('name');
         Auth::user()->save();
-        $this->compress(storage_path('app/public/images/users/' . $request->get('name')), public_path('storage/images/users/' . $request->get('name')), 75);
+//        $this->compress(storage_path('app/public/images/users/' . $request->get('name')), public_path('storage/images/users/' . $request->get('name')), 75);
         return ['msg' => 'Profile Image update Successfully', 'image' => asset('storage/images/users/' . $request->get('name'))];
     }
 
@@ -567,7 +568,7 @@ class UserSiteController extends SiteController
 
     public function suggestionFriends()
     {
-        $users = User::all()->except(Auth::id());
+        $users = User::where('id', '<>', Auth::id())->limit(12)->get();
         return view('usersite::Auth.suggestion', compact('users'));
     }
 
@@ -585,15 +586,17 @@ class UserSiteController extends SiteController
         return redirect('/posts');
     }
 
-    public function getcities()
+    public function citiesAutocomplete(Request $request)
     {
-        $country = $_GET['country'];
-        $cities = World::where('country', $country)->orderBy('city_ascii')->get();
-        $result = $cities->toArray();
-
-        return $result;
-
+        $q = str_replace(' ', '%', $request->get('q', ''));
+        $cities = World::whereRaw('upper(city_ascii) like upper(\'%' . $q . '%\')')
+            ->get(['city_ascii']);
+        $data = [];
+        foreach ($cities as $city)
+            $data[] = ['id' => $city->city_ascii, 'name' => $city->city_ascii];
+        return ['items' => $data];
     }
+
 
     /**
      * @param $action
@@ -606,23 +609,27 @@ class UserSiteController extends SiteController
         switch ($action) {
             case 'follow':
                 Auth::user()->follow($id);
-                return ['msg' => '', 'text' => 'Un Follow', 'class' => 'btn btn-danger add-friend', 'url' => route('profile.friend-action', ['unfollow', $id])];
+                return ['msg' => '', 'text' => 'Following', 'class' => 'btn btn-following add-friend', 'url' => route('profile.friend-action', ['un-follow', $id]), 'img' => asset('olympus/img/relations/30_antenna.png')];
+
+            case 'follow-back':
+                Auth::user()->reFollow($id);
+                return ['msg' => '', 'text' => 'Following', 'class' => 'btn btn-follow-back add-friend', 'url' => route('profile.friend-action', ['un-follow', $id]), 'img' => asset('olympus/img/relations/30_antenna.png')];
 
             case 'un-follow':
-                Auth::user()->follow($id);
-                return ['msg' => '', 'text' => 'Follow', 'class' => 'btn btn-success add-friend', 'url' => route('profile.friend-action', ['follow', $id])];
+                Auth::user()->unFollow($id);
+                return ['msg' => '', 'text' => 'Just Follow', 'class' => 'btn btn-follow add-friend', 'url' => route('profile.friend-action', ['follow', $id]), 'img' => asset('olympus/img/relations/rss-symbol.png')];
             case 'accept':
                 Auth::user()->acceptFriend($id);
                 $user = User::find($id);
                 $user->notify(new AcceptFriendNotification(Auth::user()));
-                return ['msg' => '', 'text' => 'Delete FriendShip', 'class' => 'btn btn-danger add-friend', 'url' => route('profile.friend-action', ['delete', $id])];
+                return ['msg' => '', 'text' => 'Friends', 'class' => 'btn btn-friends add-friend', 'url' => route('profile.friend-action', ['delete', $id]), 'img' => asset('olympus/img/relations/26_heart.png')];
             case 'add':
                 Auth::user()->addFriend($id);
                 event(new FriendShipEvent($id));
-                return ['msg' => '', 'text' => 'Delete Friend Request', 'class' => 'btn btn-danger add-friend', 'url' => route('profile.friend-action', ['delete', $id])];
+                return ['msg' => '', 'text' => 'Friend Request Sent', 'class' => 'btn btn-friend-request add-friend', 'url' => route('profile.friend-action', ['delete', $id]), 'img' => asset('olympus/img/relations/55_time.png')];
             case 'delete':
                 Auth::user()->deleteFriendship($id);
-                return ['msg' => '', 'text' => 'Add Friend', 'class' => 'btn btn-blue add-friend', 'url' => route('profile.friend-action', ['add', $id])];
+                return ['msg' => '', 'text' => 'Add Friend', 'class' => 'btn btn-add add-friend', 'url' => route('profile.friend-action', ['add', $id]), 'img' => asset('olympus/img/relations/44_plus.png')];
         }
     }
 
@@ -634,5 +641,44 @@ class UserSiteController extends SiteController
             Auth::user()->unreadNotifications()->where('id', $id)->update(['read_at' => now()]);
         }
         return ['success'];
+    }
+
+    /**
+     * @param \App\User $username
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function friends($username)
+    {
+        $friends = $username->friends();
+        $user = $username;
+        $profile_user = $user;
+        $message_friend = ' Not Having Friends Yet.';
+        return view('usersite::friends', compact('user', 'friends', 'profile_user', 'message_friend'));
+    }
+
+    /**
+     * @param \App\User $username
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function followers($username)
+    {
+        $friends = $username->followers();
+        $user = $username;
+        $profile_user = $user;
+        $message_friend = ' Not Followers Friends Yet.';
+        return view('usersite::friends', compact('user', 'friends', 'profile_user', 'message_friend'));
+    }
+
+    /**
+     * @param \App\User $username
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function following($username)
+    {
+        $friends = $username->following();
+        $user = $username;
+        $profile_user = $user;
+        $message_friend = 'Haven\'t Followed Any One Yet.';
+        return view('usersite::friends', compact('user', 'friends', 'profile_user', 'message_friend'));
     }
 }

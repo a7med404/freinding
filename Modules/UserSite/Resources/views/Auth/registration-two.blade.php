@@ -34,10 +34,8 @@
                                                                                        alt="Loading....">
                                         </div>
 
-
-                                        <img src="{{ asset('storage/images/users/default.png') }}"
-                                             class="classimg profileimg" id="idimage"
-                                             style="border-radius: 10% !important;">
+                                           <img src="{{ asset('storage/images/users/default.png') }}"
+                                                class="classimg profileimg" id="idimage">
 
                                         <input type="file" name="profileimage" hidden id="file_field"/>
                                         <div class="upload-btn-wrapper">
@@ -74,21 +72,12 @@
 
                                     <div class="form-group label-floating is-select">
                                         <label class="control-label">Gender</label>
-                                        <select class="selectpicker form-control" name="gendar">
+                                        <select class="autocomplete form-control" data-letter="0" data-placeholder="Gender" name="gendar">
                                             <option value="male">Male</option>
                                             <option value="female">Female</option>
                                         </select>
                                     </div>
 
-
-                                    {{--<div class="form-group date-time-picker label-floating">--}}
-                                    {{--<label class="control-label">Your Birthday</label>--}}
-                                    {{--<input class="birth" placeholder="" name="datetimepicker" value="{{date('d/m/Y')}}">--}}
-                                    {{--<span class="input-group-addon">--}}
-                                    {{--<svg class="olymp-month-calendar-icon icon"><use--}}
-                                    {{--xlink:href="svg-icons/sprites/icons.svg#olymp-month-calendar-icon"></use></svg>--}}
-                                    {{--</span>--}}
-                                    {{--</div>--}}
                                     <div class="form-group date-time-picker label-floating ">
                                         <label class="control-label">Your Birthday</label>
                                         <input name="datetimepicker" value="{{date('d/m/Y')}}">
@@ -178,7 +167,8 @@ display: block; background: #00c46a; padding: 10px 55px;" type="submit">Next
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endsection
 @section('scripts')
-    @include('site.partials.crop-image',['width'=>110,'height'=>110,'callback'=>'ajaxCall'])
+    @include('site.partials.crop-image',['width'=>110,'height'=>110,'callback'=>'ajaxCall','crop'=>'circle','table'=>'users'])
+    <script src="{{ asset('olympus/js/moment.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         $(document).ready(function () {

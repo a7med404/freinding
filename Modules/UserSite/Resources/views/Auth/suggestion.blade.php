@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="checkbox" style="text-align: center;">
                                     <label>
-                                        <input type="checkbox" name="friends[{{$user->id}}]">
+                                        <input type="checkbox" checked name="friends[{{$user->id}}]">
                                         Check
                                     </label>
                                 </div>

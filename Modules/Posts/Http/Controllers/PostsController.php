@@ -4,25 +4,24 @@ namespace Modules\Posts\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
+use App\Http\Controllers\Site\SiteController;
+use App\User;
 use Illuminate\Routing\Controller;
 use Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
 use Intervention\Image\Facades\Image;
 use Modules\Posts\Entities\Comment;
 use Modules\Posts\Entities\File;
 use Modules\Posts\Entities\Post;
 use Modules\Posts\Entities\PostReaction;
 use Modules\Posts\Entities\Reaction;
-use App\Http\Controllers\Site\SiteController;
-use App\User;
 use Modules\Posts\Entities\Topic;
 use TomLingham\Searchy\Facades\Searchy;
 use App\Traits\Paginate;
-
 
 class PostsController extends SiteController
 {
@@ -52,7 +51,7 @@ class PostsController extends SiteController
 
             $reactions = Reaction::where('is_active', 1)->get();
 
-            return view('posts::newsfeed', compact('user', 'posts', 'admin_panel', 'user_key', 'users','reactions'));
+            return view('posts::newsfeed', compact('user', 'posts', 'admin_panel', 'user_key', 'users', 'reactions'));
         } else {
             return redirect()->route('close');
         }
@@ -60,7 +59,25 @@ class PostsController extends SiteController
 
     public function storePostsPhotosInTemp(Request $request)
     {
-        $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
+        if ($request->has('image')) {
+            $manager = new ImageManager(array('driver' => 'gd'));
+            $image = $manager->make($request->get('image', ''));
+            $fileTempName = sha1(time() . (int)rand(10000, 1000000)) . '.' . explode('/', $image->mime())[1];
+            $image->save(storage_path('app/public/temp/' . $fileTempName));
+            $x = asset('storage/temp/' . $fileTempName);
+//            $image->save(storage_path('app/public/images/'.$request->get('table').'/' . $fileTempName));
+//            $x = asset('storage/images/'.$request->get('table').'/' . $fileTempName);
+        } else {
+            $img = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
+            $x = asset('storage/temp/' . $img);
+
+        }
+//        $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
+//        $image = $request->input('image'); // your base64 encoded
+//        $image = str_replace('data:image/png;base64,', '', $image);
+//        $image = str_replace(' ', '+', $image);
+//        $imageName = 'test.png';
+//        \File::put(storage_path(). '/' . $imageName, base64_decode($image));
         return $x;
 //        $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
 //        $img = Image::make(asset('storage/temp/'.$request->name));
@@ -246,7 +263,7 @@ class PostsController extends SiteController
             $post->topics()->detach();
 
             $success = $post->Delete();
-            return Response::json(['success' => $success, 'message' => 'Post deleted','arrayshare'=>$arrayshare], 200);
+            return Response::json(['success' => $success, 'message' => 'Post deleted', 'arrayshare' => $arrayshare], 200);
         } else {
             return Response::json(['success' => false, 'message' => 'The Post has not been deleted'], 200);
         }
@@ -445,8 +462,7 @@ class PostsController extends SiteController
         'data-id="'.$newpost->id .'"data-url="'.url("posts/get-tagged-friends").'">';
         $arraytag = array();
 
-        if ($request->selecttag)
-        {
+        if ($request->selecttag) {
 
             foreach ($request->selecttag as $x) {
                 $arraytag[] = [
@@ -493,7 +509,7 @@ class PostsController extends SiteController
                 'users_reactions' => $users_reactions,
                 'new_comment' => $new_comment,
                 'comment_delete' => $comment_delete,
-                'share_url'=>$share_url
+                'share_url' => $share_url
             ]);
         } else {
             return Response::json(['success' => $success,
@@ -506,7 +522,7 @@ class PostsController extends SiteController
                 'users_reactions' => $users_reactions,
                 'new_comment' => $new_comment,
                 'comment_delete' => $comment_delete,
-                'share_url'=>$share_url
+                'share_url' => $share_url
             ]);
         }
     }
@@ -658,12 +674,12 @@ class PostsController extends SiteController
                 'with_files' => true,
                 'newpost' => $newPost,
                 'tagsection' => $tagsection,
-                'react_url'=>$react_url,
-                'delete_url'=>$delete_url,
-                'share_url'=>$share_url,
-                'new_comment_url'=>$newCommentUrl,
-                'users_reactions'=>$users_reactions,
-                'dalete_comment_url'=>$deleteCommentUrl ]);
+                'react_url' => $react_url,
+                'delete_url' => $delete_url,
+                'share_url' => $share_url,
+                'new_comment_url' => $newCommentUrl,
+                'users_reactions' => $users_reactions,
+                'dalete_comment_url' => $deleteCommentUrl]);
         } else {
             return Response::json(['success' => $success,
                 'ShareDate' => $ShareDate,

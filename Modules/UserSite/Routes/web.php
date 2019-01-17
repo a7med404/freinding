@@ -32,7 +32,9 @@ Route::group([
     Route::get('stage', ['as' => 'stage', 'uses' => 'UserSiteController@getstage']);
     Route::get('/@{username?}', ['as' => 'index', 'uses' => 'UserSiteController@index']);
     Route::post('/{action}/{id}', 'UserSiteController@friendAction')->name('friend-action');
-
+    Route::get('/@{username?}/friends','UserSiteController@friends')->name('friends');
+    Route::get('/@{username?}/followers','UserSiteController@followers')->name('followers');
+    Route::get('/@{username?}/following','UserSiteController@following')->name('following');
 
 });
 //route for track session
@@ -50,7 +52,7 @@ Route::get('registration-three', ['as' => 'registration-three', 'uses' => 'UserS
 Route::get('suggestion-friends', ['as' => 'suggestion-friends', 'uses' => 'UserSiteController@suggestionFriends']);
 Route::post('suggestion-friends', ['as' => 'suggestion-friends', 'uses' => 'UserSiteController@saveSuggestionFriends']);
 
-Route::get('getcities', ['as' => 'getcities', 'uses' => 'UserSiteController@getcities']);
+Route::get('cities-autocomplete', ['as' => 'cities-autocomplete', 'uses' => 'UserSiteController@citiesAutocomplete']);
 
 
 Route::POST('update-user-image', ['as' => 'update-user-image', 'uses' => 'UserSiteController@updateUserImage']);

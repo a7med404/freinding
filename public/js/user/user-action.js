@@ -21,6 +21,7 @@ userAction = () => {
             url: $(this).attr('data-url'),
             success: function (data) {
                 $($this).find('span').text(data.text);
+                $($this).find('img').attr('src',data.img);
                 $($this).removeClass();
                 $($this).addClass(data.class);
                 $($this).attr('data-url', data.url);
@@ -43,49 +44,91 @@ _select2 = ($cont, onSelectFunc) => {
 function __initAutocomplete(obj, onSelectFunc, options) {
     var $this = $(obj);
     var data = options || {};
-    if ($this.find('option:selected').length == 1 && !$this.prop('multiple'))
+    if (typeof $this.attr('data-id') !== typeof undefined) {
+        data=[{id:$this.attr('data-id'),name:$this.attr('data-name')}]
+    }
+    if ($this.find('option:selected').length === 1 && !$this.prop('multiple'))
         data = [{id: $this.find('option:selected').val(), name: $this.find('option:selected').text()}];
     else
-
         $this.find('option:selected').each(function (i) {
             var $this = $(this);
             data[i] = {id: $this.val(), name: $this.text()};
         });
+    var $options;
     var url = $this.data('remote');
     var required = (typeof $this.data('required') !== typeof undefined) ? $this.data('required') : null;
     var placeholder = $this.data('placeholder') ? $this.data('placeholder') : '';
     var letters = (typeof $this.data('letter') !== typeof undefined) ? $this.data('letter') : 2;
     var linkWith = $this.attr('data-param') || '';
-    if (linkWith.charAt(0) == '#') {
+    if (linkWith.charAt(0) === '#') {
         $(linkWith).change(function () {
             $this.val('').change();
         });
     }
+    if (typeof url !== typeof undefined){
+        $options={
+            ajax: {
+                url: url,
+                dataType: 'json',
+                delay: 400,
+                data: function (params) {
+                    var param = (typeof $this.attr('data-param') !== typeof undefined) ? $this.attr('data-param') : null;
+                    if (param && param.charAt(0) === '#') {
+                        var name = $(param).attr('name') || $(param).attr('id');
+                        param = JSON.parse('{"param":"' + $(param).val() + '"}');
+                    }
+                    else if (param)
+                        param = JSON.parse('{"param":"' + param + '"}');
+                    // param = JSON.parse('{"' + param.replaceAll("&", "\",\"").replaceAll("=", "\":\"") + '"}');
+                    /*if(param && param.charAt(0) === '.') {
+
+                     }*/
+                    var $data = {q: params.term, page: params.page};
+                    if (param) {
+                        $data = $.extend($data, param);
+                    }
+                    return $data;
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.items,
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            dir: 'ltr',
+            minimumInputLength: letters,
+            placeholder: placeholder,
+            allowClear: true,
+            templateResult: __Select2_formatRepo,
+            templateSelection: __Select2_formatRepoSelection,
+            data: data,
+        };
+    } else
+        $options={
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            dir: 'ltr',
+            minimumInputLength: letters,
+            placeholder: placeholder,
+            data: data,
+        };
     if ($this.hasClass('select2-hidden-accessible')) $this.select2("destroy");
-    $this.select2({
-        escapeMarkup: function (markup) {
-            return markup;
-        },
-        dir: 'ltr',
-        minimumInputLength: letters,
-        placeholder: placeholder,
-        // allowClear: true,
-        // templateResult: __Select2_formatRepo,
-        // templateSelection: __Select2_formatRepoSelection,
-        data: data,
-        // dropdownParent: $this.parent(),
-        // dropdownCssClass: "increasedzindexclass",
-        // tags:true
-    }).on("select2:select", function (e) {
-        $(this).parent().removeClass('has-error');
-        $(this).parent().find('label.error').remove();
+    $this.select2($options).on("select2:select", function (e) {
         if (onSelectFunc != null) {
             var fn = window[onSelectFunc];
             if (typeof fn === "function")
                 fn(this);
         }
     }).on("select2:unselect", function (e) {
-        if ($(this).hasClass('required')) $(this).parent().addClass('has-error');
         $(this).append('<option value="null" selected>null</option>')
     });
 
