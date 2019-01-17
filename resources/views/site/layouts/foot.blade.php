@@ -62,6 +62,7 @@
 <script src="{{ asset('js/posts/post-operations.js') }}"></script>
 <script src="{{ asset('js/posts/reactions-model.js') }}"></script>
 <script src="{{ asset('js/posts/video-operation.js') }}"></script>
+<script src="{{ asset('js/posts/add-topic.js') }}"></script>
 <script src="{{ asset('js/util.js') }}"></script>
 
 <!-- custom user js files-->

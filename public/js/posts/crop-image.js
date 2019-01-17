@@ -1,4 +1,4 @@
-let disableShare = () => {
+let disableShare =()=> {
     if ($numOfPendingPhotos == 0) {
         $('#newShare').attr('disabled', false);
     } else {
@@ -7,7 +7,8 @@ let disableShare = () => {
 }
 
 let $numOfPendingPhotos = 0;
-window.addEventListener('DOMContentLoaded', () => {
+let $numberOfPhotos = 0;
+window.addEventListener('DOMContentLoaded',()=> {
     let image = document.getElementById('image');
     let input = document.getElementById('input');
     let $modal = $('#modal');
@@ -102,15 +103,6 @@ window.addEventListener('DOMContentLoaded', () => {
                         data: formData,
                         contentType: false,
                         processData: false,
-                        xhr: function () {
-                            let appXhr = $.ajaxSettings.xhr();
-                            if (appXhr.upload) {
-                                appXhr.upload.addEventListener('progress', (e) => {
-                                    updateProgress(e, $progressBar);
-                                }, false);
-                            }
-                            return appXhr;
-                        },
                         beforeSubmit: function () {
                             $("#progressDivId").css("display", "block");
                             var percentValue = '0%';
@@ -138,6 +130,8 @@ window.addEventListener('DOMContentLoaded', () => {
                         },
                         success: function () {
                             console.log('success');
+                            $numberOfPhotos = $numberOfPhotos + 1;
+                            EnaDisShareBtn();
                             window [callback](formData)
 
                         },
@@ -167,6 +161,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
 ajaxCall = (formData) => {
     $.ajax({
         method: 'POST',
@@ -183,9 +178,11 @@ ajaxCall = (formData) => {
         }
     });
 }
-$(document).ready(() => {
+
+
+$(document).ready(()=>{
     //delete photo from temp
-    $('body').on('click', '.delete-photo', (e) => {
+    $('body').on('click', '.delete-photo',  (e)=> {
         const clickedItem = $(e.currentTarget);
         const $url = clickedItem.data('url');
         let name = clickedItem.data('name');
@@ -200,6 +197,8 @@ $(document).ready(() => {
             success: (data) => {
                 console.log(data);
                 clickedItem.parent().remove();
+                $numberOfPhotos = $numberOfPhotos - 1;
+                EnaDisShareBtn();
             },
             error: (data) => {
                 console.log(data);
@@ -210,3 +209,11 @@ $(document).ready(() => {
         });
     });
 });
+
+let EnaDisShareBtn = (e)=>{
+    if ($.trim($('#textpost').val())||$numberOfPhotos>0){
+        $('#newShare').attr('disabled',false);
+    }else{
+        $('#newShare').attr('disabled',true);
+    }
+};

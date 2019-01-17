@@ -158,7 +158,7 @@ return [
         Zizaco\Entrust\EntrustServiceProvider::class,
         Cviebrock\EloquentSluggable\ServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
-        
+        TomLingham\Searchy\SearchyServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -226,6 +226,7 @@ return [
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Searchy' => TomLingham\Searchy\Facades\Searchy::class,
     ],
 
 ];

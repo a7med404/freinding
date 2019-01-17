@@ -66,6 +66,8 @@
 <!--notifications-->
 <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
 
+<link rel="stylesheet" type="text/css" href="{{ asset('css/posts/posts.css') }}">
+
 <!--select2-->
 <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/select2.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/select2-bootstrap.min.css') }}">

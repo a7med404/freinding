@@ -476,7 +476,7 @@
             <div class="modal-body">
                 <!--tag-->
                 <div id="tag-post-section">
-                    <select select class="js-example-basic-multiple" name="states[]" multiple="multiple"
+                    <select class="js-example-basic-multiple" name="states[]" multiple="multiple"
                             data-placeholder="Select a friend">
                         @if(isset($users))
                             @foreach($users as $user)

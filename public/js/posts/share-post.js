@@ -37,7 +37,7 @@ $(document).ready((e) => {
 
         let $topic_section = $(clickedItem).closest('.hentry').children('.hentry').children('.topic-section').clone();
         if ($topic_section.length === 0) {
-             $topic_section = $(clickedItem).closest('.hentry').children('.topic-section').clone();
+            $topic_section = $(clickedItem).closest('.hentry').children('.topic-section').clone();
         }
         if ($topic_section) $('#Modal-Share').find('.topic-section').replaceWith($topic_section);
         else $('#Modal-Share').find('.topic-section').remove();
@@ -94,6 +94,7 @@ $(document).ready((e) => {
         const $url = clickedItem.data('url');
         let _token = $("input[name='_token']").val();
         let share_text = $('#taxt-share').val();
+        let topicsSection =  $('#Modal-Share').find('.topic-section ul').html();
         $.ajax({
             type: 'POST',
             url: $url,
@@ -124,8 +125,8 @@ $(document).ready((e) => {
                         '<div class="post__author author vcard inline-items">' +
                         '<img src="' + data.user_image + '" alt="author">' +
                         //s2
-                        '<div class="author-date">' +
-                        '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
+                        '<div class="author-date">'+
+                    '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
                         //s3
                         '  <div class="post__date">' +
                         '  <time class="published" datetime="2004-07-24T18:18">' +
@@ -167,8 +168,11 @@ $(document).ready((e) => {
                         '<div class="post__author author vcard inline-items">' +
                         '<img src="' + data.Friend_image + '" alt="author">' +
                         '<div class="author-date">' +
+                        '<div class="row m-0">'+
                         '  <a class="h6 post__author-name fn" href="#">' + data.Friend_name + '</a>' +
                         '       ' + $tag + '' +
+                        '</div>'+
+                        '</div>'+
                         '  <div class="post__date">' +
                         '  <time class="published" datetime="2004-07-24T18:18">' +
                         ' ' + data.post.humansDate + ' ' +
@@ -178,10 +182,11 @@ $(document).ready((e) => {
                         '</div>' +
                         '<p style="word-wrap: break-word;">' + data.post.text + '</p>' +
                         $photos +
-                        '<div style="display: inline-block;">' +
-                        '<ul>' +
-                        '</ul>' +
-                        '</div>' +
+                        '<div class="topic-section inLineBlock">'+
+                        '<ul>'+
+                        topicsSection+
+                        '</ul>'+
+                        '</div>'+
                         '</article>' +
                         //
                         //end post shared

@@ -1,0 +1,41 @@
+.inLineBlock{
+    display: inline-block;
+}
+
+.liForTopic{
+    margin:5px;
+    float: left;
+}
+.aForTopic{
+    border-radius: 25px;
+    background-color: #9a9fbf;
+    display: block;
+    text-align: center;
+    color: aliceblue !important;
+    padding: 3px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.h400-scroll-y{
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+.custom-loader{
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 )
+    url('../../images/FhHRx.gif')
+    50% 50%
+    no-repeat;
+}

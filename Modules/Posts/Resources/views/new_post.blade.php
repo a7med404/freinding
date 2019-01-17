@@ -28,6 +28,12 @@
                                   placeholder=""></textarea>
                         <ul id="choosephoto">
                         </ul>
+                        <div id="topicSection" class="inLineBlock">
+                            <input type="hidden" id="knownTopics">
+                            <input type="hidden" id="newTopics">
+                            <ul>
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="add-options-message">
@@ -48,6 +54,16 @@
                             </svg>
                         </a>
 
+
+                        <a id="add_topics" href="javascript:void(0)" class="options-message"
+                           data-toggle="tooltip" data-placement="top"
+                           data-original-title="ADD TOPICS"
+                        data-topics-url="{{url('/posts/get-topics')}}">
+                            <svg class="olymp-computer-icon">
+                                <use xlink:href="svg/add-topic.svg#Layer_1"></use>
+                            </svg>
+                        </a>
+
                         <a href="#" class="options-message" data-toggle="tooltip" data-placement="top"
                            data-original-title="ADD LOCATION">
                             <svg class="olymp-small-pin-icon">
@@ -55,7 +71,7 @@
                             </svg>
                         </a>
 
-                        <button id="newShare" type="submit"
+                        <button id="newShare" type="submit" disabled
                                 class="btn btn-primary btn-md-2 float-right btn-post">
                             Share
                         </button>

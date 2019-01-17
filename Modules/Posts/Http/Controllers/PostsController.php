@@ -2,7 +2,10 @@
 
 namespace Modules\Posts\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\Controller;
 use Auth;
 use Illuminate\Support\Facades\DB;
@@ -16,10 +19,14 @@ use Modules\Posts\Entities\PostReaction;
 use Modules\Posts\Entities\Reaction;
 use App\Http\Controllers\Site\SiteController;
 use App\User;
+use Modules\Posts\Entities\Topic;
+use TomLingham\Searchy\Facades\Searchy;
+use App\Traits\Paginate;
 
 
 class PostsController extends SiteController
 {
+    use Paginate;
 
     public function index()
     {
@@ -217,7 +224,6 @@ class PostsController extends SiteController
                         }
                     }
                     $child->delete();
-
                 }
             }
             if ($post->comments) {
@@ -236,6 +242,8 @@ class PostsController extends SiteController
                     $tag->Delete();
                 }
             }
+
+            $post->topics()->detach();
 
             $success = $post->Delete();
             return Response::json(['success' => $success, 'message' => 'Post deleted','arrayshare'=>$arrayshare], 200);
@@ -310,6 +318,23 @@ class PostsController extends SiteController
 
     public function newPost(Request $request)
     {
+        if($request->oldTopics != null){
+            $oldTopicsId = explode(',', $request->oldTopics);
+            $totalTopicsIds = $oldTopicsId;
+        }else{
+            $totalTopicsIds = [];
+        }
+
+        if($request->newTopics != null){
+            $newTopicsText = explode(',',$request->newTopics);
+            foreach ($newTopicsText as $topic){
+                $newTopic = new Topic();
+                $newTopic->name = $topic;
+                $newTopic->save();
+                $totalTopicsIds[]=$newTopic->id;
+            }
+        }
+
         $newpost = new Post();
         $newpost->user_id = Auth::id();
         $newpost->text = $request->text;
@@ -320,52 +345,12 @@ class PostsController extends SiteController
         }
         $newpost->dir = "ltr";
 
-
-        $htmlnewpost = "";
-//        if ($request->file()) {
-//            $newfile = new File();
-//            $newfile = $request->file;
-//            $newfile->post_id = $newpost->id;
-
-//            if ($newfile->extension == "mp4") {
-//                $newpost->type = "video";
-//                foreach ($newpost->files as $file) {
-//                    $htmlnewpost = $htmlnewpost' <div style="background-color: black;display: flex;justify-content: center;  align-items: center;" id="video_post_'newpost->id'">
-//                                            <video controls style="width: 100%;height: auto;">
-//                                                <source src="' + $newpost->file->name_store + '" type="video/mp4">
-//                                           </video>
-//                                        </div>'
-//
-//
-//								  }
-//            }
-//            elseif ($newfile->extension == "jpg" | $newfile->extension == "png") {
-//                $newpost->type = "picture";
-//                $htmlnewpost = '<div class="swiper-container" data-slide="fade">' +
-//                    '< div class="swiper-wrapper" >';
-//                foreach ($newpost->files as $file) {
-//                    $htmlnewpost += ' <div class="swiper-slide" >'+
-//                                                   ' <div class="photo-item" style = "display:block;" >'+
-//                                                     '  <img src = "' + $newpost->file->name_store + '"'+
-//                                                            ' alt = "photo" >'+
-//                                                        '<div class="overlay" ></div >'+
-//                                                  '  </div > '+
-//												}
-//                $htmlnewpost += ' </div >	'+
-//                                       ' <svg class="btn-next-without olymp-popup-right-arrow" >'+
-//                                         ' <use xlink:href = "olympus/svg-icons/sprites/icons.svg#olymp-popup-right-arrow" ></use>'+
-//                                       '</svg >'+
-//                                       '<svg class="btn-prev-without olymp-popup-left-arrow" >'+
-//                                            '<use xlink:href = "olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow" ></use>'+
-//                                        '</svg >'+
-//                                    '</div > ';
-//	   }
-//            $newfile->save();
-
-
         $success = $newpost->save();
         $newpost['humansDate'] = $newpost->created_at->diffForHumans();
-        $newpost['id'] = $newpost->id;
+
+        //add topics section//
+        $newpost->topics()->attach($totalTopicsIds);
+        // end add topics section//
 
         $html_for_pictures_popup = "";
         $html_for_pictures_popup = $html_for_pictures_popup .
@@ -456,7 +441,8 @@ class PostsController extends SiteController
         }
         $html_for_pictures = $html_for_pictures . '</div>';
 
-        $tagsection = '';
+        $tagsection = '<div class="teggedFriends pointer display-flex"'.
+        'data-id="'.$newpost->id .'"data-url="'.url("posts/get-tagged-friends").'">';
         $arraytag = array();
 
         if ($request->selecttag)
@@ -471,12 +457,12 @@ class PostsController extends SiteController
 
             if ($newpost->taggedFriends) {
                 if ($newpost->taggedFriends->count() == 1) {
-                    $tagsection = '<span>&nbsp;With&nbsp;<a>' . $newpost->taggedFriends[0]->user->display_name . '</a></span>';
+                    $tagsection = $tagsection.'<span>&nbsp;With&nbsp;<a>' . $newpost->taggedFriends[0]->user->display_name . '</a></span>';
                 } elseif ($newpost->taggedFriends->count() == 2) {
-                    $tagsection = '<span>&nbsp;With&nbsp;<a>' . $newpost->taggedFriends[0]->user->display_name . '</a></span>' .
+                    $tagsection = $tagsection.'<span>&nbsp;With&nbsp;<a>' . $newpost->taggedFriends[0]->user->display_name . '</a></span>' .
                         '<span>&nbsp;And&nbsp;<a>' . $newpost->taggedFriends[1]->user->display_name . '</a></span>';
                 } elseif ($newpost->taggedFriends->count() > 2) {
-                    $tagsection = '<span>&nbsp;With&nbsp;<a>' . $newpost->taggedFriends[0]->user->display_name . '</a></span>' .
+                    $tagsection = $tagsection.'<span>&nbsp;With&nbsp;<a>' . $newpost->taggedFriends[0]->user->display_name . '</a></span>' .
                         '<span>&nbsp;And&nbsp;<a>' . $newpost->taggedFriends[1]->user->display_name . '</a></span>';
                     $name = "";
                     for ($i = 2; $i < $newpost->taggedFriends->count(); $i = $i + 1) {
@@ -487,6 +473,7 @@ class PostsController extends SiteController
                 }
             }
         }
+        $tagsection = $tagsection .`</div>`;
         $react_url = route("react");
         $users_reactions = route('users-reactions');
         $new_comment = route('new-comment');
@@ -495,7 +482,6 @@ class PostsController extends SiteController
 
         if ($request->post_has_files) {
             return Response::json(['success' => $success,
-                'htmlnewpost' => $htmlnewpost,
                 'newpost' => $newpost,
                 'user_image' => Auth::user()->image,
                 'user_name' => Auth::user()->display_name,
@@ -511,7 +497,6 @@ class PostsController extends SiteController
             ]);
         } else {
             return Response::json(['success' => $success,
-                'htmlnewpost' => $htmlnewpost,
                 'newpost' => $newpost,
                 'user_image' => Auth::user()->image,
                 'user_name' => Auth::user()->display_name,
@@ -631,15 +616,16 @@ class PostsController extends SiteController
                 '</svg>';
         }
         $html_for_pictures = $html_for_pictures . '</div>';
-        $tagsection ='';
+        $tagsection = '<div class="teggedFriends pointer display-flex"'.
+            'data-id="'.$post->id .'"data-url="'.url("posts/get-tagged-friends").'">';
         if ($post->taggedFriends) {
             if ($post->taggedFriends->count() == 1)
-                $tagsection = ' <span>&nbsp;With&nbsp;<a>' . $post->taggedFriends[0]->user->display_name . '</a></span>';
+                $tagsection = $tagsection.' <span>&nbsp;With&nbsp;<a>' . $post->taggedFriends[0]->user->display_name . '</a></span>';
             else if ($post->taggedFriends->count() == 2)
-                $tagsection = '<span>&nbsp;With&nbsp;<a>' . $post->taggedFriends[0]->user->display_name . '</a></span>
+                $tagsection = $tagsection.'<span>&nbsp;With&nbsp;<a>' . $post->taggedFriends[0]->user->display_name . '</a></span>
                             <span>&nbsp;And&nbsp;<a>' . $post->taggedFriends[1]->user->display_name . '</a></span>';
             else if ($post->taggedFriends->count() > 2) {
-                $tagsection = ' <span>&nbsp;With&nbsp;<a>' . $post->taggedFriends[0]->user->display_name . '</a></span>
+                $tagsection = $tagsection.' <span>&nbsp;With&nbsp;<a>' . $post->taggedFriends[0]->user->display_name . '</a></span>
                             <span>&nbsp;And&nbsp;<a>' . $post->taggedFriends[1]->user->display_name . '</a></span>';
 
                 $name = "";
@@ -647,9 +633,10 @@ class PostsController extends SiteController
                     $name = $name . $post->taggedFriends[$i]->user->display_name . "\n";
                 }
                 $rest = $post->taggedFriends->count() - 2;
-                $tagsection = $tagsection . ' <span title="' . $name . '">And ' . $rest . ' more</span>';
+                $tagsection = $tagsection . ' <span title="' . $name . '">&nbsp;And ' . $rest . ' more</span>';
             }
         }
+        $tagsection = $tagsection .`</div>`;
 
         $react_url = route("react");
         $delete_url = route("delete-post");
@@ -696,4 +683,31 @@ class PostsController extends SiteController
                 'dalete_comment_url' => $deleteCommentUrl]);
         }
     }
+
+    public function getTopics(Request $request){
+        $term = trim($request->q);
+
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+
+        $topics = Searchy::topics('name')->query($term)->get();
+
+        $data = $this->paginate($topics,5,$request->page);
+
+        $formatted_topics = [];
+        foreach ($data->items() as $topic) {
+            $formatted_topics[] = ['id' => $topic->id, 'text' => $topic->name];
+        }
+        return \Response::json(['results'=>$formatted_topics,'has_more'=>$data->nextPageUrl() ? true : false]);
+    }
+
+    public function getTaggedFriends(Request $request){
+        $post_id = $request->id;
+        $taggedFriends = Post::where('id',$post_id)->first()->taggedFriends()->with(['user' => function($query){
+            return $query->select(['id','display_name','image']);
+        }])->get();
+       return $taggedFriends;
+    }
+
 }

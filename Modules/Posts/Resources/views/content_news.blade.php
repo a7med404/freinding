@@ -21,28 +21,31 @@
                                          alt="author">
 
                                     <div class="author-date">
-                                            <a class="h6 post__author-name fn"
+                                        <div class="row m-0">
+                                            <a class="h6 post__author-name fn "
                                                href="#">{{$post->user->display_name}}</a>
-
-                                        @if($post->taggedFriends)
-                                            @if($post->taggedFriends->count()==1)
-                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
-                                            @elseif($post->taggedFriends->count()==2)
-                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
-                                                <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
-                                            @elseif($post->taggedFriends->count()>2)
-                                                <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
-                                                <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
-                                                <?php
-                                                $name = "";
-                                                for ($i = 2; $i < $post->taggedFriends->count(); $i = $i + 1) {
-                                                    $name = $name . $post->taggedFriends[$i]->user->display_name . "\n";
-                                                }
-                                                ?>
-                                                <span title="{{$name}}">And {{$post->taggedFriends->count()-2}}
-                                                    more</span>
-                                            @endif
-                                        @endif
+                                            <div class="teggedFriends pointer display-flex" data-id="{{$post->id}}"
+                                                 data-url="{{url('posts/get-tagged-friends')}}">
+                                                @if($post->taggedFriends)
+                                                    @if($post->taggedFriends->count()==1)
+                                                        <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                    @elseif($post->taggedFriends->count()==2)
+                                                        <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                        <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
+                                                    @elseif($post->taggedFriends->count()>2)
+                                                        <span>&nbsp;With&nbsp;<a>{{$post->taggedFriends[0]->user->display_name}}</a></span>
+                                                        <span>&nbsp;And&nbsp;<a>{{$post->taggedFriends[1]->user->display_name}}</a></span>
+                                                        <?php
+                                                        $name = "";
+                                                        for ($i = 2; $i < $post->taggedFriends->count(); $i = $i + 1) {
+                                                            $name = $name . $post->taggedFriends[$i]->user->display_name . "\n";
+                                                        }
+                                                        ?>
+                                                        <span title="{{$name}}">&nbsp;And {{$post->taggedFriends->count()-2}} more</span>
+                                                    @endif
+                                                @endif
+                                            </div>
+                                        </div>
                                         <div class="post__date">
                                             <time class="published" datetime="2004-07-24T18:18">
                                                 {{$post->created_at->diffForHumans()}}
@@ -59,7 +62,8 @@
                                                 <a href="#">Edit Post</a>
                                             </li>
                                             <li>
-                                                <a href="javascript:void(0)" class="post-delete" id="{{$post->id}}" data-url="{{route('delete-post')}}">Delete
+                                                <a href="javascript:void(0)" class="post-delete" id="{{$post->id}}"
+                                                   data-url="{{route('delete-post')}}">Delete
                                                     Post</a>
                                             </li>
                                             <li>
@@ -70,10 +74,9 @@
                                             </li>
                                         </ul>
                                     </div>
-
                                 </div>
                                 <p style="word-wrap: break-word;">{{$post->text}}</p>
-                            @if($post->type == 'picture')
+                                @if($post->type == 'picture')
                                     <div class="picture-section {{$post->files->count()>1?'swiper-container':""}}"
                                          data-slide="fade">
                                         <div class="swiper-wrapper">
@@ -85,7 +88,7 @@
                                                         <div class="overlay"></div>
                                                     </div>
                                                 </div>
-                                        @endforeach
+                                            @endforeach
                                         </div>
                                         @if($post->files->count()>1)
                                             <svg class="btn-next-without olymp-popup-right-arrow">
@@ -123,35 +126,41 @@
                                                 <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
                                             </svg>
                                         @endif
-                                </div>
+                                    </div>
                                 @endif
                             <!--post shared-->
                                 @if($post->post_id != 0 && $post->social_network_id==1)
-                                    <article class="hentry post video" style="border: 3px solid;border-radius: 10px;border-color: #9a9fbf;">
+                                    <article class="hentry post video"
+                                             style="border: 3px solid;border-radius: 10px;border-color: #9a9fbf;">
                                         <div class="post__author author vcard inline-items">
                                             <img src="{{$post->post->user->image}}" alt="author">
                                             <div class="author-date">
-                                                <a class="h6 post__author-name fn"
-                                                   href="#">{{$post->post->user->display_name}}</a>
-                                                @if($post->post->taggedFriends)
-                                                    @if($post->post->taggedFriends->count()==1)
-                                                        <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
-                                                    @elseif($post->post->taggedFriends->count()==2)
-                                                        <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
-                                                        <span>&nbsp;And&nbsp;<a>{{$post->post->taggedFriends[1]->user->display_name}}</a></span>
-                                                    @elseif($post->post->taggedFriends->count()>2)
-                                                        <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
-                                                        <span>&nbsp;And&nbsp;<a>{{$post->post->taggedFriends[1]->user->display_name}}</a></span>
-                                                        <?php
-                                                        $name = "";
-                                                        for ($i = 2; $i < $post->post->taggedFriends->count(); $i = $i + 1) {
-                                                            $name = $name . $post->post->taggedFriends[$i]->user->display_name . "\n";
-                                                        }
-                                                        ?>
-                                                        <span title="{{$name}}">And {{$post->post->taggedFriends->count()-2}}
-                                                            more</span>
-                                                    @endif
-                                                @endif
+                                                <div class="row m-0">
+                                                    <a class="h6 post__author-name fn "
+                                                       href="#">{{$post->post->user->display_name}}</a>
+                                                    <div class="teggedFriends pointer display-flex"
+                                                         data-id="{{$post->post->id}}"
+                                                         data-url="{{url('posts/get-tagged-friends')}}">
+                                                        @if($post->post->taggedFriends)
+                                                            @if($post->post->taggedFriends->count()==1)
+                                                                <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
+                                                            @elseif($post->post->taggedFriends->count()==2)
+                                                                <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
+                                                                <span>&nbsp;And&nbsp;<a>{{$post->post->taggedFriends[1]->user->display_name}}</a></span>
+                                                            @elseif($post->post->taggedFriends->count()>2)
+                                                                <span>&nbsp;With&nbsp;<a>{{$post->post->taggedFriends[0]->user->display_name}}</a></span>
+                                                                <span>&nbsp;And&nbsp;<a>{{$post->post->taggedFriends[1]->user->display_name}}</a></span>
+                                                                <?php
+                                                                $name = "";
+                                                                for ($i = 2; $i < $post->post->taggedFriends->count(); $i = $i + 1) {
+                                                                    $name = $name . $post->post->taggedFriends[$i]->user->display_name . "\n";
+                                                                }
+                                                                ?>
+                                                                <span title="{{$name}}">&nbsp;And {{$post->post->taggedFriends->count()-2}} more</span>
+                                                            @endif
+                                                        @endif
+                                                    </div>
+                                                </div>
                                                 <div class="post__date">
                                                     <time class="published" datetime="2004-07-24T18:18">
                                                         {{$post->post->created_at->diffForHumans()}}
@@ -214,19 +223,12 @@
                                                     <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-popup-left-arrow"></use>
                                                 </svg>
                                             </div>
-                                    @endif
-                                        <div style="display: inline-block;">
+                                        @endif
+                                        <div class="topic-section inLineBlock">
                                             <ul>
                                                 @foreach($post->post->topics as $topic)
-                                                    <li style="margin:5px; float: left">
-                                                        <a style="border-radius: 25px;
-                                       background-color: #9a9fbf;
-                                       display: block;
-                                       text-align: center;
-                                       color: aliceblue;
-                                       padding: 3px;
-                                       padding-left: 8px;
-                                       padding-right: 8px;">
+                                                    <li class="liForTopic">
+                                                        <a class="aForTopic">
                                                             {{$topic->name}}
                                                         </a>
                                                     </li>
@@ -234,20 +236,13 @@
                                             </ul>
                                         </div>
                                     </article>
-                                @endif
+                            @endif
                             <!--end post shared-->
-                                <div class="topic-section" style="display: inline-block;">
+                                <div class="topic-section inLineBlock">
                                     <ul>
                                         @foreach($post->topics as $topic)
-                                            <li style="margin:5px; float: left">
-                                                <a style="border-radius: 25px;
-                                       background-color: #9a9fbf;
-                                       display: block;
-                                       text-align: center;
-                                       color: aliceblue;
-                                       padding: 3px;
-                                       padding-left: 8px;
-                                       padding-right: 8px;">
+                                            <li class="liForTopic">
+                                                <a class="aForTopic">
                                                     {{$topic->name}}
                                                 </a>
                                             </li>
@@ -257,7 +252,7 @@
                                 <div class="post-additional-info form-inline post-control-button flex-container reaction">
                                     <a id="btn_react{{$post->id}}" class="btn btn-control btn_react_first "
                                        style="background-color: {{$post->is_liked?'red':''}};"
-                                    data-url="{{route('react')}}">
+                                       data-url="{{route('react')}}">
                                         <svg class="olymp-like-post-icon">
                                             <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
                                         </svg>
@@ -277,13 +272,14 @@
                                         </a>
                                         <ul class="more-dropdown">
                                             <li>
-                                                <a href="javascript:void(0)" id="sharePost" data-id="{{$post->id}}" data-share-url="{{route('share-post')}}">Share</a>
+                                                <a href="javascript:void(0)" id="sharePost" data-id="{{$post->id}}"
+                                                   data-share-url="{{route('share-post')}}">Share</a>
                                             </li>
                                             <li>
-                                                <a href="#">Share in group</a>
+                                                <a href="javascript:void(0)">Share in group</a>
                                             </li>
                                             <li>
-                                                <a href="#">share on friend's diary</a>
+                                                <a href="javascript:void(0)">share on friend's diary</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -295,7 +291,7 @@
                                         @foreach($post->reactions as $reaction)
                                             @if($loop->index<5)
                                                 <li>
-                                                    <a href="#">
+                                                    <a href="javascript:void(0)">
                                                         <img src="{{$reaction->user->image}}" alt="friend">
                                                     </a>
                                                 </li>
@@ -304,7 +300,8 @@
                                             @endif
                                         @endforeach
                                     </ul>
-                                    <div class="post_reacts_users" id="{{$post->id}}" data-url="{{route('users-reactions')}}"
+                                    <div class="post_reacts_users" id="{{$post->id}}"
+                                         data-url="{{route('users-reactions')}}"
                                          style="position: absolute;right: 5%;cursor: pointer;">
                                         <a class="post-add-icon inline-items">
                                             <?php
@@ -326,6 +323,7 @@
                                                 flex-direction: row;
                                                 width: 100%;
                                             }
+
                                             .btn_react_first {
                                                 margin-top: 10px;
                                             }
@@ -344,7 +342,7 @@
 
                                             <div class="author-date">
                                                 <a class="h6 post__author-name fn"
-                                                   href="#">{{$post->newest_comment->user->display_name}}</a>
+                                                   href="javascript:void(0)">{{$post->newest_comment->user->display_name}}</a>
                                                 <div class="post__date">
                                                     <time class="published" datetime="2004-07-24T18:18">
                                                         {{$post->newest_comment->created_at->diffForHumans()}}
@@ -359,10 +357,11 @@
                                                 </svg>
                                                 <ul class="more-dropdown">
                                                     <li>
-                                                        <a href="#">Edit comment</a>
+                                                        <a href="javascript:void(0)">Edit comment</a>
                                                     </li>
                                                     <li>
-                                                        <a href="javascript:void(0)" class="comment-delete" data-url="{{route('comment-delete')}}"
+                                                        <a href="javascript:void(0)" class="comment-delete"
+                                                           data-url="{{route('comment-delete')}}"
                                                            id="{{$post->newest_comment->id}}">Delete comment</a>
                                                     </li>
 
@@ -374,16 +373,16 @@
                                         <p>{{$post->newest_comment->text}}
                                         </p>
 
-                                        <a href="#" class="post-add-icon inline-items">
+                                        <a href="javascript:void(0)" class="post-add-icon inline-items">
                                             <svg class="olymp-heart-icon">
                                                 <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-heart-icon"></use>
                                             </svg>
                                             <span>{{$post->newest_comment->reactions->count()}}</span>
                                         </a>
-                                        <a href="#" class="reply">Reply</a>
+                                        <a href="javascript:void(0)" class="reply">Reply</a>
                                     </li>
                                     <!-- ... end Comments -->
-                                    <a href="#" class="more-comments">View more comments <span>+</span></a>
+                                    <a href="javascript:void(0)" class="more-comments">View more comments <span>+</span></a>
                                 @endif
                             </ul>
 
@@ -398,7 +397,7 @@
                                 <textarea id="comment_post_form{{$post->id}}" class="form-control"
                                           placeholder="Your Comment Here" required></textarea>
                                         <div class="add-options-message">
-                                            <a href="#" class="options-message" data-toggle="modal"
+                                            <a href="javascript:void(0)" class="options-message" data-toggle="modal"
                                                data-target="#update-header-photo">
                                                 <svg class="olymp-camera-icon">
                                                     <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-camera-icon"></use>
@@ -408,7 +407,8 @@
                                     </div>
                                 </div>
 
-                                <button id="btn_comment_{{$post->id}}" class="btn btn-md-2 btn-primary" data-url="{{route('new-comment')}}"
+                                <button id="btn_comment_{{$post->id}}" class="btn btn-md-2 btn-primary"
+                                        data-url="{{route('new-comment')}}"
                                         data-delete-url="{{route('comment-delete')}}">Post Comment
                                 </button>
 
@@ -440,3 +440,5 @@
 </div>
 
 @include('site.home.popup')
+@include('posts::popups.add_topics')
+@include('posts::popups.tagged_friends')

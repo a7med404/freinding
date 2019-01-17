@@ -11,6 +11,8 @@ $(document).ready(() => {
             const clickedItem = $(e.currentTarget);
             const $url = clickedItem.data('url');
             const $dalete_post_url = clickedItem.data('delete-post-url');
+            let $oldTopics = $('#knownTopics').val();
+            let $newTopics = $('#newTopics').val();
             $this = $(this)
             //start loader
             let bar = new ProgressBar.Line(containerloader, {
@@ -51,7 +53,9 @@ $(document).ready(() => {
                     text,
                     selecttag,
                     files: $names,
-                    _token: _token
+                    _token: _token,
+                    oldTopics : $oldTopics,
+                    newTopics : $newTopics
                 },
                 cache: false,
 
@@ -71,13 +75,16 @@ $(document).ready(() => {
                             '<div class="post__author author vcard inline-items">' +
                             '<img src="' + data.user_image + '" alt="author">' +
                             '<div class="author-date">' +
-                            '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
-                            '' + data.tagsection + '' +
-                            '  <div class="post__date">' +
-                            '  <time class="published" datetime="2004-07-24T18:18">' +
-                            ' ' + data.newpost.humansDate + ' ' +
-                            ' </time>' +
-                            ' </div>' +
+                                '<div class="row m-0">'+
+                                     '  <a class="h6 post__author-name fn" href="#">' + data.user_name + '</a>' +
+                                        '' + data.tagsection + '' +
+                                '</div>'+
+                            '</div>'+
+                                '<div class="post__date">' +
+                                '  <time class="published" datetime="2004-07-24T18:18">' +
+                                ' ' + data.newpost.humansDate + ' ' +
+                                ' </time>' +
+                                ' </div>' +
                             '</div>' +
                             '<div class="more">' +
                             '  <svg class="olymp-three-dots-icon">' +
@@ -101,8 +108,9 @@ $(document).ready(() => {
                             '</div>' +
                             '<p style="word-wrap: break-word;">' + textOfPost + '</p>' +
                             $photos +
-                            '<div style="display: inline-block;">' +
+                            '<div class="topic-section inLineBlock">' +
                             '<ul>' +
+                            $('#topicSection').children('ul').html()+
                             '</ul>' +
                             '</div>' +
                             '<div class="post-additional-info form-inline post-control-button">' +
@@ -172,6 +180,13 @@ $(document).ready(() => {
                             '</form>' +
                             '</div>'
                         );
+                        //clear topics sections//
+                        $('#topicSection').children('ul').html('');
+                        $('#knownTopics').val('');
+                        $('#newTopics').val('');
+                        $('.js-example-placeholder-multiple').val('');
+                        $('.js-example-placeholder-multiple').text('');
+                        //end clear topics sections//
 
                         $('#textpost').val('');
                         $(".js-example-basic-multiple").val('');
@@ -221,14 +236,10 @@ $(document).ready(() => {
     };
 
     $(".js-example-basic-multiple").select2({
+        placeholder: "Select a friend",
         templateResult: formatState,
         templateSelection: formatState,
         width: "100%"
-    });
-
-    $('body').on('click','#TAG-YOUR-FRIENDS',(e)=>{
-        e.preventDefault();
-        $("#tag-post-section").attr('hidden', false);
     });
 
     $('body').on('click','#addtag',()=>{
@@ -262,6 +273,10 @@ $(document).ready(() => {
                 '<span>And ' + $l + ' more</span></div>');
         }
         $('#tag-Modal').modal('hide');
+    });
+
+    $('body').on('keyup','#textpost',(e)=>{
+        EnaDisShareBtn();
     });
 
 });

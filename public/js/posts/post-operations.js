@@ -132,7 +132,6 @@ $(document).ready(()=>{
                 }
             });
         }
-        ;
     });
 
     // delete post
@@ -253,6 +252,57 @@ $(document).ready(()=>{
                 console.log('Error!', err);
                 swal("Not Deleted!", "Your comment has not been deleted try again later.", "error");
             },
+        });
+    });
+
+    //open tagged friends model
+    $('body').on('click','.teggedFriends',(e)=>{
+        const clickedItem = $(e.currentTarget);
+        const $url = clickedItem.data('url');
+        const id = clickedItem.data('id');
+        $('#waitForTaggedFriends').show();
+        $('#tagged-friends-section').html('');
+        $('#tagged-friends-modal').modal();
+        let _token = $("input[name='_token']").val();
+        $.ajax({
+            type: 'GET',
+            url: $url,
+            data: {_token: _token, id: id},
+            cache: false,
+            success:  (data)=> {
+                console.log(data);
+                let lis = "";
+                for (item in data) {
+                    lis += ' <li class="inline-items">\n' +
+                        '     <div class="author-thumb">\n' +
+                        '         <img width="36px" height="36px" src="' + data[item].user.image + '"\n' +
+                        '              alt="author">\n' +
+                        '     </div>\n' +
+                        '     <div class="notification-event">\n' +
+                        '         <a href="#"\n' +
+                        '            class="h6 notification-friend">' + data[item].user.display_name + '</a>\n' +
+                        '         <span class="chat-message-item">8 Frinds In Common</span>\n' +
+                        '     </div>\n' +
+                        '     <span class="notification-icon post-control-button "\n' +
+                        '           data-toggle="tooltip" data-placement="top"\n' +
+                        '           data-original-title="ADD TO YOUR FREINDS">\n' +
+                        '         <a class="btn btn-control" href="#" data-user-id="'+data[item].user.id+'">\n' +
+                        '             <svg class="olymp-star-icon"><use\n' +
+                        '                 xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-plus-icon"></use></svg>\n' +
+                        '         </a>\n' +
+                        '     </span>\n' +
+                        ' </li>';
+                }
+                $('#tagged-friends-section').html(lis);
+                $('#waitForTaggedFriends').hide();
+            },
+            error: function (data) {
+                $('#waitForTaggedFriends').hide();
+                console.log(data);
+                swal("Error",
+                    "Server error try again later",
+                    "error");
+            }
         });
     });
 

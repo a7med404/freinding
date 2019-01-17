@@ -18,7 +18,8 @@
         "laravelcollective/html": "^5.7",
         "pusher/pusher-php-server": "^3.3",
         "voerro/laravel-visitor-tracker": "^1.2",
-        "zizaco/entrust": "5.2.x-dev"
+        "zizaco/entrust": "5.2.x-dev",
+        "tom-lingham/searchy" : "2.*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

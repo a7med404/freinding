@@ -1,6 +1,5 @@
 $(document).ready(()=>{
     $(window).resize(function () {
-        console.log(1);
         Resize();
     });
 
