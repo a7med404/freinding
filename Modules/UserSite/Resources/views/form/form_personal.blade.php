@@ -75,14 +75,7 @@
             {{--</div>--}}
             <div class="form-group label-floating is-select">
                 <label class="control-label" style="z-index: 11;">Your City</label>
-                <select name="country" class="autocomplete form-control" data-placeholder="Your City"  id="select2 ">
-                    <option value=""></option>
-                    @foreach($cities as $city)
-                        <option value="{{$city->city_ascii}}"
-                                @if ($user->country == $city->city_ascii)
-                                selected="selected"
-                                @endif>{{$city->city_ascii}}</option>
-                    @endforeach
+                <select name="country" class="autocomplete form-control" data-letter="2" data-remote="{{url('cities-autocomplete')}}" data-id="{{$user->country}}" data-name="{{$user->country}}" data-placeholder="Your City"  id="select2 ">
                 </select>
             </div>
             {{--<br>--}}
@@ -212,28 +205,6 @@
 
 
             event.preventDefault();
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('#csfr').val()
-                },
-                url: "{{ route('getcities') }}",
-                method: "GET",
-                data: {country: country},
-                success: function (data) {
-                    console.log(data);
-
-                    $("#select2 option").remove();
-                    for (var i = 0; i < data.length; i++) {
-                        $('#select2').append($('<option>', {
-                            value: data[i].city_ascii,
-                            text: data[i].city_ascii
-                        }));
-                    }
-                    $('#select2').show('slow');
-                    $('.loader').hide('slow');
-
-                }
-            });
         });
 
 

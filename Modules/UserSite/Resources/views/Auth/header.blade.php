@@ -10,7 +10,7 @@
                 </div>
                 <div class="title-block">
                     <h6 class="logo-title">Friending</h6>
-                    <div class="sub-title">SOCIAL NETWORK</div>
+                    <div class="sub-title">Social Network</div>
                 </div>
             </a>
             <a href="#" class="open-responsive-menu js-open-responsive-menu">

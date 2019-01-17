@@ -8,6 +8,7 @@
     <base href="/">
     <!-- Meta -->
     <title>Friending | @yield('title')</title>
+    <meta name="_token" content="{{ csrf_token() }}"/>
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('olympus/Bootstrap/dist/css/bootstrap-reboot.css') }}">
@@ -69,5 +70,14 @@
 @include('usersite::Auth.header')
 @yield('content')
 @include('usersite::Auth.footer')
+<script>
+    var baseUrl='{{url('').'/'}}';
+    var dir='ltr';
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        }
+    });
+</script>
 @yield('scripts')
 </html>

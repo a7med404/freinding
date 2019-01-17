@@ -28,7 +28,7 @@
                             <div class="col col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group label-floating is-select">
                                     <label class="control-label">Relationship</label>
-                                    <select class="selectpicker form-control" name="relationship">
+                                    <select class="autocomplete form-control" data-letter="0" data-placeholder="Your Relationship"  name="relationship">
                                         <option value="none">None</option>
                                         <option value="single">Single</option>
                                         <option value="relationship">In a Relationship</option>
@@ -68,11 +68,7 @@
                                 {{--</div>--}}
                                 <div class="form-group label-floating is-select">
                                     <label class="control-label" style="z-index: 11">City</label>
-                                    <select name="livingcity" class="autocomplete form-control" data-placeholder="Your City">
-                                        <option value=""></option>
-                                        @foreach($cities as $city)
-                                            <option value="{{$city->city_ascii}}">{{$city->city_ascii}}</option>
-                                        @endforeach
+                                    <select name="livingcity" class="autocomplete form-control" data-letter="2" data-remote="{{url('cities-autocomplete')}}" data-placeholder="Your City">
                                     </select>
                                     @if ($errors->has('livingcity'))
                                         <span class="help-block">

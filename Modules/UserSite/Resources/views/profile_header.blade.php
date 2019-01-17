@@ -16,46 +16,49 @@
                                         <a href="{{ route('profile.index') }}" class="active">Timeline</a>
                                     </li>
                                     <li>
-                                        <a href="05-ProfilePage-About.html">About</a>
+                                        <a href="05-ProfilePage-About.html">Photos</a>
                                     </li>
                                     <li>
-                                        <a href="06-ProfilePage.html">Friends</a>
+                                        <a href="06-ProfilePage.html">Videos</a>
                                     </li>
                                 </ul>
                             </div>
                             <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
                                 <ul class="profile-menu">
                                     <li>
-                                        <a href="07-ProfilePage-Photos.html">Photos</a>
+                                        <a href="{{route('profile.friends',[$profile_user->slug])}}">Friends</a>
                                     </li>
                                     <li>
-                                        <a href="09-ProfilePage-Videos.html">Videos</a>
+                                        <a href="{{route('profile.followers',[$profile_user->slug])}}">Followers</a>
                                     </li>
                                     <li>
-                                        <div class="more">
-                                            <svg class="olymp-three-dots-icon">
-                                                <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
-                                            </svg>
-                                            <ul class="more-dropdown more-with-triangle">
-                                                <li>
-                                                    <a href="#">Report Profile</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Block Profile</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <a href="{{route('profile.following',[$profile_user->slug])}}">Following</a>
                                     </li>
+                                    {{--<li>--}}
+                                    {{--<div class="more">--}}
+                                    {{--<svg class="olymp-three-dots-icon">--}}
+                                    {{--<use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>--}}
+                                    {{--</svg>--}}
+                                    {{--<ul class="more-dropdown more-with-triangle">--}}
+                                    {{--<li>--}}
+                                    {{--<a href="#">Report Profile</a>--}}
+                                    {{--</li>--}}
+                                    {{--<li>--}}
+                                    {{--<a href="#">Block Profile</a>--}}
+                                    {{--</li>--}}
+                                    {{--</ul>--}}
+                                    {{--</div>--}}
+                                    {{--</li>--}}
                                 </ul>
                             </div>
                         </div>
 
                         <div class="control-block-button">
-                            <a href="35-YourAccount-FriendsRequests.html" class="btn btn-control bg-blue">
-                                <svg class="olymp-happy-face-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-happy-face-icon"></use>
-                                </svg>
-                            </a>
+                            {{--<a href="35-YourAccount-FriendsRequests.html" class="btn btn-control bg-blue">--}}
+                                {{--<svg class="olymp-happy-face-icon">--}}
+                                    {{--<use xlink:href="svg-icons/sprites/icons.svg#olymp-happy-face-icon"></use>--}}
+                                {{--</svg>--}}
+                            {{--</a>--}}
 
                             <a href="#" class="btn btn-control bg-purple">
                                 <svg class="olymp-chat---messages-icon">
@@ -98,7 +101,8 @@
                                 <a href="{{ route('profile.index',[$profile_user->slug]) }}"
                                    class="h4 author-name">{{$profile_user->display_name}}</a>
                             @else
-                                <a href="{{ route('profile.index',[$profile_user->slug]) }}" class="h4 author-name">{{$profile_user->display_name}} <i
+                                <a href="{{ route('profile.index',[$profile_user->slug]) }}"
+                                   class="h4 author-name">{{$profile_user->display_name}} <i
                                             style="color:green; font-size:17px;" class="fas fa-check-circle"></i></a>
                             @endif
                             <div class="country">{!!countryData($profile_user->country)!!}</div>
@@ -106,24 +110,10 @@
                         </div>
                     </div>
                 </div>
-                @if($profile_user->id != Auth::id())
-                    @php
-                        $status=Auth::user()->check($profile_user->id)
-                    @endphp
-                    <div class="text-center">
-                        <button data-url="{{$status['url']}}" data-toggle="tooltip" title="{{$status['status']}}"
-                                class="{{$status['class']}}">
-                            <img src="{{asset('olympus/img/add-user.png')}}" alt="">
-                            <span>{{$status['text']}}</span>
-                        </button>
-                        <button data-url="{{route('profile.friend-action',['follow',$profile_user->id])}}"
-                                class="btn btn-success add-friend">
-                            <img src="{{asset('olympus/img/rss.png')}}" alt="">
-                            <span>Just Follow</span>
-                        </button>
-                    </div>
-                @endif
             </div>
+          @if(URL::current() == route('profile.index',[$profile_user->slug]))
+              @include('usersite::relation-section')
+              @endif
         </div>
     </div>
 </div>

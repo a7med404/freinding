@@ -12,7 +12,11 @@
             </div>
             <div class="modal-body">
                 <div style="max-width: 100%;">
-                    <img id="image"  data-width="{{isset($width)?$width:110}}" data-height="{{isset($height)?$height:110}}" data-callback="{{isset($callback)?$callback:'ajaxCall'}}"
+                    <img id="image" data-width="{{isset($width)?$width:110}}"
+                         data-height="{{isset($height)?$height:110}}"
+                         data-callback="{{isset($callback)?$callback:'ajaxCall'}}"
+                         data-crop="{{isset($crop)?$crop:'square'}}"
+                         data-table="{{isset($table)?$table:'users'}}"
                          src="https://avatars0.githubusercontent.com/u/3456749">
                 </div>
             </div>

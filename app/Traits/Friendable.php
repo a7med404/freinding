@@ -17,13 +17,13 @@ trait Friendable
     public function check($id)
     {
         if (\Auth::user()->isFriendWith($id) == 1)
-            return ['status' => 'Delete Friends' , 'text' => 'Friends', 'class' => 'btn btn-danger add-friend', 'url' => route('profile.friend-action', ['delete', $id])];
+            return ['status' => 'Delete Friends' , 'text' => 'Friends', 'class' => 'btn btn-friends add-friend', 'url' => route('profile.friend-action', ['delete', $id]),'img'=>asset('olympus/img/relations/26_heart.png')];
         elseif (\Auth::user()->hasPendingFriendRequestFrom($id) == 1)
-            return ['status' => 'Request Pending', 'text' => 'Accept Friend', 'class' => 'btn btn-blue add-friend', 'url' => route('profile.friend-action', ['accept', $id])];
+            return ['status' => 'Request Pending', 'text' => 'Accept Friend', 'class' => 'btn btn-accept add-friend', 'url' => route('profile.friend-action', ['accept', $id]),'img'=>asset('olympus/img/relations/checked.png')];
         elseif (\Auth::user()->hasPendingFriendRequestSent($id) == 1)
-            return ['status' => 'Waiting For Accept', 'text' => 'Delete Friend Request', 'class' => 'btn btn-danger add-friend', 'url' => route('profile.friend-action', ['delete', $id])];
+            return ['status' => 'Waiting For Accept', 'text' => 'Friend Request sent', 'class' => 'btn btn-friend-request add-friend', 'url' => route('profile.friend-action', ['delete', $id]),'img'=>asset('olympus/img/relations/55_time.png')];
 
-        return ['status' => 'No Friend', 'text' => 'Add Friend', 'class' => 'btn btn-blue add-friend', 'url' => route('profile.friend-action', ['add', $id])];
+        return ['status' => 'No Friend', 'text' => 'Add Friend', 'class' => 'btn btn-add add-friend', 'url' => route('profile.friend-action', ['add', $id]),'img'=>asset('olympus/img/relations/44_plus.png')];
     }
 
     public function addFriend($user_requested)
@@ -39,19 +39,6 @@ trait Friendable
         $friendship = Friendship::create(['requester' => $this->id, 'user_requested' => $user_requested]);
         return 1;
     }
-//    public function follow($user_requested)
-//    {
-//        if ($this->id == $user_requested)
-//            return [false];
-//        if ($this->hasPendingFriendRequestSent($user_requested) == 1)
-//            return ["Already sent a friend request."];
-//        if ($this->hasPendingFriendRequestFrom($user_requested) == 1)
-//            return $this->acceptFriend($user_requested);
-//        if ($this->isFriendWith($user_requested))
-//            return ['You are Already Friends.'];
-//        $friendship = Friendship::create(['requester' => $this->id, 'user_requested' => $user_requested,'is_follow'=>1]);
-//        return 1;
-//    }
 
     /**
      * @param $user_reuested
@@ -170,20 +157,5 @@ trait Friendable
         } else
             return false;
     }
-    public function follow($userId)
-    {
-        $this->follows()->attach($userId);
-        return $this;
-    }
 
-    public function unfollow($userId)
-    {
-        $this->follows()->detach($userId);
-        return $this;
-    }
-
-    public function isFollowing($userId)
-    {
-        return (boolean) $this->follows()->where('follows_id', $userId)->first(['id']);
-    }
 }

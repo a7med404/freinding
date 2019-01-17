@@ -1686,7 +1686,8 @@
 
     {{--</div>--}}
 </div>
-
 @include('site.home.popup')
 @endsection
-
+@section('after_foot')
+    @include('site.partials.crop-image',['width'=>110,'height'=>110,'callback'=>'ajaxCall','crop'=>'circle','table'=>'users'])
+@endsection
