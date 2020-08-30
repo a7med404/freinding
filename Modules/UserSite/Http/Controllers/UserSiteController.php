@@ -3,6 +3,10 @@
 namespace Modules\UserSite\Http\Controllers;
 
 use App\Events\FriendShipEvent;
+use App\Events\AddFriendEvent;
+use App\Events\AcceptFriendEvent;
+use App\Events\FollowEvent;
+use App\Events\ReFollowEvent;
 use App\Http\Controllers\Site\SiteController;
 use App\Model\ProfileStage;
 use App\Model\SaveSession;
@@ -13,6 +17,8 @@ use App\Notifications\AcceptFriendNotification;
 use App\Notifications\NewFriendNotification;
 use App\User;
 use Auth;
+use Carbon\Carbon;
+use DateTime;
 use DB;
 use File;
 use Hash;
@@ -22,12 +28,15 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Redirect;
 use Session;
+use URL;
+use App\Traits\AllRequiredTrait;
 
 //as SiteController
 
 //use App\Model\Options;
 class UserSiteController extends SiteController
 {
+  use AllRequiredTrait;
 
     /**
      * Display a listing of the resource.
@@ -35,6 +44,7 @@ class UserSiteController extends SiteController
      */
     public function index($username = null)
     {
+
         if ($this->site_open == 1 || $this->site_open == "1") {
             $lang = 'en';
             $prof = 1;
@@ -44,14 +54,16 @@ class UserSiteController extends SiteController
                 $profile_user = Auth::user();
             $user_key = $profile_user->name;
             $admin_panel = 0;
+
             if ($profile_user->can(['access-all', 'post-type-all', 'post-all'])) {
                 $admin_panel = 1;
             }
             $title = 'Home' . " &#8211; " . $this->site_title;
             View::share('title', $title);
             $form_type = 'personal';
+            // dd(Auth::user());
             $verified_status = UsersIds::where('user_id', Auth::user()->id)->first();
-            return view('usersite::index', compact('prof', 'form_type', 'profile_user', 'admin_panel', 'user_key', 'verified_status'));
+            return view('usersite::user-profile', compact('prof', 'form_type', 'profile_user', 'admin_panel', 'user_key', 'verified_status'));
         } else {
             return redirect()->route('close');
         }
@@ -522,12 +534,21 @@ class UserSiteController extends SiteController
     {
 //        dd($request->all());
         File::move(storage_path('app/public/temp/' . $request->get('name')), storage_path('app/public/images/users/' . $request->get('name')));
+        File::move(storage_path('app/public/temp/mini_' . $request->get('name')), storage_path('app/public/images/users/mini_' . $request->get('name')));
         Auth::user()->image = $request->get('name');
         Auth::user()->save();
 //        $this->compress(storage_path('app/public/images/users/' . $request->get('name')), public_path('storage/images/users/' . $request->get('name')), 75);
         return ['msg' => 'Profile Image update Successfully', 'image' => asset('storage/images/users/' . $request->get('name'))];
     }
-
+    public function updateUserHeaderImage(Request $request)
+    {
+        File::move(storage_path('app/public/temp/' . $request->get('name')), storage_path('app/public/images/headers/' . $request->get('name')));
+        Auth::user()->cover_image = $request->get('name');
+        Auth::user()->save();
+//        dd($request->all());
+        $this->compress(storage_path('app/public/images/headers/' . $request->get('name')), public_path('storage/images/headers/' . $request->get('name')), 40);
+        return ['msg' => 'Profile Image update Successfully', 'image' => asset('storage/images/headers/' . $request->get('name'))];
+    }
     public function updateUserTwo(request $request)
     {
         $validation = Validator::make($request->all(), [
@@ -609,27 +630,27 @@ class UserSiteController extends SiteController
         switch ($action) {
             case 'follow':
                 Auth::user()->follow($id);
-                return ['msg' => '', 'text' => 'Following', 'class' => 'btn btn-following add-friend', 'url' => route('profile.friend-action', ['un-follow', $id]), 'img' => asset('olympus/img/relations/30_antenna.png')];
+                return ['msg' => '', 'text' => 'Following', 'class' => 'btn btn-following add-friend bg-green', 'url' => route('profile.friend-action', ['un-follow', $id]), 'icon'=>'fa fa-check'];
 
             case 'follow-back':
                 Auth::user()->reFollow($id);
-                return ['msg' => '', 'text' => 'Following', 'class' => 'btn btn-follow-back add-friend', 'url' => route('profile.friend-action', ['un-follow', $id]), 'img' => asset('olympus/img/relations/30_antenna.png')];
+                return ['msg' => '', 'text' => 'Following', 'class' => 'btn btn-follow-back add-friend  bg-green', 'url' => route('profile.friend-action', ['un-follow', $id]), 'icon'=>'fa fa-arrow-right'];
 
             case 'un-follow':
                 Auth::user()->unFollow($id);
-                return ['msg' => '', 'text' => 'Just Follow', 'class' => 'btn btn-follow add-friend', 'url' => route('profile.friend-action', ['follow', $id]), 'img' => asset('olympus/img/relations/rss-symbol.png')];
+                return ['msg' => '', 'text' => 'Follow', 'class' => 'btn btn-follow add-friend', 'url' => route('profile.friend-action', ['follow', $id]), 'icon'=>'fa fa-arrow-right'];
             case 'accept':
                 Auth::user()->acceptFriend($id);
                 $user = User::find($id);
                 $user->notify(new AcceptFriendNotification(Auth::user()));
-                return ['msg' => '', 'text' => 'Friends', 'class' => 'btn btn-friends add-friend', 'url' => route('profile.friend-action', ['delete', $id]), 'img' => asset('olympus/img/relations/26_heart.png')];
+                return ['msg' => '', 'text' => 'Friends', 'class' => 'btn btn-friends add-friend', 'url' => route('profile.friend-action', ['delete', $id]), 'icon'=>'fa fa-arrow-right'];
             case 'add':
                 Auth::user()->addFriend($id);
                 event(new FriendShipEvent($id));
-                return ['msg' => '', 'text' => 'Friend Request Sent', 'class' => 'btn btn-friend-request add-friend', 'url' => route('profile.friend-action', ['delete', $id]), 'img' => asset('olympus/img/relations/55_time.png')];
+                return ['msg' => '', 'text' => 'Friend Request Sent', 'class' => 'btn btn-friend-request add-friend', 'url' => route('profile.friend-action', ['delete', $id]), 'icon'=>'fa fa-arrow-right'];
             case 'delete':
                 Auth::user()->deleteFriendship($id);
-                return ['msg' => '', 'text' => 'Add Friend', 'class' => 'btn btn-add add-friend', 'url' => route('profile.friend-action', ['add', $id]), 'img' => asset('olympus/img/relations/44_plus.png')];
+                return ['msg' => '', 'text' => 'Add Friend', 'class' => 'btn btn-add add-friend', 'url' => route('profile.friend-action', ['add', $id]), 'icon'=>'fa fa-arrow-right'];
         }
     }
 
@@ -649,7 +670,7 @@ class UserSiteController extends SiteController
      */
     public function friends($username)
     {
-        $friends = $username->friends();
+        $friends = collect(array_except($username->friends(), 0));
         $user = $username;
         $profile_user = $user;
         $message_friend = ' Not Having Friends Yet.';
@@ -662,11 +683,12 @@ class UserSiteController extends SiteController
      */
     public function followers($username)
     {
-        $friends = $username->followers();
+        $followers = collect(array_except($username->followers(), 0));
         $user = $username;
         $profile_user = $user;
         $message_friend = ' Not Followers Friends Yet.';
-        return view('usersite::friends', compact('user', 'friends', 'profile_user', 'message_friend'));
+        // dd($friends);
+        return view('usersite::followers', compact('user', 'followers', 'profile_user', 'message_friend'));
     }
 
     /**
@@ -675,10 +697,69 @@ class UserSiteController extends SiteController
      */
     public function following($username)
     {
-        $friends = $username->following();
+        $followings = collect(array_except($username->following(), 0));
         $user = $username;
         $profile_user = $user;
         $message_friend = 'Haven\'t Followed Any One Yet.';
-        return view('usersite::friends', compact('user', 'friends', 'profile_user', 'message_friend'));
+        return view('usersite::followings', compact('user', 'followings', 'profile_user', 'message_friend'));
     }
+
+
+
+    public function readNotificationa($id = null){
+      if($id == nul) {
+        Auth::user()->unreadNotifications()->markAsRead();
+      } else {
+        Auth::user()->unreadNotifications()->markAsRead();
+      }
+    }
+
+
+    public function apiFollowings($id){
+      return auth()->user()->followings($id);
+    }
+
+    public function apiCheckFriend($id){
+      $user_requested = User::findOrFail($id);
+      return auth()->user()->checkFriend((int)$id);
+    }
+    public function apiAddFriend($id){
+      $user_requested = User::findOrFail($id);
+      event(new AddFriendEvent($user_requested));
+      return auth()->user()->addFriend((int)$id);
+    }
+
+    public function apiAcceptFriend($id){
+      $user_requested = User::findOrFail($id);
+      event(new AcceptFriendEvent($user_requested));
+      return auth()->user()->acceptFriend((int)$id);
+    }
+
+    public function apiDeleteFriendship($id){
+      $user_requested = User::findOrFail($id);
+      return auth()->user()->deleteFriendship((int)$id);
+    }
+
+    public function apiCheckFollow($id){
+      $user_requested = User::findOrFail($id);
+      return auth()->user()->checkFollow((int)$id);
+    }
+    public function apiFollow($id){
+      $user_requested = User::findOrFail($id);
+      event(new FollowEvent($user_requested));
+      return auth()->user()->follow((int)$id);
+
+    }
+
+    public function apiReFollow($id){
+      $user_requested = User::findOrFail($id);
+      event(new ReFollowEvent($user_requested));
+      return auth()->user()->reFollow((int)$id);
+    }
+
+    public function apiUnFollow($id){
+      $user_requested = User::findOrFail($id);
+      return auth()->user()->unFollow((int)$id);
+    }
+
 }

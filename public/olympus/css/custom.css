@@ -68,30 +68,25 @@ p.cangecover {
 }
 
 .btn-add{
-    background-color: #4ab79d;
+    background-color: #38a9ff;
     color: white;
-    border-radius: 0px !important;
 }
 .btn-accept{
-    background-color: #888888;
+    background-color: #888da8;
     color: white;
-    border-radius: 0px !important;
 }
 .btn-follow{
-    background-color: #4eb69d;
+    background-color: #08ddc1;
     color: white;
-    border-radius: 0px !important;
 }
 .btn-friends,.btn-following{
-    background-color: #36986f;
+    background-color: #1ed760;
     color: white;
-    border-radius: 0px !important;
 }
 
 .btn-follow-back,.btn-friend-request{
-    background-color: #a4b335;
+    background-color: #ffdc1b;
     color: white;
-    border-radius: 0px !important;
 }
 @media (max-width: 425px) {
     .upload-btn-wrapper {

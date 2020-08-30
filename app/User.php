@@ -12,6 +12,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 use DB;
 use Carbon\Carbon;
 
+
 class User extends Authenticatable {
 
     use Notifiable,Friendable,EntrustUserTrait,Followable;
@@ -39,6 +40,10 @@ class User extends Authenticatable {
         'password', 'remember_token',
     ];
 
+    // public function followers(){
+    //     return $this->belongsToMany(\Modules\UserSite\Entities\Follower::class, 'followers', 'requester', 'user_requested');
+    // }
+
     public function userMeta() {
         return $this->hasMany(\App\Model\UserMeta::class);
     }
@@ -48,7 +53,6 @@ class User extends Authenticatable {
     }
 
     public function isActive() {
-
         return Auth::user()->is_active == 1;
     }
 

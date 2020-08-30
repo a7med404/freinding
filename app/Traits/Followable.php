@@ -11,21 +11,45 @@ namespace App\Traits;
 
 use App\User;
 use Modules\UserSite\Entities\Follower;
+use App\Events\AddFriendEvent;
+use App\Events\AcceptFriendEvent;
+use App\Events\FollowEvent;
+use App\Events\ReFollowEvent;
 
 trait Followable
 {
     public function checkFollow($id)
     {
         if (\Auth::user()->isFollowing($id) == 1 && \Auth::user()->isFollowedBy($id) == 1)
-            return ['status' => 'Following', 'text' => 'Following', 'class' => 'btn btn-following add-friend', 'url' => route('profile.friend-action', ['un-follow', $id]), 'img' => asset('olympus/img/relations/30_antenna.png')];
-        else if (\Auth::user()->isFollowedBy($id) == 1 && !\Auth::user()->isFollowing($id) == 1)
-            return ['status' => 'Follow Back', 'text' => 'Follow Back', 'class' => 'btn btn-follow-back add-friend', 'url' => route('profile.friend-action', ['follow-back', $id]), 'img' => asset('olympus/img/relations/30_antenna.png')];
-        else if (!\Auth::user()->isFollowedBy($id) == 1 && \Auth::user()->isFollowing($id) == 1)
-            return ['status' => 'Follow Back', 'text' => 'Follow Back', 'class' => 'btn btn-follow-back add-friend', 'url' => route('profile.friend-action', ['follow-back', $id]), 'img' => asset('olympus/img/relations/30_antenna.png')];
-        else if (\Auth::user()->isFollowedBy($id) == 1)
-            return ['status' => 'Follow Back', 'text' => 'Follow Back', 'class' => 'btn btn-follow-back add-friend', 'url' => route('profile.friend-action', ['follow-back', $id]), 'img' => asset('olympus/img/relations/30_antenna.png')];
+          return ['status' => 1];
+        else if (\Auth::user()->isFollowedBy($id) == 1 && !\Auth::user()->isFollowing($id) == 1){
+          return ['status' => 2];
+        }
+        else if (!\Auth::user()->isFollowedBy($id) == 1 && \Auth::user()->isFollowing($id) == 1){
+          return ['status' => 3];
+        }
+        return ['status' => 4];
+    }
 
-        return ['status' => 'Follow', 'text' => 'Just Follow', 'class' => 'btn btn-follow add-friend', 'url' => route('profile.friend-action', ['follow', $id]), 'img' => asset('olympus/img/relations/rss-symbol.png')];
+    public function checkf($id)
+    {
+        if (\Auth::user()->isFollowing($id) == 1 && \Auth::user()->isFollowedBy($id) == 1)
+            return ['status' => 'Following', 'text' => 'Following', 'class' => 'btn btn-following add-friend btn-green', 'url' => route('profile.friend-action', ['un-follow', $id]), 'icon'=>'fa fa-check'];
+        else if (\Auth::user()->isFollowedBy($id) == 1 && !\Auth::user()->isFollowing($id) == 1){
+          event(new ReFollowEvent(\App\User::where('id', $id)->first()));
+          return ['status' => 'Follow Back', 'text' => 'Follow Back', 'class' => 'btn btn-follow-back add-friend', 'url' => route('profile.friend-action', ['follow-back', $id]), 'icon'=>'fa fa-arrow-right'];
+        }
+        else if (!\Auth::user()->isFollowedBy($id) == 1 && \Auth::user()->isFollowing($id) == 1){
+          event(new ReFollowEvent(\App\User::where('id', $id)->first()));
+          return ['status' => 'Follow Back', 'text' => 'Follow Back', 'class' => 'btn btn-follow-back add-friend', 'url' => route('profile.friend-action', ['follow-back', $id]), 'icon'=>'fa fa-arrow-right'];
+        }
+        else if (\Auth::user()->isFollowedBy($id) == 1){
+          event(new ReFollowEvent(\App\User::where('id', $id)->first()));
+          return ['status' => 'Follow Back', 'text' => 'Follow Back', 'class' => 'btn btn-follow-back add-friend', 'url' => route('profile.friend-action', ['follow-back', $id]), 'icon'=>'fa fa-arrow-right'];
+        }
+
+        event(new FollowEvent(\App\User::where('id', $id)->first()));
+        return ['status' => 'Follow', 'text' => 'Follow', 'class' => 'btn btn-follow add-friend', 'url' => route('profile.friend-action', ['follow', $id]), 'icon'=>'fa fa-follow'];
     }
 
     public function follow($userId)
@@ -109,6 +133,23 @@ trait Followable
             array_push($followers, User::find($item->requester));
         }
         return $followers;
+    }
+
+
+    public function followings($id)
+    {
+        $followings = $followings1 = $followings2 = [];
+
+        $followings1 = Follower::where('requester', $id)->where('followed', 1)->get();
+        $followings2 = Follower::where('user_requested', $id)->where('re_followed', 1)->get();
+
+        foreach ($followings1 as $item) {
+            array_push($followings, User::find($item->user_requested));
+        }
+        foreach ($followings2 as $item) {
+            array_push($followers, User::find($item->requester));
+        }
+        return $followings;
     }
 
     public function followingIds()

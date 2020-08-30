@@ -62,13 +62,18 @@ class PostsController extends SiteController
             $manager = new ImageManager(array('driver' => 'gd'));
             $image = $manager->make($request->get('image', ''));
             $fileTempName = sha1(time() . (int)rand(10000, 1000000)) . '.' . explode('/', $image->mime())[1];
-            $image->save(storage_path('app/public/temp/' . $fileTempName));
+            $image->resize(300, null, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save(storage_path('app/public/temp/' . $fileTempName));
+            $image->resize(100, null, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save(storage_path('app/public/temp/mini_' . $fileTempName));
             $x = asset('storage/temp/' . $fileTempName);
 //            $image->save(storage_path('app/public/images/'.$request->get('table').'/' . $fileTempName));
 //            $x = asset('storage/images/'.$request->get('table').'/' . $fileTempName);
         } else {
             $img = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);
-            $x = asset('storage/temp/' . $img);
+            $x = asset('storage/' . $img);
 
         }
 //        $x = Storage::disk('public')->putFileAs('/temp', $request->avatar, $request->name);

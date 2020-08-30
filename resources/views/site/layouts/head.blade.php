@@ -36,6 +36,8 @@
 
 <!-- CSRF Token -->
 <meta name="_token" content="{{ csrf_token() }}"/>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="userId" content="{{ Auth::check() ? auth()->user()->id : '' }}"/>
 
 <!-- Title -->
 <title>{{ $title }} </title>
@@ -54,23 +56,21 @@
 
 <!-- Main Styles CSS -->
 <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/main.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/main-edit.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/fonts.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/custom.css') }}">
 
 <!--tag-style-->
-<link rel="stylesheet" type="text/css" href="{{ asset('css/select2.min.css') }}">
+{{-- <link rel="stylesheet" type="text/css" href="{{ asset('css/select2.min.css') }}">
 
 <!--cropp-image-->
 <link rel="stylesheet" type="text/css" href="{{ asset('css/cropper.css') }}">
 
 <!--notifications-->
-<link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}"> --}}
 
 <link rel="stylesheet" type="text/css" href="{{ asset('css/posts/posts.css') }}">
 
 <!--select2-->
-<link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/select2.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/select2-bootstrap.min.css') }}">
-
-
-
+{{-- <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/select2.css') }}"> --}}
+{{-- <link rel="stylesheet" type="text/css" href="{{ asset('olympus/css/select2-bootstrap.min.css') }}"> --}}

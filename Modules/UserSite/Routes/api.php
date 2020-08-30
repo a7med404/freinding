@@ -16,3 +16,14 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/usersite', function (Request $request) {
     return $request->user();
 });
+Route::group(['prefix' => '/profile'], function () {
+
+    // Route::get('/@{username?}', 'UserSiteController@index');
+    // Route::get('/add-friend/{id}', function(){
+    //   dd(Auth::user());
+    // });// 'UserSiteController@apiAddFriend');
+    // Route::get('/@{username?}/friends','UserSiteController@friends');
+    // Route::get('/@{username?}/followers','UserSiteController@followers');
+    // Route::get('/@{username?}/following','UserSiteController@following');
+
+});

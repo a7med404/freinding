@@ -4,42 +4,46 @@ let disableShare = () => {
     } else {
         $('#newShare').attr('disabled', true);
     }
-}
+};
 
 let $numOfPendingPhotos = 0;
 let $numberOfPhotos = 0;
+
 window.addEventListener('DOMContentLoaded',()=> {
     let image = document.getElementById('image');
-    let input = document.getElementById('input');
+    let input = document.getElementsByClassName('input');
     let $modal = $('#modal');
     let cropper;
 
     $('[data-toggle="tooltip"]').tooltip();
+    for (var i = 0; i < input.length; i++) {
+        input[i].addEventListener('change', (e) => {
+            let files = e.target.files;
+            let done = function (url) {
+                input.value = '';
+                image.src = url;
+                document.getElementById("edit-post").style.zIndex = "1";
+                $modal.modal('show');
+            };
 
-    input.addEventListener('change', (e) => {
-        let files = e.target.files;
-        let done = function (url) {
-            input.value = '';
-            image.src = url;
-            $modal.modal('show');
-        };
-
-        let reader;
-        let file;
-        let url;
-        if (files && files.length > 0) {
-            file = files[0];
-            if (URL) {
-                done(URL.createObjectURL(file));
-            } else if (FileReader) {
-                reader = new FileReader();
-                reader.onload = (e) => {
-                    done(reader.result);
-                };
-                reader.readAsDataURL(file);
+            let reader;
+            let file;
+            let url;
+            if (files && files.length > 0) {
+                file = files[0];
+                if (URL) {
+                    done(URL.createObjectURL(file));
+                } else if (FileReader) {
+                    reader = new FileReader();
+                    reader.onload = (e) => {
+                        done(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
             }
-        }
-    });
+        });
+    }
+
 
     $modal.on('shown.bs.modal', () => {
         cropper = new Cropper(image, {
@@ -62,6 +66,7 @@ window.addEventListener('DOMContentLoaded',()=> {
             let canvasF, src, roundedCanvas;
             disableShare();
             let canvas, $ext;
+           document.getElementById("edit-post").style.zIndex = " 1050";
             $modal.modal('hide');
             if (cropper) {
                 canvas = cropper.getCroppedCanvas({
@@ -84,6 +89,24 @@ window.addEventListener('DOMContentLoaded',()=> {
 
                 nameOfphoto = guid() + '.jpg';
                 $('#choosephoto').append(
+                    '<li style="width: 100px;height: 100px;display: inline-flex;margin: 5px;">' +
+                    '<img class="rounded" data-name="' + nameOfphoto + '" src="' + src + '">' +
+                    '<button type="button" data-name="' + nameOfphoto + '"data-url="' + $delete_url + '" class="close delete-photo" aria-label="Close" style="background: red;' +
+                    'margin-left: -98px;' +
+                    'margin-top: 2px;' +
+                    'border-radius: 50%;' +
+                    'width: 15px;' +
+                    'height: 15px;' +
+                    'font-size:15px;' +
+                    'opacity: .7;">' +
+                    '<span aria-hidden="true">×</span>' +
+                    '</button>' +
+                    '<div class="progress myProgress' + $numOfPendingPhotos + '" style="margin-top: 100px;margin-left: -26.5px;width: 100%;">' +
+                    '<div class="progress-bar myProgressBar' + $numOfPendingPhotos + ' progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>\n' +
+                    '</div>' +
+                    '</li>'
+                );
+                $('#newpostphoto').append(
                     '<li style="width: 100px;height: 100px;display: inline-flex;margin: 5px;">' +
                     '<img class="rounded" data-name="' + nameOfphoto + '" src="' + src + '">' +
                     '<button type="button" data-name="' + nameOfphoto + '"data-url="' + $delete_url + '" class="close delete-photo" aria-label="Close" style="background: red;' +
@@ -138,8 +161,6 @@ window.addEventListener('DOMContentLoaded',()=> {
                                 $('#percent').html(percentValue);
                             },
                             uploadProgress: function (event, position, total, percentComplete) {
-
-                                console.log(total, percentComplete)
                                 var percentValue = percentComplete + '%';
                                 $("#progressBar").animate({
                                     width: '' + percentValue + ''
@@ -178,7 +199,7 @@ window.addEventListener('DOMContentLoaded',()=> {
                     $ext, 2);
             }
         });
-    }
+    };
 
     let updateProgress = (e, progressbar) => {
         if (e.lengthComputable) {
@@ -190,6 +211,8 @@ window.addEventListener('DOMContentLoaded',()=> {
         }
     }
 });
+
+
 getRoundedCanvas = (sourceCanvas) => {
     var canvas = document.createElement('canvas');
     var context = canvas.getContext('2d');
@@ -222,6 +245,7 @@ ajaxCall = (formData) => {
         }
     });
 };
+
 $(document).ready(() => {
     //delete photo from temp
     $('body').on('click', '.delete-photo', (e) => {

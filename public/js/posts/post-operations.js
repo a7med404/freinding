@@ -55,6 +55,7 @@ $(document).ready(()=>{
         let post_id = btn.attr('id').substring(12);
         let $url = btn.data('url');
         let $delete_url = btn.data('delete-url');
+        var $edit_url = btn.data('edit-url');
         let comment = $('#comment_post_form' + post_id).val();
         if (comment.length > 0) {
             $.ajax({
@@ -91,9 +92,9 @@ $(document).ready(()=>{
                             '<use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
                             '</svg>' +
                             '<ul class="more-dropdown">' +
-                            '<li>' +
-                            '<a href="#">Edit comment</a>' +
-                            '</li>' +
+                      '      <li>'+
+                      '      <a href="javascript:void(0)" id="edit_comment' + newCommentID + '"  data-url="'+$edit_url+'">Edit comment</a>'+
+                      '  </li>'+
                             '<li>' +
                             '<a href="javascript:void(0)" class="comment-delete" id="' + newCommentID + '" data-url="'+$delete_url+'">Delete comment</a>' +
                             '</li>' +
@@ -103,7 +104,7 @@ $(document).ready(()=>{
                             '\n' +
                             '       </div>\n' +
                             '\n' +
-                            '       <p>' + data['newestComment'].text + '\n' +
+                            '       <p  id="text-comment'+newCommentID +'">' + data['newestComment'].text + '\n' +
                             '       </p>\n' +
                             '\n' +
                             '       <a href="#" class="post-add-icon inline-items">\n' +
@@ -246,7 +247,7 @@ $(document).ready(()=>{
                 else {
                     $('.comments-list--' + data.post.id).html('');
                 }
-
+                swal("Deleted!", "Your comment has been deleted", "success")
             },
             error:  (err)=> {
                 console.log('Error!', err);

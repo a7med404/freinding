@@ -36,7 +36,51 @@ Route::group([
     Route::get('/@{username?}/followers','UserSiteController@followers')->name('followers');
     Route::get('/@{username?}/following','UserSiteController@following')->name('following');
 
+
+
 });
+
+/*
+| this routes for api and it's here temp
+**/
+Route::group(['prefix' => 'profile','middleware' => ['auth']], function () {
+  # post rether than get
+  Route::get('/check-friend/{id}', 'UserSiteController@apiCheckFriend')->name('check-friend');
+  Route::get('/add-friend/{id}', 'UserSiteController@apiAddFriend')->name('add-friend');
+  Route::delete('/delete-friendship/{id}', 'UserSiteController@apiDeleteFriendship')->name('delete-friendship');
+  Route::get('/accept-friend/{id}', 'UserSiteController@apiAcceptFriend')->name('accept-friend');
+
+
+  # post rether than get
+  Route::get('/follow/{id}', 'UserSiteController@apiFollow')->name('follow');
+  Route::get('/re-follow/{id}', 'UserSiteController@apiReFollow')->name('re-follow');
+  Route::delete('/un-follow/{id}', 'UserSiteController@apiUnFollow')->name('un-follow');
+
+  # check status
+  Route::get('/check-friendship/{id}', 'UserSiteController@apiCheckFriend')->name('check-follow');
+  Route::get('/check-follow/{id}', 'UserSiteController@apiCheckFollow')->name('check-follow');
+
+
+  Route::post('/friends/{id}', 'UserSiteController@apiFriends')->name('friends-all');
+  Route::get('/followers/{id}',   'UserSiteController@apiFollowers')->name('followers');
+  Route::get('/followings/{id}',   'UserSiteController@apiFollowings')->name('followings');
+
+});
+
+
+Route::group(['prefix' => 'notifications','middleware' => ['auth']], function () {
+  Route::get('/get', 'NotificationController@get');
+  Route::post('/read', 'NotificationController@read');
+});
+
+
+
+Route::group(['prefix' => 'notifications', 'as' => 'notify.', 'middleware' => ['auth']], function () {
+
+  Route::get('/all', 'NotificationController@allNotification')->name('notifications-all');
+
+});
+
 //route for track session
 Route::get('profileleave', ['as' => 'profileleave', 'uses' => 'UserSiteController@save_activity']);
 
@@ -56,6 +100,7 @@ Route::get('cities-autocomplete', ['as' => 'cities-autocomplete', 'uses' => 'Use
 
 
 Route::POST('update-user-image', ['as' => 'update-user-image', 'uses' => 'UserSiteController@updateUserImage']);
+Route::POST('update-header-image', ['as' => 'update-header-image', 'uses' => 'UserSiteController@updateUserHeaderImage']);
 
 Route::POST('update-user-two', ['as' => 'update-user-two', 'uses' => 'UserSiteController@updateUserTwo']);
 

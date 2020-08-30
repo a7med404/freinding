@@ -21,5 +21,8 @@
         "psr-4": {
             "Modules\\UserSite\\": ""
         }
+    },
+    "require": {
+        "pusher/pusher-php-server": "^3.3"
     }
 }

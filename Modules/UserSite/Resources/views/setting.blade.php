@@ -28,8 +28,16 @@
 </div>
 <!-- ... end Your Account Personal Information -->
 @include('site.home.popup')
+@include('site.partials.crop-image',['width'=>1220,'height'=>400,'callback'=>'updateHeaderImage','crop'=>'square','table'=>'headers','id'=>'header-image-modal'])
+@include('site.partials.crop-image',['width'=>110,'height'=>110,'callback'=>'ajaxCall','crop'=>'circle','table'=>'users','id'=>'user-modal'])
+    <div class="image-container" style="display: none">
+        <span class="close-image">
+            <i class="fas fa-times fa-2x"></i>
+        </span>
+        <div class="text-center">
+            <img src="{{asset('storage/images/headers/1b6c8467-f6dc-1eb6-a028-66447ff63c9a.jpg')}}" alt="image" class="image-user">
+        </div>
+    </div>
 @endsection
-@section('scripts')
-    @include('site.partials.crop-image',['width'=>110,'height'=>110,'callback'=>'ajaxCall','crop'=>'circle','table'=>'users'])
-@endsection
+
 

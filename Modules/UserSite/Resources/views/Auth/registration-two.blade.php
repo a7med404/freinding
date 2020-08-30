@@ -34,8 +34,8 @@
                                                                                        alt="Loading....">
                                         </div>
 
-                                           <img src="{{ asset('storage/images/users/default.png') }}"
-                                                class="classimg profileimg" id="idimage">
+                                        <img src="{{ asset('storage/images/users/default.png') }}"
+                                             class="classimg profileimg" id="idimage">
 
                                         <input type="file" name="profileimage" hidden id="file_field"/>
                                         <div class="upload-btn-wrapper">
@@ -43,7 +43,7 @@
                                                     class="btn btn-md-2 open-modal btn-border-think custom-color c-grey"
                                             >Upload a file
                                             </button>
-                                            <input type="file" class="sr-only" hidden id="input" name="image"
+                                            <input type="file" class="sr-only file-input-user" data-modal="user-modal" hidden id="input" name="image"
                                                    accept="image/*">
                                         </div>
                                     </div>
@@ -55,8 +55,8 @@
                                         </div>
                                     </div>
                                     {{--<div class='progress' id="progressDivId">--}}
-                                        {{--<div class='progress-bar' id='progressBar'></div>--}}
-                                        {{--<div class='percent' id='percent'>0%</div>--}}
+                                    {{--<div class='progress-bar' id='progressBar'></div>--}}
+                                    {{--<div class='percent' id='percent'>0%</div>--}}
                                     {{--</div>--}}
                                 </div>
                             </div>
@@ -72,15 +72,20 @@
 
                                     <div class="form-group label-floating is-select">
                                         <label class="control-label">Gender</label>
-                                        <select class="autocomplete form-control" data-letter="0" data-placeholder="Gender" name="gendar">
+                                        <select class="autocomplete form-control" data-letter="0"
+                                                data-placeholder="Gender" name="gendar">
                                             <option value="male">Male</option>
                                             <option value="female">Female</option>
                                         </select>
                                     </div>
-
+                                    @php
+                                        $date = new DateTime();
+                                     date_sub($date, date_interval_create_from_date_string('13 years'));
+                                    $sub_date=date_format($date, 'd-m-Y');
+                                    @endphp
                                     <div class="form-group date-time-picker label-floating ">
                                         <label class="control-label">Your Birthday</label>
-                                        <input name="datetimepicker" value="{{date('d/m/Y')}}">
+                                        <input name="datetimepicker" data-date="{{$sub_date}}" value="{{$sub_date}}">
                                         <span class="input-group-addon">
                                         <svg class="olymp-month-calendar-icon icon"><use
                                                     xlink:href="svg-icons/sprites/icons.svg#olymp-month-calendar-icon"></use></svg>
@@ -167,7 +172,7 @@ display: block; background: #00c46a; padding: 10px 55px;" type="submit">Next
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endsection
 @section('scripts')
-    @include('site.partials.crop-image',['width'=>110,'height'=>110,'callback'=>'ajaxCall','crop'=>'circle','table'=>'users'])
+    @include('site.partials.crop-image',['width'=>110,'height'=>110,'callback'=>'ajaxCall','crop'=>'circle','table'=>'users','id'=>'user-modal'])
     <script src="{{ asset('olympus/js/moment.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
@@ -188,7 +193,7 @@ display: block; background: #00c46a; padding: 10px 55px;" type="submit">Next
                 altInput: true,
                 altFormat: "F j, Y",
                 dateFormat: "Y-m-d",
-                maxDate: "today"
+                maxDate: $("[name=datetimepicker]").attr('data-date')
             }
             $("[name=datetimepicker]").flatpickr(optional_config);
             $('.open-modal').on('click', function () {

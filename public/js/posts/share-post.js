@@ -142,11 +142,12 @@ $(document).ready((e) => {
                         '  <use xlink:href="olympus/svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>' +
                         ' </svg>' +
                         '<ul class="more-dropdown">' +
+                        '<li>' +
+                        '<a href="javascript:void(0)" id="editPost" data-id="' + data.newpost.id + ' " ' +
+                        'data-url="' + data.edit_post_url + '" data-get-post="' + data.get_post + '">Edit Post</a>' +
+                        '</li>' +
                         ' <li>' +
-                        ' <a href="#">Edit Share</a>' +
-                        ' </li>' +
-                        ' <li>' +
-                        ' <a href="javascript:void(0)" class="post-delete" id="' + data.newpost.id + '" data-url="' + data.delete_url + '">Delete Share</a>' +
+                        ' <a href="javascript:void(0)" class="post-delete" id="' + data.newpost.id + '" data-url="' + data.delete_url + '">Delete Post</a>' +
                         ' </li>' +
                         '<li>' +
                         ' <a href="#">Turn Off Notifications</a>' +
@@ -156,10 +157,8 @@ $(document).ready((e) => {
                         ' </li>' +
                         '</ul>' +
                         '</div>' +
-                        //e2
                         '</div>' +
-                        //e1
-                        '<p style="word-wrap: break-word;">' + $text + '</p>' +
+                        '<p id="text-newpost'+data.newpost.id+'" style="word-wrap: break-word;">' + $text + '</p>' +
                         //post shared
                         //
                         '<article class="hentry post video" style=" border: 3px solid;' +

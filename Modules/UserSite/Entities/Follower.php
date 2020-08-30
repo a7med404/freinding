@@ -14,4 +14,5 @@ namespace Modules\UserSite\Entities;
 class Follower extends \Eloquent
 {
     protected $fillable = ['requester', 'user_requested', 'followed','re_followed'];
+
 }

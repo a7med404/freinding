@@ -21,7 +21,7 @@ userAction = () => {
             url: $(this).attr('data-url'),
             success: function (data) {
                 $($this).find('span').text(data.text);
-                $($this).find('img').attr('src',data.img);
+                $($this).find('icon').attr('class',data.icon);
                 $($this).removeClass();
                 $($this).addClass(data.class);
                 $($this).attr('data-url', data.url);

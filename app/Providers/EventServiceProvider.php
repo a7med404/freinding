@@ -13,9 +13,35 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\FriendShipEvent' => [
-            'App\Listeners\AddListener',
-            'App\Listeners\AcceptListener',
+        // 'App\Events\FriendShipEvent' => [
+        //     'App\Listeners\AddListener',
+        //     'App\Listeners\AcceptListener',
+        // ],
+        'App\Events\AddFriendEvent' => [
+            'App\Listeners\AddFriendListener',
+            'App\Listeners\NotifyAddFriendListener'
+        ],
+        'App\Events\DeleteFriendEvent' => [
+            'App\Listeners\DeleteFriendListener',
+            'App\Listeners\NotifyDeleteFriendListener'
+        ],
+        'App\Events\AcceptFriendEvent' => [
+            'App\Listeners\AcceptFriendListener',
+            'App\Listeners\NotifyAcceptFriendListener'
+        ],
+
+
+        'App\Events\FollowEvent' => [
+            'App\Listeners\FollowListener',
+            'App\Listeners\NotifyFollowListener'
+        ],
+        'App\Events\ReFollowEvent' => [
+            'App\Listeners\ReFollowListener',
+            'App\Listeners\NotifyReFollowListener'
+        ],
+        'App\Events\UnFollowEvent' => [
+            'App\Listeners\UnFollowListener',
+            'App\Listeners\NotifyUnFollowListener'
         ],
     ];
 

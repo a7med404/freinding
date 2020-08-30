@@ -18,7 +18,12 @@
             </div>
             <div class="form-group date-time-picker label-floating">
                 <label class="control-label">Your Birthday</label>
-                <input name="datetimepicker" value="{{$user->birthdate}}"/>
+                @php
+                    $date = new DateTime('NOW');
+                 date_sub($date, date_interval_create_from_date_string('13 years'));
+                $sub_date=date_format($date, 'd-m-Y');
+                @endphp
+                <input name="datetimepicker" data-date="{{$sub_date}}" value="{{$user->birthdate}}"/>
                 <span class="input-group-addon">
                     <svg class="olymp-month-calendar-icon icon"><use
                                 xlink:href="svg-icons/sprites/icons.svg#olymp-month-calendar-icon"></use></svg>
@@ -153,7 +158,18 @@
             width: 60px;
             display: none;
         }
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+            background: #00c46a !important;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            color: #fff;
+            border-color: #00c46a !important;
+        }
+        .flatpickr-input[readonly]{
+            background-color: transparent !important;
+        }
     </style>
+
     <script>
         name = $('input[name=name]').val();
         email = $('input[name=email]').val();
@@ -187,13 +203,6 @@
             $('input[name=datetimepicker]').val(datetimepicker);
             return false;
         })
-        $('.top-header').bind('mouseover', function () {
-            $('.cangecover').fadeIn();
-        });
-        $(".top-header").mouseleave(function () {
-            $('.cangecover').fadeOut();
-
-        });
 
         $(document).on('change', '#nationality', function () {
             $('#select2').hide('slow');
@@ -211,3 +220,18 @@
     </script>
 
 @endsection
+@section('after_head')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    @endsection
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        let optional_config = {
+            altInput: true,
+            altFormat: "F j, Y",
+            dateFormat: "Y-m-d",
+            maxDate: $("[name=datetimepicker]").attr('data-date')
+        }
+        $("[name=datetimepicker]").flatpickr(optional_config);
+    </script>
+    @endsection
